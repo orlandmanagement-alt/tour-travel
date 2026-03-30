@@ -9,7 +9,7 @@ export async function generateStaticParams() {
 }
 
 // Memaksa halaman tetap dinamis di sisi client (hybrid)
-export const dynamicParams = true;
+export const dynamicParams = false;
 
 // Fallback mock jika API tidak terjangkau
 const mockTourDetail = {
