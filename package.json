@@ -2,15 +2,13 @@
   "name": "nusantaratrip-monorepo",
   "version": "1.0.0",
   "private": true,
-  "packageManager": "npm@10.9.2",
   "workspaces": [
     "apps/*"
   ],
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
-    "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "lint": "turbo lint"
   },
   "devDependencies": {
     "enhanced-resolve": "^5.20.1",
