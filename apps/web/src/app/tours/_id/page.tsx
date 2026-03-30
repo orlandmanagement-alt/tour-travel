@@ -1,3 +1,4 @@
+// CACHE_BUST: 2026-03-30-FINAL-V1
 import { notFound } from 'next/navigation';
 import ImageCarousel from '@/components/ImageCarousel';
 import PriceCalculator from '@/components/PriceCalculator';

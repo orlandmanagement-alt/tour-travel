@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // <--- BARIS PALING PENTING
-  distDir: 'out',   // Memastikan folder output bernama 'out'
-  trailingSlash: true,
+  output: 'export',      // <--- WAJIB: Ini yang membuat folder 'out' muncul
+  trailingSlash: true,   // Membantu routing di Cloudflare Pages
   images: {
-    unoptimized: true, // Wajib ada untuk mode export statis
+    unoptimized: true,   // Wajib untuk mode export
   },
 };
 
