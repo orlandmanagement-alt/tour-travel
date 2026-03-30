@@ -1,0 +1,8 @@
+name = "nusantaratrip-api"
+main = "src/index.ts"
+compatibility_date = "2024-03-29"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nusantaratrip_db"
+database_id = "8e39f09d-f154-4a5f-836b-faaee9b861a8"
