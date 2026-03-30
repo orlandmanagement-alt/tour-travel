@@ -2,7 +2,16 @@ import { notFound } from 'next/navigation';
 import ImageCarousel from '@/components/ImageCarousel';
 import PriceCalculator from '@/components/PriceCalculator';
 
-// Fallback mock
+// 1. Tambahkan ini agar build sukses di mode static export
+// Kita return array kosong karena data akan diambil di sisi client jika tidak ada params saat build
+export async function generateStaticParams() {
+  return [];
+}
+
+// Memaksa halaman tetap dinamis di sisi client (hybrid)
+export const dynamicParams = true;
+
+// Fallback mock jika API tidak terjangkau
 const mockTourDetail = {
   id: 1,
   tour_code: 'T-BMO-MID',
@@ -31,25 +40,38 @@ const mockTourDetail = {
   ]
 };
 
-export default async function TourDetailPage({ params }: { params: Promise<{ id: string }> }) {
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function TourDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
   const tourId = resolvedParams.id;
   
   let tour: any = null;
+  
+  // 2. Gunakan URL API Worker asli kamu untuk produksi
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://nusantaratrip-api.orlandmanagement.workers.dev';
+
   try {
-    const res = await fetch(`http://127.0.0.1:8787/api/tours/${tourId}`, { cache: 'no-store' });
+    const res = await fetch(`${API_BASE}/api/tours/${tourId}`, { 
+      next: { revalidate: 60 } // Cache selama 60 detik
+    });
+    
     if (res.ok) {
       const data = await res.json();
       tour = data.data;
     } else {
-      throw new Error("Failed");
+      throw new Error("Failed to fetch from API");
     }
   } catch(e) {
-    if (tourId === '1' || tourId === 'T-BMO-MID') {
+    console.error("Fetch error, using fallback mock:", e);
+    // Fallback strategy: Jika tourId adalah Bromo, pakai mock
+    if (tourId === '1' || tourId?.includes('BMO')) {
        tour = mockTourDetail;
     } else {
-       // Mock for others too
-       tour = { ...mockTourDetail, tour_name: 'Awesome Tour ' + tourId, id: Number(tourId) || 99 };
+       // Mock dinamis sederhana jika ID lain
+       tour = { ...mockTourDetail, tour_name: 'Paket Tour ' + tourId, id: tourId };
     }
   }
 
@@ -69,7 +91,7 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
         <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
           <div>
             <div className="flex items-center space-x-2 text-sm text-slate-500 mb-2">
-               <span className="bg-brand-primary/10 text-brand-primary px-2 py-1 rounded font-medium">{tour.trip_type}</span>
+               <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded font-medium">{tour.trip_type}</span>
                <span>•</span>
                <span>{tour.location_name}</span>
                <span>•</span>
@@ -80,11 +102,11 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
             </h1>
           </div>
           <div className="flex items-center space-x-4 text-sm font-medium text-slate-700 dark:text-slate-300">
-             <div className="flex items-center bg-white dark:bg-slate-800 px-3 py-2 rounded-lg shadow-sm">
+             <div className="flex items-center bg-white dark:bg-slate-800 px-3 py-2 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
                <span className="mr-2">⏱</span>
-               {tour.duration_days} Days {tour.duration_nights > 0 ? `${tour.duration_nights} Nights` : ''}
+               {tour.duration_days} Hari {tour.duration_nights > 0 ? `${tour.duration_nights} Malam` : ''}
              </div>
-             <div className="flex items-center bg-white dark:bg-slate-800 px-3 py-2 rounded-lg shadow-sm">
+             <div className="flex items-center bg-white dark:bg-slate-800 px-3 py-2 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
                <span className="mr-2">🏔️</span>
                {tour.difficulty_level || 'Moderate'}
              </div>
@@ -95,7 +117,7 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Gallery */}
-        <div className="mb-12 shadow-xl shadow-slate-200 dark:shadow-none rounded-2xl">
+        <div className="mb-12 shadow-xl rounded-2xl overflow-hidden bg-white dark:bg-slate-800">
            <ImageCarousel images={galleryImages} altPrefix={tour.tour_name} />
         </div>
 
@@ -106,23 +128,23 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
             
              {/* Overview Section */}
              <section className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
-               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Overview</h2>
+               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Informasi Tour</h2>
                <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-lg">
-                 Embark on an unforgettable journey with our {tour.tour_name} package. Designed for the adventurous spirit, this meticulously crafted {tour.trip_type.toLowerCase()} allows you to witness the breathtaking beauty of {tour.location_name} with the guidance of our expert local teams.
+                 Nikmati pengalaman tak terlupakan dengan paket {tour.tour_name}. Paket ini dirancang khusus untuk Anda yang ingin mengeksplorasi keindahan {tour.location_name} secara mendalam dengan fasilitas terbaik dari NusantaraTrip.
                </p>
              </section>
 
              {/* Itinerary Section */}
              <section className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
-               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Itinerary</h2>
+               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Rencana Perjalanan</h2>
                <div className="space-y-6 relative before:absolute before:bg-slate-200 dark:before:bg-slate-700 before:w-1 before:h-full before:left-3.5 before:top-0">
-                  {tour.itineraries?.map((item: any, idx: number) => (
+                  {tour.itineraries?.map((item: any) => (
                     <div key={item.id} className="relative flex items-start pl-12 group">
-                      <div className="absolute left-1.5 top-1.5 w-5 h-5 bg-brand-primary rounded-full border-4 border-white dark:border-slate-800 group-hover:scale-125 transition-transform"></div>
+                      <div className="absolute left-1.5 top-1.5 w-5 h-5 bg-blue-600 rounded-full border-4 border-white dark:border-slate-800 group-hover:scale-125 transition-transform"></div>
                       <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl w-full border border-slate-100 dark:border-slate-700">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
                            <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100">{item.activity_title}</h4>
-                           <span className="text-sm font-semibold text-brand-primary mt-1 sm:mt-0 bg-brand-primary/10 px-3 py-1 rounded-full">
+                           <span className="text-sm font-semibold text-blue-600 mt-1 sm:mt-0 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
                              {item.start_time} - {item.end_time}
                            </span>
                         </div>
@@ -135,19 +157,21 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
 
              {/* Terms */}
              <section className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
-               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Terms & Conditions</h2>
+               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Syarat & Ketentuan</h2>
                <ul className="list-disc pl-5 space-y-3 text-slate-600 dark:text-slate-300">
-                 <li>Pricing is valid for the selected date only. High season surcharges may apply.</li>
-                 <li>Cancellations 7 days before departure receive a 50% refund.</li>
-                 <li>The itinerary may be adjusted due to weather or natural circumstances for safety.</li>
-                 <li>All participants must be in reasonable health condition.</li>
+                 <li>Harga berlaku sesuai dengan tanggal yang dipilih.</li>
+                 <li>Pembatalan kurang dari 7 hari sebelum keberangkatan dikenakan biaya 50%.</li>
+                 <li>Jadwal perjalanan dapat berubah sewaktu-waktu tergantung kondisi cuaca dan lapangan.</li>
+                 <li>Peserta diharapkan dalam kondisi fisik yang sehat dan prima.</li>
                </ul>
              </section>
           </div>
 
           {/* Sticky Sidebar Right */}
           <div className="w-full lg:w-1/3">
-             <PriceCalculator tourData={tour} />
+             <div className="sticky top-24">
+                <PriceCalculator tourData={tour} />
+             </div>
           </div>
 
         </div>
