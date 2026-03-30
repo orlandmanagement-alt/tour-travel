@@ -2,16 +2,16 @@ import { notFound } from 'next/navigation';
 import ImageCarousel from '@/components/ImageCarousel';
 import PriceCalculator from '@/components/PriceCalculator';
 
-// 1. Tambahkan ini agar build sukses di mode static export
-// Kita return array kosong karena data akan diambil di sisi client jika tidak ada params saat build
-export async function generateStaticParams() {
+// 1. Wajib ada untuk mode 'output: export' di Next.js
+// Mengembalikan array kosong agar build sukses tanpa membuat halaman statis di server
+export function generateStaticParams() {
   return [];
 }
 
-// Memaksa halaman tetap dinamis di sisi client (hybrid)
+// 2. Wajib set ke false jika menggunakan mode export statis
 export const dynamicParams = false;
 
-// Fallback mock jika API tidak terjangkau
+// Mock Data Fallback jika API tidak terhubung
 const mockTourDetail = {
   id: 1,
   tour_code: 'T-BMO-MID',
@@ -49,28 +49,23 @@ export default async function TourDetailPage({ params }: PageProps) {
   const tourId = resolvedParams.id;
   
   let tour: any = null;
-  
-  // 2. Gunakan URL API Worker asli kamu untuk produksi
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://nusantaratrip-api.orlandmanagement.workers.dev';
 
   try {
-    const res = await fetch(`${API_BASE}/api/tours/${tourId}`, { 
-      next: { revalidate: 60 } // Cache selama 60 detik
-    });
-    
+    // Melakukan fetch ke Cloudflare Worker API
+    const res = await fetch(`${API_BASE}/api/tours/${tourId}`);
     if (res.ok) {
       const data = await res.json();
       tour = data.data;
     } else {
-      throw new Error("Failed to fetch from API");
+      throw new Error("API response not ok");
     }
   } catch(e) {
-    console.error("Fetch error, using fallback mock:", e);
-    // Fallback strategy: Jika tourId adalah Bromo, pakai mock
+    console.warn("Using fallback mock for tour ID:", tourId);
+    // Logika Fallback
     if (tourId === '1' || tourId?.includes('BMO')) {
        tour = mockTourDetail;
     } else {
-       // Mock dinamis sederhana jika ID lain
        tour = { ...mockTourDetail, tour_name: 'Paket Tour ' + tourId, id: tourId };
     }
   }
@@ -91,7 +86,7 @@ export default async function TourDetailPage({ params }: PageProps) {
         <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
           <div>
             <div className="flex items-center space-x-2 text-sm text-slate-500 mb-2">
-               <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded font-medium">{tour.trip_type}</span>
+               <span className="bg-blue-600/10 text-blue-600 px-2 py-1 rounded font-medium">{tour.trip_type}</span>
                <span>•</span>
                <span>{tour.location_name}</span>
                <span>•</span>
@@ -126,7 +121,6 @@ export default async function TourDetailPage({ params }: PageProps) {
           {/* Main Content Form LEFT */}
           <div className="w-full lg:w-2/3 space-y-12">
             
-             {/* Overview Section */}
              <section className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Informasi Tour</h2>
                <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-lg">
@@ -134,7 +128,6 @@ export default async function TourDetailPage({ params }: PageProps) {
                </p>
              </section>
 
-             {/* Itinerary Section */}
              <section className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Rencana Perjalanan</h2>
                <div className="space-y-6 relative before:absolute before:bg-slate-200 dark:before:bg-slate-700 before:w-1 before:h-full before:left-3.5 before:top-0">
@@ -155,7 +148,6 @@ export default async function TourDetailPage({ params }: PageProps) {
                </div>
              </section>
 
-             {/* Terms */}
              <section className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Syarat & Ketentuan</h2>
                <ul className="list-disc pl-5 space-y-3 text-slate-600 dark:text-slate-300">
