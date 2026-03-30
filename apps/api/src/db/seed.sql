@@ -12,6 +12,13 @@ INSERT INTO master_categories (category_name, description) VALUES
 ('Family Fun', 'Family-friendly attractions and parks'),
 ('Photography', 'Scenic spots perfect for photography');
 
+-- Insert Master Addons
+INSERT INTO master_addons (addon_name, location_id, charge_type, default_price) VALUES
+('Jeep Rental 4WD', 3, 'per_group', 600000), -- 3 is Bromo (BMO)
+('Horse Ride', 3, 'per_pax', 150000),
+('Gas Mask', 2, 'per_pax', 50000), -- 2 is Banyuwangi (BWI)
+('Professional Photographer', 1, 'per_group', 500000); -- 1 is Malang (MLG)
+
 -- Insert Trip Types
 INSERT INTO master_trip_types (type_name, description) VALUES 
 ('Open Trip', 'Join a scheduled group tour'),

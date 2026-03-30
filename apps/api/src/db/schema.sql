@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS master_destinations;
 DROP TABLE IF EXISTS master_transport;
 DROP TABLE IF EXISTS master_trip_types;
 DROP TABLE IF EXISTS master_categories;
+DROP TABLE IF EXISTS master_addons;
 DROP TABLE IF EXISTS master_locations;
 
 CREATE TABLE master_locations (
@@ -24,6 +25,14 @@ CREATE TABLE master_categories (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   category_name TEXT NOT NULL UNIQUE,
   description TEXT
+);
+
+CREATE TABLE master_addons (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  addon_name TEXT NOT NULL,
+  location_id INTEGER REFERENCES master_locations(id) ON DELETE CASCADE,
+  charge_type TEXT NOT NULL CHECK(charge_type IN ('per_pax', 'per_group')),
+  default_price INTEGER NOT NULL
 );
 
 CREATE TABLE master_trip_types (

@@ -1,7 +1,8 @@
 // CACHE_BUST: 2026-03-30-FINAL-V1
 import { notFound } from 'next/navigation';
 import ImageCarousel from '@/components/ImageCarousel';
-import PriceCalculator from '@/components/PriceCalculator';
+import StickyBookingWidget from '@/components/StickyBookingWidget';
+import ItineraryTimeline from '@/components/ItineraryTimeline';
 
 // 1. Wajib ada untuk mode 'output: export' di Next.js
 // Mengembalikan array kosong agar build sukses tanpa membuat halaman statis di server
@@ -131,21 +132,8 @@ export default async function TourDetailPage({ params }: PageProps) {
 
              <section className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Rencana Perjalanan</h2>
-               <div className="space-y-6 relative before:absolute before:bg-slate-200 dark:before:bg-slate-700 before:w-1 before:h-full before:left-3.5 before:top-0">
-                  {tour.itineraries?.map((item: any) => (
-                    <div key={item.id} className="relative flex items-start pl-12 group">
-                      <div className="absolute left-1.5 top-1.5 w-5 h-5 bg-blue-600 rounded-full border-4 border-white dark:border-slate-800 group-hover:scale-125 transition-transform"></div>
-                      <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl w-full border border-slate-100 dark:border-slate-700">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
-                           <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100">{item.activity_title}</h4>
-                           <span className="text-sm font-semibold text-blue-600 mt-1 sm:mt-0 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
-                             {item.start_time} - {item.end_time}
-                           </span>
-                        </div>
-                        <p className="text-slate-600 dark:text-slate-400">{item.activity_description}</p>
-                      </div>
-                    </div>
-                  ))}
+               <div className="space-y-6">
+                 <ItineraryTimeline itineraries={tour.itineraries} />
                </div>
              </section>
 
@@ -163,7 +151,7 @@ export default async function TourDetailPage({ params }: PageProps) {
           {/* Sticky Sidebar Right */}
           <div className="w-full lg:w-1/3">
              <div className="sticky top-24">
-                <PriceCalculator tourData={tour} />
+                <StickyBookingWidget tourData={tour} />
              </div>
           </div>
 

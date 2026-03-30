@@ -30,6 +30,10 @@ export default {
         return await TourController.getAllTours(env, url);
       }
 
+      if (path === '/api/tours/generate-code' && method === 'GET') {
+        return await TourController.generateAutoCode(env, url);
+      }
+
       const tourIdMatch = path.match(/^\/api\/tours\/([a-zA-Z0-9_-]+)$/);
       if (tourIdMatch && method === 'GET') {
         return await TourController.getTourDetail(env, tourIdMatch[1]);

@@ -9,6 +9,7 @@ const masterTables = [
   { id: 'transport', name: 'Transport Modes', count: 6, cols: ['Mode Name', 'Description'] },
   { id: 'destinations', name: 'Destinations', count: 18, cols: ['Destination Name', 'Location', 'Entry Fee'] },
   { id: 'accommodations', name: 'Accommodations', count: 12, cols: ['Name', 'Location', 'Type', 'Star Rating'] },
+  { id: 'addons', name: 'Add-ons', count: 8, cols: ['Add-on Name', 'Charge Type', 'Location', 'Default Price'] },
 ];
 
 export default function MasterDataPage() {

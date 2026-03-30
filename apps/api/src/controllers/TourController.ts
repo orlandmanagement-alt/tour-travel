@@ -115,4 +115,21 @@ export class TourController {
       return sendError(e.message);
     }
   }
+
+  static async generateAutoCode(env: Env, url: URL) {
+    try {
+      const prefix = url.searchParams.get('prefix');
+      if (!prefix) return sendError("Prefix is required", 400);
+
+      const query = await env.DB.prepare(`SELECT COUNT(*) as cnt FROM tours WHERE tour_code LIKE ?`).bind(`${prefix}-%`).first();
+      // @ts-ignore
+      const count = query ? query.cnt : 0;
+      const nextNum = Number(count) + 1;
+      const formattedNum = nextNum.toString().padStart(6, '0');
+      
+      return sendResponse({ tour_code: `${prefix}-${formattedNum}` });
+    } catch (e: any) {
+      return sendError(e.message);
+    }
+  }
 }
