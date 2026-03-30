@@ -1,129 +1,211 @@
-import DestinationCard from '@/components/DestinationCard';
 import Link from 'next/link';
+import HeroSlider from '@/components/HeroSlider';
+import SearchFilter from '@/components/SearchFilter';
+import TourCard from '@/components/TourCard';
 
-// Mock destinations data
-const TRENDING_DESTINATIONS = [
+const CATEGORIES = [
+  { name: 'Pegunungan', icon: 'fa-mountain' },
+  { name: 'Pantai & Pulau', icon: 'fa-umbrella-beach' },
+  { name: 'City Tour', icon: 'fa-city' },
+  { name: 'Honeymoon', icon: 'fa-heart' },
+  { name: 'Open Trip', icon: 'fa-users' },
+  { name: 'Fotografi', icon: 'fa-camera' },
+  { name: 'Camping', icon: 'fa-campground' },
+  { name: 'Luar Negeri', icon: 'fa-globe' },
+];
+
+const SPECIAL_PROMOS = [
   {
-    id: 'BMO',
-    name: 'Mount Bromo',
-    image: 'https://images.unsplash.com/photo-1542898939-5e5f385c5dfa?w=800&q=80',
-    description: 'Experience the magic of an active volcano at sunrise. Surrounded by an ancient sea of sand and stunning viewpoints.',
-    tourCount: 5,
+    title: 'Promo Bromo Sunrise',
+    image: 'https://images.unsplash.com/photo-1542898939-5e5f385c5dfa?w=800',
+    discount: 'DISC 20%',
+    validUntil: '30 Nov',
+    color: 'from-brand-950/90 via-brand-900/70'
   },
   {
-    id: 'BWI',
-    name: 'Ijen Crater',
-    image: 'https://images.unsplash.com/photo-1517441865-c32f8313bd8a?w=800&q=80',
-    description: 'Witness the rare blue fire phenomenon and the largest highly acidic crater lake in the world.',
-    tourCount: 3,
+    title: 'Malang City Explorer',
+    image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=800',
+    discount: 'CASHBACK 500K',
+    code: 'MLGCERIA',
+    color: 'from-brand-accent/90 via-brand-accent/70'
   },
   {
-    id: 'MLG',
-    name: 'Malang City',
-    image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=800&q=80',
-    description: 'Explore historical sites, colorful villages, and enjoy the cool weather of East Java\'s most relaxing city.',
-    tourCount: 8,
+    title: 'Bali Team Building',
+    image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800',
+    discount: 'CORPORATE',
+    validUntil: 'Pesan 10 Gratis 1',
+    color: 'from-emerald-900/90 via-emerald-800/70'
+  }
+];
+
+const BEST_SELLERS = [
+  {
+    id: '1',
+    tourCode: 'BMO-01',
+    title: 'Private Tour Bromo & Madakaripura',
+    location: 'Malang/SBY',
+    category: 'Pegunungan',
+    tripType: 'PRIVATE',
+    duration: '3D2N',
+    price: 1250000,
+    originalPrice: 1500000,
+    imageUrl: 'https://images.unsplash.com/photo-1542898939-5e5f385c5dfa?w=400'
   },
+  {
+    id: '2',
+    tourCode: 'IJN-01',
+    title: 'Open Trip Kawah Ijen Blue Fire',
+    location: 'Banyuwangi',
+    category: 'Pegunungan',
+    tripType: 'OPEN TRIP',
+    duration: '1 Hari',
+    price: 350000,
+    imageUrl: 'https://images.unsplash.com/photo-1517441865-c32f8313bd8a?w=400'
+  },
+  {
+    id: '3',
+    tourCode: 'MLG-01',
+    title: 'Romantic Escape Malang & Batu Tour',
+    location: 'Malang',
+    category: 'Honeymoon',
+    tripType: 'PRIVATE',
+    duration: '3D2N',
+    price: 4500000,
+    originalPrice: 5000000,
+    imageUrl: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400'
+  }
 ];
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-900 font-sans">
       
-      {/* Hero Section */}
-      <section className="relative w-full h-[85vh] min-h-[600px] flex items-center justify-center pt-20">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-slate-900/60 z-10"></div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img 
-            src="https://images.unsplash.com/photo-1518090597335-e6f7783ee855?w=1600&q=80" 
-            alt="Cinematic Mount Bromo landscape" 
-            className="w-full h-full object-cover"
-          />
-        </div>
-        
-        <div className="relative z-20 text-center px-4 max-w-4xl mx-auto -mt-20">
-          <span className="inline-block py-1 px-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white text-sm font-semibold mb-6 animate-fade-in">
-            Premium Tour Experiences in Indonesia
-          </span>
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-white tracking-tight mb-8 leading-tight">
-            Find Your Next <br /> <span className="text-brand-accent">Adventure</span>
-          </h1>
-          <p className="text-lg md:text-xl text-slate-200 max-w-2xl mx-auto font-medium leading-relaxed drop-shadow-sm">
-            Discover breathtaking landscapes and exclusive private tours curated for the ultimate enterprise-class experience.
-          </p>
-        </div>
+      {/* Hero Slider Section */}
+      <HeroSlider />
 
-        {/* Floating Quick Search Bar (overlaps bottom of hero) */}
-        <div className="absolute bottom-0 left-0 right-0 transform translate-y-1/2 z-30 px-4">
-          <div className="max-w-5xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2 sm:p-4">
-            <form action="/tours" method="GET" className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-              <div className="p-3 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700">
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Location</label>
-                <input type="text" name="location" placeholder="Where to?" className="w-full bg-transparent text-slate-900 dark:text-white font-medium focus:outline-none placeholder-slate-400" />
-              </div>
-              <div className="p-3 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700">
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Type</label>
-                <select name="type" className="w-full bg-transparent text-slate-900 dark:text-white font-medium focus:outline-none appearance-none cursor-pointer">
-                  <option value="">All Types</option>
-                  <option value="Open Trip">Open Trip</option>
-                  <option value="Private Trip">Private Trip</option>
-                </select>
-              </div>
-              <div className="p-3 border-b md:border-b-0 md:border-r md:border-transparent">
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Date</label>
-                <input type="date" name="date" className="w-full bg-transparent text-slate-900 dark:text-white font-medium focus:outline-none" />
-              </div>
-              <div className="p-2 h-full">
-                <button type="submit" className="w-full h-full min-h-[48px] bg-brand-primary hover:bg-brand-primary-dark text-white font-bold rounded-xl transition-all duration-300 shadow-lg shadow-brand-primary/20 flex items-center justify-center gap-2">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                  Search
-                </button>
-              </div>
-            </form>
+      {/* Floating Search Filter */}
+      <SearchFilter />
+
+      {/* Categories Section */}
+      <section className="py-12 border-b border-white dark:border-slate-800 bg-white dark:bg-slate-900/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center md:justify-center gap-4 sm:gap-8 overflow-x-auto no-scrollbar pb-2 snap-x">
+            {CATEGORIES.map((cat) => (
+              <Link 
+                key={cat.name}
+                href={`/tours?category=${cat.name}`} 
+                className="flex flex-col items-center gap-3 min-w-[80px] snap-center group"
+              >
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent group-hover:border-brand-primary group-hover:bg-brand-primary group-hover:shadow-xl group-hover:shadow-brand-primary/20 flex items-center justify-center text-brand-primary group-hover:text-white text-xl sm:text-2xl transition-all duration-300 transform group-hover:-translate-y-1">
+                  <i className={`fa-solid ${cat.icon} group-hover:rotate-12 transition-transform`}></i>
+                </div>
+                <span className="text-[10px] sm:text-xs font-bold text-slate-600 dark:text-slate-400 group-hover:text-brand-primary text-center leading-tight whitespace-nowrap transition-colors whitespace-pre-line">
+                  {cat.name.replace(' & ', ' &\n')}
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Spacer for floating bar */}
-      <div className="h-40 sm:h-24"></div>
-
-      {/* Trending Destinations Section */}
-      <section className="py-20 bg-slate-50 dark:bg-slate-900 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-            <div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">Trending Destinations</h2>
-              <p className="text-slate-600 dark:text-slate-400 max-w-2xl text-lg">
-                Explore our most sought-after locations curated for uncompromised adventure and comfort.
-              </p>
-            </div>
-            <Link href="/tours" className="hidden md:flex mt-6 md:mt-0 items-center justify-center px-6 py-3 border border-slate-300 dark:border-slate-600 rounded-xl text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-brand-primary transition-all duration-300 group">
-              View All Tours 
-              <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-            </Link>
+      {/* Special Offers Section */}
+      <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-900 dark:text-white tracking-tight flex items-center gap-3">
+              <i className="fa-solid fa-fire text-brand-accent animate-pulse"></i> 
+              Spesial Promo
+            </h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">Jangan lewatkan penawaran terbatas minggu ini.</p>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {TRENDING_DESTINATIONS.map((dest) => (
-              <DestinationCard 
-                key={dest.id}
-                id={dest.id}
-                name={dest.name}
-                image={dest.image}
-                description={dest.description}
-                tourCount={dest.tourCount}
+          <Link href="/promo" className="group text-sm font-bold text-brand-primary hover:text-brand-accent flex items-center gap-1 transition-colors">
+            Lihat Semua <i className="fa-solid fa-arrow-right-long text-[10px] group-hover:translate-x-1 transition-transform"></i>
+          </Link>
+        </div>
+        
+        <div className="flex overflow-x-auto no-scrollbar gap-5 pb-6 snap-x">
+          {SPECIAL_PROMOS.map((promo) => (
+            <Link 
+              key={promo.title}
+              href="/promo" 
+              className="group relative rounded-2xl overflow-hidden h-44 sm:h-56 min-w-[300px] sm:min-w-[400px] shadow-lg border border-slate-100 dark:border-slate-800 flex-shrink-0 snap-center transition-all duration-500 hover:shadow-2xl"
+            >
+              <img 
+                src={promo.image} 
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                alt={promo.title}
               />
-            ))}
-          </div>
+              <div className={`absolute inset-0 bg-gradient-to-r ${promo.color} to-transparent opacity-90`}></div>
+              
+              {/* Hover Glow */}
+              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-[1px]"></div>
 
-          <div className="mt-12 text-center md:hidden">
-            <Link href="/tours" className="inline-flex items-center justify-center px-6 py-3 border border-slate-300 dark:border-slate-600 rounded-xl text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300 w-full sm:w-auto text-lg">
-              Explore All Tours
+              <div className="relative z-10 p-6 flex flex-col justify-center h-full text-white w-2/3">
+                <span className="bg-brand-accent text-white text-[10px] sm:text-xs font-bold px-3 py-1 rounded-lg shadow-lg mb-3 w-max flex items-center gap-1.5 backdrop-blur-md">
+                  <i className="fa-solid fa-tag"></i> {promo.discount}
+                </span>
+                <h3 className="font-extrabold text-lg sm:text-2xl leading-tight mb-2 drop-shadow-md">{promo.title}</h3>
+                {promo.validUntil ? (
+                  <p className="text-xs text-white/70 font-medium flex items-center gap-1.5 uppercase tracking-wider">
+                    <i className="fa-regular fa-clock"></i> Berlaku s/d {promo.validUntil}
+                  </p>
+                ) : (
+                  <p className="text-xs text-brand-950 font-bold bg-white/90 px-3 py-1 rounded-lg w-max shadow-sm">
+                    KODE: {promo.code}
+                  </p>
+                )}
+              </div>
+              
+              <div className="absolute bottom-6 right-6 w-10 h-10 rounded-full bg-white text-brand-primary flex items-center justify-center shadow-lg opacity-0 transform translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                <i className="fa-solid fa-arrow-right"></i>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Best Seller Section */}
+      <section className="py-16 sm:py-20 bg-white dark:bg-brand-950/20 border-y border-slate-100 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+            <div>
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-brand-900 dark:text-white mb-2 tracking-tight">Best Seller Packages</h2>
+              <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">Paket liburan paling diminati oleh pelanggan kami di seluruh Indonesia.</p>
+            </div>
+            <Link href="/tours" className="hidden md:flex items-center gap-2 px-6 py-3 border-2 border-slate-100 dark:border-slate-800 rounded-2xl text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-brand-primary transition-all duration-300 group">
+              Lihat Semua Paket 
+              <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
             </Link>
           </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
+            {BEST_SELLERS.map((tour) => (
+              <TourCard key={tour.id} {...tour} />
+            ))}
+            
+            {/* CTA Card for Custom Trip */}
+            <div className="bg-gradient-to-br from-brand-primary to-brand-accent rounded-2xl p-6 flex flex-col justify-between text-white shadow-xl shadow-brand-primary/20 group transform transition-all duration-500 hover:-translate-y-2">
+              <div>
+                <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-6 shadow-sm border border-white/10">
+                  <i className="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-extrabold leading-tight mb-3">Punya Rencana Sendiri?</h3>
+                <p className="text-white/80 text-sm font-medium">Buat itinerary custom sesuai keinginanmu hanya dalam hitungan menit.</p>
+              </div>
+              <Link 
+                href="/planner" 
+                className="mt-8 py-3 bg-white text-brand-primary font-bold text-sm rounded-xl text-center shadow-lg transform group-hover:scale-105 transition-all"
+              >
+                Mulai Rancang Trip
+              </Link>
+            </div>
+          </div>
 
+          <div className="mt-10 text-center md:hidden">
+            <Link href="/tours" className="inline-flex items-center justify-center px-8 py-4 bg-brand-primary text-white font-bold rounded-2xl shadow-lg transition-all w-full">
+              Jelajahi Semua Paket
+            </Link>
+          </div>
         </div>
       </section>
 

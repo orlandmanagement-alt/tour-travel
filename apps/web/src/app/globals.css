@@ -10,9 +10,10 @@
   --color-foreground: var(--foreground);
   --color-brand-primary: #4f46e5; /* indigo-600 */
   --color-brand-primary-dark: #4338ca; /* indigo-700 */
-  --color-brand-accent: #14b8a6; /* teal-500 */
-  --color-brand-accent-dark: #0d9488; /* teal-600 */
-  --font-sans: "Inter", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --color-brand-accent: #f97316; /* orange-500 */
+  --color-brand-accent-dark: #ea580c; /* orange-600 */
+  --font-sans: "Poppins", "Inter", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Lora", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
 @media (prefers-color-scheme: dark) {

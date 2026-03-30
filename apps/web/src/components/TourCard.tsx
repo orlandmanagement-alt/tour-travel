@@ -9,8 +9,11 @@ interface TourCardProps {
   tripType: string;
   duration: string;
   price: number;
+  originalPrice?: number;
+  rating?: number;
+  reviewCount?: number;
   imageUrl?: string;
-  onQuickView?: () => void;
+  onQuickView?: () => void; // <-- Sudah benar!
 }
 
 export default function TourCard({
@@ -22,88 +25,88 @@ export default function TourCard({
   tripType,
   duration,
   price,
-  imageUrl = 'https://images.unsplash.com/photo-1518002171953-a080ee817e1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-  onQuickView
+  originalPrice,
+  rating = 4.9,
+  reviewCount = 120,
+  imageUrl = 'https://images.unsplash.com/photo-1542898939-5e5f385c5dfa?w=400',
+  onQuickView, // <-- JANGAN LUPA PANGGIL DI SINI
 }: TourCardProps) {
-  const formattedPrice = new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-  }).format(price);
+  const formatPrice = (p: number) => {
+    return (p / 1000).toFixed(0) + 'k';
+  };
 
   return (
-    <div className="group flex flex-col bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 hover:shadow-brand-primary/20 transition-all duration-500 border border-slate-100 dark:border-slate-700">
+    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden hover:shadow-2xl hover:border-brand-primary/30 group transition-all duration-500 flex flex-col relative transform hover:-translate-y-2">
       
+      {/* Duration Badge Top Right */}
+      <div className="absolute top-3 right-3 z-10 bg-brand-primary text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-lg flex items-center gap-1.5 backdrop-blur-md">
+        <i className="fa-regular fa-clock"></i> {duration}
+      </div>
+
       {/* Image Container */}
-      <div className="relative h-64 overflow-hidden">
+      <div className="relative h-40 sm:h-48 overflow-hidden group/image">
         <img 
           src={imageUrl} 
           alt={title} 
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 font-medium" 
         />
-        {/* Overlay gradient on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-        
-        {/* Badges */}
-        <div className="absolute top-4 left-4 flex flex-col gap-2">
-          <span className="px-3 py-1 bg-gradient-to-r from-brand-primary to-brand-primary-dark text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-lg">
-            {tripType}
-          </span>
-          <span className="px-3 py-1 bg-gradient-to-r from-brand-secondary to-brand-secondary-dark text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-lg">
-            Hot Deal
-          </span>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          
+          {/* TOMBOL QUICK VIEW MUNCUL SAAT HOVER GAMBAR */}
+          {onQuickView && (
+            <button 
+              onClick={onQuickView}
+              className="translate-y-4 group-hover:translate-y-0 transition-all duration-300 bg-white/20 hover:bg-white text-white hover:text-brand-primary backdrop-blur-sm border border-white/50 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg"
+            >
+              <i className="fa-regular fa-eye"></i> Quick View
+            </button>
+          )}
+
         </div>
-        
-        <div className="absolute bottom-4 right-4 flex space-x-2">
-          <div className="px-3 py-1 glass text-white text-xs font-medium rounded-full flex items-center shadow-lg">
-             ⏱ {duration}
-          </div>
-        </div>
-        
-        {/* Hover Quick View Button */}
-        {onQuickView && (
-          <button 
-            onClick={(e) => { e.preventDefault(); onQuickView(); }}
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-brand-primary font-bold py-3 px-6 rounded-full opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 shadow-xl hover:bg-brand-primary hover:text-white"
-          >
-            Quick View
-          </button>
-        )}
+        <span className={`absolute top-3 left-3 text-[10px] font-extrabold px-2 py-1 rounded-lg shadow-lg backdrop-blur-md ${
+          tripType.toUpperCase() === 'PRIVATE' ? 'bg-white/90 text-brand-accent' : 'bg-white/90 text-brand-primary'
+        }`}>
+          {tripType.toUpperCase()}
+        </span>
       </div>
 
-      {/* Content Container */}
-      <div className="flex flex-col flex-grow p-5">
-        <div className="flex items-center text-xs font-medium text-slate-500 dark:text-slate-400 mb-2 space-x-2">
-          <span className="flex items-center text-brand-secondary">📍 <span className="ml-1 text-slate-500 dark:text-slate-400">{location}</span></span>
-          <span>•</span>
+      {/* Content */}
+      <div className="p-4 sm:p-5 flex flex-col flex-grow group-hover:bg-brand-primary/5 transition-colors duration-500">
+        <div className="flex items-center gap-2 text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 mb-2">
+          <i className="fa-solid fa-location-dot text-brand-primary"></i> 
+          <span>Start {location}</span>
+          <span className="mx-1">•</span>
           <span className="text-brand-primary">{category}</span>
         </div>
         
-        <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2 line-clamp-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-brand-primary group-hover:to-brand-secondary transition-all">
+        <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base mb-2 line-clamp-2 leading-tight group-hover:text-brand-primary transition-colors">
           {title}
         </h3>
         
-        <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 line-clamp-2">
-          Experience the best of {location} with our carefully curated {category.toLowerCase()} tour. Code: {tourCode}
-        </p>
+        <div className="flex items-center gap-1.5 mb-4">
+          <i className="fa-solid fa-star text-[10px] sm:text-xs text-yellow-500"></i>
+          <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{rating}</span>
+          <span className="text-[10px] text-slate-400 dark:text-slate-500">({reviewCount})</span>
+        </div>
 
-        {/* Footer info & Action */}
-        <div className="mt-auto flex items-end justify-between border-t border-slate-100 dark:border-slate-700 pt-4">
+        <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-between items-end">
           <div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wider font-semibold">Start from</p>
-            <p className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-secondary to-brand-secondary-dark">
-              {formattedPrice}
+            {originalPrice && (
+              <p className="text-[10px] text-slate-400 line-through mb-0.5">Rp {formatPrice(originalPrice)}</p>
+            )}
+            <p className="text-brand-accent font-extrabold text-sm sm:text-lg leading-none">
+              Rp {formatPrice(price)}<span className="text-[10px] font-semibold text-slate-400 ml-1">/pax</span>
             </p>
           </div>
+          
           <Link 
             href={`/tours/${id}`}
-            className="px-5 py-2.5 bg-slate-100 dark:bg-slate-700 group-hover:bg-gradient-to-r group-hover:from-brand-primary group-hover:to-brand-primary-dark group-hover:text-white text-slate-700 dark:text-slate-200 text-sm font-bold rounded-xl shadow-sm hover:shadow-md transition-all"
+            className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-brand-primary/10 text-brand-primary flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all duration-300 shadow-sm transform hover:rotate-12"
           >
-            Details
+            <i className="fa-solid fa-chevron-right text-xs"></i>
           </Link>
         </div>
       </div>
-      
     </div>
   );
 }

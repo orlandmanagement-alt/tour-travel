@@ -7,11 +7,11 @@ interface PriceCalculatorProps {
   tourData: any;
 }
 
-export default function PriceCalculator({ tourData }: PriceCalculatorProps) {
+export default function StickyBookingWidget({ tourData }: PriceCalculatorProps) {
   const router = useRouter();
   
   const [date, setDate] = useState<string>('');
-  const [pax, setPax] = useState<number>(1);
+  const [pax, setPax] = useState<number>(2);
   const [selectedAddons, setSelectedAddons] = useState<any[]>([]);
   
   const [total, setTotal] = useState<number>(0);
@@ -22,7 +22,11 @@ export default function PriceCalculator({ tourData }: PriceCalculatorProps) {
   });
 
   const formatPrice = (val: number) => {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val);
+    return new Intl.NumberFormat('id-ID', { 
+      style: 'currency', 
+      currency: 'IDR', 
+      minimumFractionDigits: 0 
+    }).format(val);
   };
 
   useEffect(() => {
@@ -30,32 +34,35 @@ export default function PriceCalculator({ tourData }: PriceCalculatorProps) {
 
     let base = 0;
     
-    // Base Price logic
-    if (tourData.trip_type_id === 2 && tourData.pricing_tiers?.length > 0) { // Private Trip
-      const tier = tourData.pricing_tiers.find((t: any) => pax >= t.min_pax && pax <= t.max_pax);
+    // Base Price logic (assuming tourData.base_price is per pax for Private Trip with tiers)
+    // If it's Private Trip, use tiers or base_price
+    if (tourData.trip_type && tourData.trip_type.toUpperCase() === 'PRIVATE') {
+      const tier = tourData.pricing_tiers?.find((t: any) => pax >= t.min_pax && pax <= t.max_pax);
       if (tier) {
         base = tier.price_per_pax * pax;
       } else {
-        base = tourData.base_price * pax;
+        // Simple logic for simulation if no tiers: slightly cheaper for more pax
+        let pricePerPax = tourData.base_price;
+        if (pax >= 4) pricePerPax *= 0.8;
+        else if (pax >= 3) pricePerPax *= 0.9;
+        else if (pax === 1) pricePerPax *= 1.8;
+        base = pricePerPax * pax;
       }
     } else {
+      // Open Trip usually flat per pax
       base = tourData.base_price * pax;
     }
 
     // Addons
     let addonsTotal = 0;
     selectedAddons.forEach(addon => {
-      const dbAddon = tourData.addons.find((a: any) => a.id === addon.id);
+      const dbAddon = tourData.addons?.find((a: any) => a.id === addon.id);
       if (dbAddon) {
-        if (dbAddon.charge_type === 'per_pax') {
-           addonsTotal += dbAddon.price * addon.quantity;
-        } else {
-           addonsTotal += dbAddon.price * addon.quantity;
-        }
+        addonsTotal += dbAddon.price * addon.quantity;
       }
     });
 
-    // Surcharges (simplified for client-side demo)
+    // Surcharges
     let surchargeTotal = 0;
     if (date && tourData.surcharges?.length > 0) {
       const travelDate = new Date(date);
@@ -65,7 +72,6 @@ export default function PriceCalculator({ tourData }: PriceCalculatorProps) {
          if (travelDate >= start && travelDate <= end) {
             if (s.surcharge_type === 'flat_fee') surchargeTotal += s.surcharge_amount;
             else if (s.surcharge_type === 'per_pax') surchargeTotal += s.surcharge_amount * pax;
-            else if (s.surcharge_type === 'percentage') surchargeTotal += (base * s.surcharge_amount) / 100;
          }
       });
     }
@@ -75,31 +81,9 @@ export default function PriceCalculator({ tourData }: PriceCalculatorProps) {
     
   }, [pax, selectedAddons, date, tourData]);
 
-  const toggleAddon = (addonId: number, name: string) => {
-    const existing = selectedAddons.find(a => a.id === addonId);
-    if (existing) {
-      setSelectedAddons(prev => prev.filter(a => a.id !== addonId));
-    } else {
-      // Default quantity to total pax if per_pax, otherwise 1
-      const dbAddon = tourData.addons.find((a: any) => a.id === addonId);
-      const qty = dbAddon?.charge_type === 'per_pax' ? pax : 1;
-      setSelectedAddons(prev => [...prev, { id: addonId, name, quantity: qty }]);
-    }
-  };
-
-  const updateAddonQty = (addonId: number, delta: number) => {
-    setSelectedAddons(prev => prev.map(a => {
-      if (a.id === addonId) {
-        const newQty = Math.max(1, a.quantity + delta);
-        return { ...a, quantity: newQty };
-      }
-      return a;
-    }));
-  };
-
   const handleCheckout = () => {
     if (!date) {
-      alert('Please select a travel date');
+      alert('Silakan pilih tanggal keberangkatan');
       return;
     }
     
@@ -113,7 +97,6 @@ export default function PriceCalculator({ tourData }: PriceCalculatorProps) {
       grand_total: total
     };
     
-    // Save to localStorage or session for the checkout page
     sessionStorage.setItem('checkoutPayload', JSON.stringify(checkoutPayload));
     router.push('/checkout');
   };
@@ -121,131 +104,127 @@ export default function PriceCalculator({ tourData }: PriceCalculatorProps) {
   if (!tourData) return null;
 
   return (
-    <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 sticky top-24">
-      <h3 className="text-xl font-bold mb-6 text-slate-800 dark:text-slate-100">Price Calculator</h3>
-      
-      <div className="space-y-6">
-        {/* Date Selection */}
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Travel Date</label>
-          <input 
-            type="date"
-            min={new Date().toISOString().split('T')[0]}
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-brand-primary dark:bg-slate-700 outline-none"
-          />
-        </div>
-
-        {/* Pax Selection */}
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Number of Participants</label>
-          <div className="flex items-center space-x-4">
-            <button 
-              type="button"
-              onClick={() => setPax(p => Math.max(1, p - 1))}
-              className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex justify-center items-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 font-bold"
-            >
-              -
-            </button>
-            <span className="text-lg font-bold w-12 text-center text-slate-800 dark:text-white">{pax}</span>
-            <button 
-              type="button"
-              onClick={() => setPax(p => p + 1)}
-              className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex justify-center items-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 font-bold"
-            >
-              +
-            </button>
-          </div>
-          {tourData.trip_type_id === 2 && (
-            <p className="text-xs text-brand-primary mt-2 flex items-center">
-               <svg className="w-4 h-4 mr-1 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-               Private Trip: Price per pax reduces as group size increases
-            </p>
-          )}
-        </div>
-
-        {/* Addons Selection */}
-        {tourData.addons?.length > 0 && (
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Add-ons</label>
-            <div className="space-y-3">
-              {tourData.addons.map((addon: any) => {
-                const isSelected = selectedAddons.some(a => a.id === addon.id);
-                const selectedAddon = selectedAddons.find(a => a.id === addon.id);
-
-                return (
-                  <div key={addon.id} className={`p-3 rounded-xl border transition-colors ${isSelected ? 'border-brand-primary bg-brand-primary/5 dark:bg-brand-primary/10' : 'border-slate-200 dark:border-slate-700'}`}>
-                    <label className="flex items-start cursor-pointer">
-                      <div className="flex items-center h-5 mt-1 pointer-events-none">
-                        <input 
-                          type="checkbox" 
-                          checked={isSelected}
-                          onChange={() => toggleAddon(addon.id, addon.addon_name)}
-                          className="w-4 h-4 text-brand-primary focus:ring-brand-primary border-slate-300 rounded" 
-                        />
-                      </div>
-                      <div className="ml-3 flex-1 flex flex-col pointer-events-none">
-                        <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{addon.addon_name}</span>
-                        <span className="text-xs text-slate-500">{formatPrice(addon.price)} · {addon.charge_type === 'per_pax' ? 'Per Person' : 'Per Group'}</span>
-                      </div>
-                    </label>
-
-                    {/* Addon Qty selector if selected */}
-                    {isSelected && (
-                       <div className="ml-7 mt-2 flex items-center space-x-3">
-                         <span className="text-xs text-slate-500">Qty:</span>
-                         <button onClick={() => updateAddonQty(addon.id, -1)} className="w-6 h-6 rounded bg-slate-200 dark:bg-slate-600 flex justify-center items-center text-xs">-</button>
-                         <span className="text-xs font-bold w-4 text-center">{selectedAddon?.quantity}</span>
-                         <button onClick={() => updateAddonQty(addon.id, 1)} className="w-6 h-6 rounded bg-slate-200 dark:bg-slate-600 flex justify-center items-center text-xs">+</button>
-                       </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Summary Breakdown */}
-        <div className="pt-4 border-t border-slate-200 dark:border-slate-700 space-y-2">
-          <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
-            <span>Base Price ({pax} Pax)</span>
-            <span>{formatPrice(breakdown.basePrice)}</span>
-          </div>
-          {breakdown.addonsTotal > 0 && (
-            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
-              <span>Add-ons</span>
-              <span>+ {formatPrice(breakdown.addonsTotal)}</span>
-            </div>
-          )}
-          {breakdown.surchargeTotal > 0 && (
-            <div className="flex justify-between text-sm text-amber-600 dark:text-amber-500">
-              <span>High Season Surcharge</span>
-              <span>+ {formatPrice(breakdown.surchargeTotal)}</span>
-            </div>
-          )}
-        </div>
+    <aside className="w-full lg:w-[360px] flex-shrink-0">
+      <div className="sticky top-24 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl p-5 sm:p-6 overflow-hidden">
         
-        {/* Grand Total */}
-        <div className="pt-4 border-t border-slate-200 dark:border-slate-700 flex justify-between items-end">
-           <div>
-             <p className="text-sm font-bold text-slate-800 dark:text-slate-100">Total Price</p>
-             <p className="text-xs text-slate-500">Taxes & fees included</p>
-           </div>
-           <p className="text-2xl font-bold text-brand-secondary-dark dark:text-brand-secondary">
-             {formatPrice(total)}
-           </p>
+        {/* Header Pricing */}
+        <div className="mb-6 pb-6 border-b border-slate-100 dark:border-slate-700">
+          <div className="flex justify-between items-center mb-2">
+            <span className="bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider">
+              Hemat s/d 20%
+            </span>
+            <p className="text-slate-400 text-sm line-through font-medium">{formatPrice(tourData.base_price * 1.2)}</p>
+          </div>
+          <div className="flex items-end gap-1.5">
+            <h2 className="text-3xl font-black text-brand-primary leading-none">
+              {formatPrice(total / pax || tourData.base_price)}
+            </h2>
+            <span className="text-sm font-bold text-slate-500 mb-1">/ pax</span>
+          </div>
+          <p className="text-[10px] font-bold text-slate-400 mt-2 flex items-center gap-1.5">
+            <i className="fa-solid fa-circle-info text-blue-400"></i> Harga bervariasi sesuai jumlah peserta.
+          </p>
         </div>
 
-        {/* CTA */}
-        <button 
-          onClick={handleCheckout}
-          className="w-full py-4 mt-4 bg-brand-primary hover:bg-brand-primary-dark text-white rounded-xl font-bold text-lg shadow-lg shadow-brand-primary/30 transition-all hover:-translate-y-1"
-        >
-          Proceed to Checkout
-        </button>
+        {/* Form Container */}
+        <div className="space-y-5">
+          
+          {/* Date Picker */}
+          <div>
+            <label className="block text-xs font-black text-slate-700 dark:text-slate-200 mb-2 uppercase tracking-wide">Tanggal Keberangkatan</label>
+            <div className="relative group">
+              <i className="fa-regular fa-calendar absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-primary text-sm transition-colors"></i>
+              <input 
+                type="date"
+                min={new Date().toISOString().split('T')[0]}
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-brand-primary/20 rounded-2xl focus:ring-4 focus:ring-brand-primary/5 outline-none text-sm font-bold text-slate-800 dark:text-white cursor-pointer transition-all"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Pax Counter */}
+          <div>
+            <label className="block text-xs font-black text-slate-700 dark:text-slate-200 mb-2 uppercase tracking-wide">Jumlah Peserta</label>
+            <div className="flex items-center justify-between p-1.5 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-inner">
+              <button 
+                onClick={() => setPax(p => Math.max(1, p - 1))}
+                className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-white flex items-center justify-center hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all active:scale-90"
+              >
+                <i className="fa-solid fa-minus text-xs"></i>
+              </button>
+              <div className="flex flex-col items-center">
+                <span className="text-xl font-black text-slate-900 dark:text-white">{pax}</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Peserta</span>
+              </div>
+              <button 
+                onClick={() => setPax(p => p + 1)}
+                className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-white flex items-center justify-center hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all active:scale-90"
+              >
+                <i className="fa-solid fa-plus text-xs"></i>
+              </button>
+            </div>
+          </div>
+
+          {/* Price Breakdown */}
+          <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 border-dashed space-y-2">
+            <div className="flex justify-between text-xs font-bold text-slate-500">
+              <span>Total Harga:</span>
+              <span className="text-base font-black text-slate-900 dark:text-white">{formatPrice(total)}</span>
+            </div>
+            {breakdown.surchargeTotal > 0 && (
+              <div className="flex justify-between text-[10px] font-bold text-brand-accent">
+                <span>High Season Surcharge:</span>
+                <span>+ {formatPrice(breakdown.surchargeTotal)}</span>
+              </div>
+            )}
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="space-y-3 pt-2">
+            <button 
+              onClick={handleCheckout}
+              className="w-full py-4 bg-brand-primary hover:bg-brand-primary-dark text-white font-black text-sm rounded-2xl shadow-xl shadow-brand-primary/20 transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2"
+            >
+              Pesan Sekarang <i className="fa-solid fa-arrow-right-long text-xs"></i>
+            </button>
+            
+            <a 
+              href="https://wa.me/628123456789" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3 bg-white dark:bg-slate-800 border-2 border-emerald-500 text-emerald-600 dark:text-emerald-500 font-black text-sm rounded-2xl flex items-center justify-center gap-2 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-all"
+            >
+              <i className="fa-brands fa-whatsapp text-lg"></i> Hubungi Admin
+            </a>
+          </div>
+
+          {/* Trust Badges */}
+          <div className="grid grid-cols-3 gap-2 pt-6 border-t border-slate-100 dark:border-slate-700 text-center">
+            <div className="space-y-1.5">
+              <div className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto">
+                <i className="fa-solid fa-shield-halved text-xs"></i>
+              </div>
+              <p className="text-[8px] font-black text-slate-500 uppercase tracking-tighter">Aman</p>
+            </div>
+            <div className="space-y-1.5">
+              <div className="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto">
+                <i className="fa-solid fa-headset text-xs"></i>
+              </div>
+              <p className="text-[8px] font-black text-slate-500 uppercase tracking-tighter">Support</p>
+            </div>
+            <div className="space-y-1.5">
+              <div className="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto">
+                <i className="fa-solid fa-money-bill-transfer text-xs"></i>
+              </div>
+              <p className="text-[8px] font-black text-slate-500 uppercase tracking-tighter">Transparan</p>
+            </div>
+          </div>
+
+        </div>
       </div>
-    </div>
+    </aside>
   );
 }

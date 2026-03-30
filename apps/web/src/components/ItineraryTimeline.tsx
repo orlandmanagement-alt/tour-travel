@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 
 interface ItineraryItem {
   id: string | number;
@@ -14,55 +16,59 @@ interface ItineraryTimelineProps {
 }
 
 export default function ItineraryTimeline({ itineraries }: ItineraryTimelineProps) {
-  if (!itineraries || itineraries.length === 0) return null;
+  const [openItems, setOpenItems] = useState<Record<string | number, boolean>>({
+    [itineraries[0]?.id]: true // Open first item by default
+  });
 
-  // Group by day_number
-  const days = itineraries.reduce((acc, current) => {
-    let dayGroup = acc.find((g: any) => g.day === current.day_number);
-    if (!dayGroup) {
-      dayGroup = { day: current.day_number, items: [] };
-      acc.push(dayGroup);
-    }
-    dayGroup.items.push(current);
-    return acc;
-  }, [] as { day: number; items: ItineraryItem[] }[]);
+  const toggleItem = (id: string | number) => {
+    setOpenItems(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
+  if (!itineraries || itineraries.length === 0) return null;
 
   return (
     <div className="w-full">
-      {days.map((dayGroup: any) => (
-        <div key={dayGroup.day} className="mb-10 last:mb-0">
-          
-          <div className="inline-block px-4 py-2 bg-slate-900 dark:bg-slate-700 text-white font-extrabold rounded-lg shadow-sm tracking-wide mb-8 uppercase text-sm">
-            Day {dayGroup.day}
-          </div>
+      <div className="space-y-4 relative before:absolute before:inset-y-0 before:left-[15px] before:w-0.5 before:bg-slate-200 dark:before:bg-slate-700 pl-8 ml-2">
+        {itineraries.map((item, index) => {
+          const isOpen = openItems[item.id];
+          const isAccent = index === 3; // Example: highlight some items with accent color like in HTML reference
 
-          <div className="relative border-l-2 border-slate-200 dark:border-slate-700 ml-4 lg:ml-6 space-y-8">
-            {dayGroup.items.map((item: ItineraryItem) => (
-              <div key={item.id} className="relative group w-full pl-6 md:pl-10">
-                {/* Timeline node dot */}
-                <div className="absolute -left-[9px] top-6 w-4 h-4 rounded-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 group-hover:border-brand-primary group-hover:scale-125 group-hover:shadow-[0_0_15px_rgba(79,70,229,0.5)] transition-all duration-300"></div>
-                
-                {/* Card Container */}
-                <div className="bg-white dark:bg-slate-800/50 p-5 md:p-6 rounded-2xl border border-slate-100 dark:border-slate-700 group-hover:shadow-xl group-hover:-translate-y-1 group-hover:border-brand-primary/30 transition-all duration-300">
-                  <div className="flex flex-col md:flex-row md:items-center gap-3 mb-3">
-                    <span className="inline-flex max-w-min whitespace-nowrap bg-blue-50 dark:bg-blue-900/30 text-brand-primary dark:text-blue-300 px-3 py-1.5 rounded-lg text-xs font-bold font-mono tracking-tight items-center shadow-sm">
-                      <svg className="w-4 h-4 mr-1.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                      {item.start_time} - {item.end_time}
-                    </span>
-                    <h4 className="text-lg md:text-xl font-extrabold text-slate-900 dark:text-white leading-tight">
+          return (
+            <div key={item.id} className="relative">
+              {/* Timeline Bullet */}
+              <div className={`absolute w-4 h-4 ${isAccent ? 'bg-brand-accent' : 'bg-brand-primary'} rounded-full border-4 border-white dark:border-slate-900 -left-[39px] top-1.5 shadow-sm group-hover:scale-125 transition-transform`}></div>
+              
+              <div className={`bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-sm hover:border-brand-primary/30 transition-all duration-300 group`}>
+                <button 
+                  className="w-full text-left p-4 sm:p-5 flex justify-between items-center focus:outline-none group"
+                  onClick={() => toggleItem(item.id)}
+                >
+                  <div className="flex-1">
+                    <div className={`text-[10px] font-black uppercase tracking-widest mb-1 ${isAccent ? 'text-brand-accent' : 'text-brand-primary'}`}>
+                      {item.start_time} - {item.end_time} WIB
+                    </div>
+                    <h4 className="font-extrabold text-slate-800 dark:text-white text-sm sm:text-base tracking-tight leading-tight group-hover:text-brand-primary transition-colors">
                       {item.activity_title}
                     </h4>
                   </div>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base leading-relaxed">
+                  <i className={`fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-300 ${isOpen ? 'rotate-180 text-brand-primary' : ''}`}></i>
+                </button>
+                
+                <div 
+                  className={`transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'max-h-96 opacity-100 py-4 px-5 border-t border-slate-50 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30' : 'max-h-0 opacity-0'}`}
+                >
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
                     {item.activity_description}
                   </p>
                 </div>
               </div>
-            ))}
-          </div>
-
-        </div>
-      ))}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

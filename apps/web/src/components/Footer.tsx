@@ -2,73 +2,98 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-900 text-white pt-20 pb-10 border-t border-slate-800">
+    <footer className="bg-brand-950 text-white pt-16 pb-8 border-t-[4px] border-brand-accent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12 border-b border-white/10 pb-12">
+          
+          {/* Brand Col */}
+          <div className="lg:col-span-2 space-y-6">
             <Link href="/" className="font-extrabold text-2xl tracking-tighter flex items-center gap-2">
-              <span className="w-8 h-8 rounded-lg bg-brand-primary text-white flex items-center justify-center">N</span>
-              NusantaraTrip
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent text-white flex items-center justify-center shadow-lg">
+                <i className="fa-solid fa-paper-plane text-sm"></i>
+              </div>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">NusaTrip</span>
             </Link>
-            <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-              Your trusted partner for enterprise-grade travel experiences across Indonesia. We deliver exceptional adventures with uncompromised quality and service.
+            <p className="text-slate-400 text-sm leading-relaxed max-w-sm font-medium">
+              Platform travel terpercaya tingkat enterprise. Kami memberikan pengalaman liburan tanpa kompromi untuk private trip, corporate, dan rental kendaraan di seluruh Indonesia.
             </p>
-            <div className="flex space-x-4">
-              {/* Social Icons Mock */}
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-brand-primary hover:text-white transition-all duration-300">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" /></svg>
+            <div className="flex space-x-3 pt-2">
+              <a href="#" className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-brand-primary hover:text-white hover:border-transparent transition-all duration-300 group">
+                <i className="fa-brands fa-facebook-f text-sm group-hover:scale-110 transition-transform"></i>
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-brand-primary hover:text-white transition-all duration-300">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" /></svg>
+              <a href="#" className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-brand-primary hover:text-white hover:border-transparent transition-all duration-300 group">
+                <i className="fa-brands fa-instagram text-sm group-hover:scale-110 transition-transform"></i>
+              </a>
+              <a href="#" className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-brand-primary hover:text-white hover:border-transparent transition-all duration-300 group">
+                <i className="fa-brands fa-tiktok text-sm group-hover:scale-110 transition-transform"></i>
+              </a>
+              <a href="#" className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-brand-primary hover:text-white hover:border-transparent transition-all duration-300 group">
+                <i className="fa-brands fa-youtube text-sm group-hover:scale-110 transition-transform"></i>
               </a>
             </div>
           </div>
 
+          {/* Links Col 1: Perusahaan */}
           <div>
-            <h3 className="text-white font-bold mb-6 text-lg tracking-tight">Company</h3>
-            <ul className="space-y-4 text-slate-400 text-sm font-medium">
-              <li><Link href="/about" className="hover:text-brand-accent transition-colors">About Us</Link></li>
-              <li><Link href="/careers" className="hover:text-brand-accent transition-colors">Careers</Link></li>
-              <li><Link href="/blog" className="hover:text-brand-accent transition-colors">Travel Blog</Link></li>
-              <li><Link href="/contact" className="hover:text-brand-accent transition-colors">Contact Support</Link></li>
+            <h3 className="text-white font-bold mb-6 text-sm flex items-center gap-2">
+              <span className="w-1.5 h-4 bg-brand-accent rounded-full inline-block"></span>
+              Perusahaan
+            </h3>
+            <ul className="space-y-3.5 text-slate-400 text-sm font-medium">
+              <li><Link href="/corporate" className="hover:text-brand-accent transition-colors flex items-center gap-2 group"><i className="fa-solid fa-angle-right text-[10px] opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all"></i> Tentang Kami</Link></li>
+              <li><Link href="/blog" className="hover:text-brand-accent transition-colors flex items-center gap-2 group"><i className="fa-solid fa-angle-right text-[10px] opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all"></i> Blog Travel</Link></li>
+              <li><Link href="/faq" className="hover:text-brand-accent transition-colors flex items-center gap-2 group"><i className="fa-solid fa-angle-right text-[10px] opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all"></i> Pusat Bantuan</Link></li>
+              <li><Link href="/contact" className="hover:text-brand-accent transition-colors flex items-center gap-2 group"><i className="fa-solid fa-angle-right text-[10px] opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all"></i> Hubungi Kami</Link></li>
             </ul>
           </div>
 
+          {/* Links Col 2: Layanan */}
           <div>
-            <h3 className="text-white font-bold mb-6 text-lg tracking-tight">Destinations</h3>
-            <ul className="space-y-4 text-slate-400 text-sm font-medium">
-              <li><Link href="/tours?location=BMO" className="hover:text-brand-accent transition-colors">Mount Bromo</Link></li>
-              <li><Link href="/tours?location=BWI" className="hover:text-brand-accent transition-colors">Ijen Crater</Link></li>
-              <li><Link href="/tours?location=MLG" className="hover:text-brand-accent transition-colors">Malang City</Link></li>
-              <li><Link href="/tours?location=BALI" className="hover:text-brand-accent transition-colors">Bali Explorer</Link></li>
+            <h3 className="text-white font-bold mb-6 text-sm flex items-center gap-2">
+              <span className="w-1.5 h-4 bg-brand-accent rounded-full inline-block"></span>
+              Layanan
+            </h3>
+            <ul className="space-y-3.5 text-slate-400 text-sm font-medium">
+              <li><Link href="/tours" className="hover:text-brand-accent transition-colors flex items-center gap-2 group"><i className="fa-solid fa-angle-right text-[10px] opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all"></i> Semua Paket Tour</Link></li>
+              <li><Link href="/destinations" className="hover:text-brand-accent transition-colors flex items-center gap-2 group"><i className="fa-solid fa-angle-right text-[10px] opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all"></i> Jelajah Destinasi</Link></li>
+              <li><Link href="/planner" className="hover:text-brand-accent transition-colors flex items-center gap-2 group"><i className="fa-solid fa-angle-right text-[10px] opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all"></i> Trip Planner</Link></li>
+              <li><Link href="/corporate" className="hover:text-brand-accent transition-colors flex items-center gap-2 group"><i className="fa-solid fa-angle-right text-[10px] opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all"></i> B2B Corporate</Link></li>
             </ul>
           </div>
 
+          {/* Payment & Secure Col */}
           <div>
-            <h3 className="text-white font-bold mb-6 text-lg tracking-tight">Newsletter</h3>
-            <p className="text-slate-400 text-sm mb-4">Subscribe to our newsletter for exclusive travel offers and updates.</p>
-            <form className="flex flex-col gap-2">
-              <input 
-                type="email" 
-                placeholder="Enter your email" 
-                className="bg-slate-800 border border-slate-700 text-white px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary transition-all duration-300 w-full"
-                required
-              />
-              <button 
-                type="submit" 
-                className="bg-brand-primary hover:bg-brand-primary-dark text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 w-full"
-              >
-                Subscribe
-              </button>
-            </form>
+            <h3 className="text-white font-bold mb-6 text-sm flex items-center gap-2">
+              <span className="w-1.5 h-4 bg-brand-accent rounded-full inline-block"></span>
+              Pembayaran Aman
+            </h3>
+            <div className="flex flex-wrap gap-2.5 mb-6">
+              <div className="bg-white px-2 py-1.5 rounded-lg text-brand-900 shadow-sm flex items-center justify-center transition-transform hover:scale-105 group"><i className="fa-brands fa-cc-visa text-blue-800 text-xl"></i></div>
+              <div className="bg-white px-2 py-1.5 rounded-lg text-brand-900 shadow-sm flex items-center justify-center transition-transform hover:scale-105 group"><i className="fa-brands fa-cc-mastercard text-red-600 text-xl"></i></div>
+              <div className="bg-white px-2 py-1.5 rounded-lg text-brand-900 shadow-sm flex items-center justify-center transition-transform hover:scale-105 group"><i className="fa-brands fa-cc-jcb text-emerald-700 text-xl"></i></div>
+              <div className="bg-white px-2.5 py-1.5 rounded-lg text-brand-950 text-[10px] font-extrabold shadow-sm flex items-center transition-transform hover:scale-105">BCA</div>
+              <div className="bg-white px-2.5 py-1.5 rounded-lg text-brand-950 text-[10px] font-extrabold shadow-sm flex items-center transition-transform hover:scale-105">MANDIRI</div>
+            </div>
+            
+            <h3 className="text-white font-bold mb-3 text-[11px] uppercase tracking-widest text-slate-500">Security</h3>
+            <div className="flex gap-2">
+              <div className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1.5 rounded-lg backdrop-blur-sm">
+                <i className="fa-solid fa-shield-check"></i> SSL Secure
+              </div>
+              <div className="flex items-center gap-1.5 text-[10px] font-bold text-blue-400 border border-blue-400/20 bg-blue-400/10 px-2.5 py-1.5 rounded-lg backdrop-blur-sm">
+                <i className="fa-solid fa-badge-check"></i> Verified
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm font-medium">
-          <p>&copy; {new Date().getFullYear()} NusantaraTrip System. All rights reserved.</p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link href="/privacy" className="hover:text-slate-300 transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-slate-300 transition-colors">Terms of Service</Link>
+        {/* Bottom Footer */}
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-slate-500 text-xs font-semibold gap-4">
+          <p className="order-2 md:order-1">© {new Date().getFullYear()} PT Nusantara Trip System. Hak Cipta Dilindungi.</p>
+          <div className="flex space-x-8 order-1 md:order-2">
+            <Link href="/privacy" className="hover:text-white transition-colors duration-300">Kebijakan Privasi</Link>
+            <Link href="/terms" className="hover:text-white transition-colors duration-300">Syarat & Ketentuan</Link>
+            <Link href="/faq" className="hover:text-white transition-colors duration-300">Pusat Bantuan</Link>
           </div>
         </div>
       </div>

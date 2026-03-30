@@ -3,116 +3,171 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-const DUMMY_QR_PAYLOAD = 'NSTR-84021|SARAH|CHEN|BROMO|20261215|PAID';
-
 interface ETicketClientProps {
   bookingRef: string;
 }
 
 export default function ETicketClient({ bookingRef }: ETicketClientProps) {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   if (!mounted) return null;
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center py-12 px-4 print:bg-white print:p-0">
-      <div className="max-w-3xl w-full flex flex-col items-center">
-
-        <div className="w-full flex justify-between mb-8 print:hidden">
-          <Link href="/dashboard" className="text-slate-500 hover:text-brand-primary flex items-center font-bold text-sm transition-colors">
-            <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-            Back to Dashboard
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-950 pb-20 print:bg-white print:pb-0">
+      
+      {/* Action Bar (No Print) */}
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 py-4 shadow-sm sticky top-0 z-50 no-print">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <Link href="/dashboard" className="text-slate-500 dark:text-slate-400 hover:text-brand-primary font-black text-[10px] uppercase tracking-widest flex items-center gap-2 transition-all">
+            <i className="fa-solid fa-arrow-left"></i> Kembali ke Dashboard
           </Link>
-          <button onClick={() => window.print()} className="px-5 py-2 bg-slate-900 text-white text-sm font-bold rounded-xl shadow hover:bg-slate-800 transition flex items-center gap-2">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-            Print Ticket
+          <div className="flex items-center gap-3">
+            <button className="px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-black text-[10px] uppercase tracking-widest rounded-xl transition-all flex items-center gap-2">
+              <i className="fa-solid fa-download opacity-50"></i> Unduh PDF
+            </button>
+            <button 
+              onClick={() => window.print()}
+              className="px-5 py-2.5 bg-brand-primary hover:bg-indigo-700 text-white font-black text-[10px] uppercase tracking-widest rounded-xl shadow-lg shadow-brand-primary/20 transition-all flex items-center gap-2"
+            >
+              <i className="fa-solid fa-print opacity-50"></i> Cetak E-Ticket
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Ticket Container */}
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 mt-8 sm:mt-12 print:mt-0">
+        
+        <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-none overflow-hidden relative border border-slate-100 dark:border-slate-800 print:shadow-none print:border-slate-300 print:rounded-none">
+          
+          {/* Ticket Header */}
+          <div className="bg-slate-900 dark:bg-black text-white p-6 sm:p-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative overflow-hidden">
+            <div className="absolute right-[-20px] top-[-20px] text-9xl opacity-5 rotate-12 pointer-events-none">
+               <i className="fa-solid fa-paper-plane"></i>
+            </div>
+            
+            <div className="relative z-10">
+              <div className="font-black text-2xl tracking-tighter flex items-center gap-3 mb-2 uppercase">
+                <div className="w-10 h-10 rounded-xl bg-brand-primary text-white flex items-center justify-center shadow-lg"><i className="fa-solid fa-paper-plane text-sm"></i></div>
+                NusaTrip
+              </div>
+              <p className="text-[10px] text-slate-400 font-black tracking-[0.3em] uppercase">E-Voucher Perjalanan Resmi</p>
+            </div>
+
+            <div className="text-left sm:text-right relative z-10">
+              <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest mb-1">No. Pesanan</p>
+              <p className="text-2xl sm:text-3xl font-black tabular-nums tracking-wider">{bookingRef || 'INV-20261024-001'}</p>
+              <span className="inline-flex mt-2 bg-emerald-500 text-white text-[9px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">LUNAS / PAID</span>
+            </div>
+          </div>
+
+          {/* Ticket Body */}
+          <div className="flex flex-col md:flex-row relative">
+            
+            {/* Cutouts (Desktop only) */}
+            <div className="hidden md:block absolute left-[-15px] top-1/2 -translate-y-1/2 w-[30px] h-[30px] bg-slate-100 dark:bg-slate-950 rounded-full border-r border-slate-200 dark:border-slate-800 z-20 print:bg-white print:border-slate-300"></div>
+            <div className="hidden md:block absolute right-[-15px] top-1/2 -translate-y-1/2 w-[30px] h-[30px] bg-slate-100 dark:bg-slate-950 rounded-full border-l border-slate-200 dark:border-slate-800 z-20 print:bg-white print:border-slate-300"></div>
+
+            {/* General Info Section */}
+            <div className="flex-1 p-8 sm:p-12">
+              
+              <div className="mb-8">
+                <span className="bg-brand-primary/10 text-brand-primary border border-brand-primary/20 text-[9px] font-black px-3 py-1 rounded-lg shadow-sm mb-3 inline-block uppercase tracking-widest">Private Tour</span>
+                <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight uppercase tracking-tight">
+                  Private Tour Bromo Midnight & Air Terjun Madakaripura
+                </h1>
+              </div>
+
+              <div className="grid grid-cols-2 gap-y-8 gap-x-6 mb-10">
+                {[
+                  { label: 'Tanggal Trip', value: 'Sabtu, 24 Okt 2026', icon: 'fa-regular fa-calendar' },
+                  { label: 'Peserta', value: '2 Dewasa', icon: 'fa-solid fa-users' },
+                  { label: 'Waktu Jemput', value: '00:00 WIB (Tengah Malam)', icon: 'fa-regular fa-clock' },
+                  { label: 'Lokasi Jemput', value: 'Hotel Tugu Malang', icon: 'fa-solid fa-map-pin' }
+                ].map((item, i) => (
+                  <div key={i}>
+                    <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5 flex items-center gap-2">
+                       <i className={`${item.icon} text-brand-primary`}></i> {item.label}
+                    </p>
+                    <p className="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-200 uppercase tracking-tight">{item.value}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="border-t border-slate-100 dark:border-slate-800 pt-8">
+                <h3 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4">Detail Penumpang Utama</h3>
+                <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50 rounded-2xl p-5 flex gap-5 items-center">
+                  <div className="w-12 h-12 rounded-full bg-brand-primary text-white flex items-center justify-center font-black text-lg shadow-lg flex-shrink-0">
+                    BS
+                  </div>
+                  <div>
+                    <p className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">Tn. Budi Santoso</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-bold italic">+62 812-3456-7890 • budi.santoso@email.com</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Separator Line */}
+            <div className="hidden md:block w-px border-l-2 border-dashed border-slate-100 dark:border-slate-800 print:border-slate-300"></div>
+
+            {/* QR Code Section */}
+            <div className="w-full md:w-[280px] p-8 sm:p-12 bg-slate-50 dark:bg-slate-800/30 flex flex-col justify-center items-center text-center print:bg-white print:border-l print:border-slate-300">
+              
+              <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] mb-6">Pindai QR Code</p>
+              
+              <div className="bg-white dark:bg-white p-4 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 mb-6 group hover:scale-105 transition-transform duration-500">
+                <img 
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=NUSA-${bookingRef || 'INV-20261024-001'}`} 
+                  alt="QR Code" 
+                  className="w-32 h-32 sm:w-40 sm:h-40 object-contain"
+                />
+              </div>
+              
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold italic leading-relaxed max-w-[180px]">
+                Tunjukkan QR Code ini kepada Driver atau Tour Guide kami saat penjemputan.
+              </p>
+              
+            </div>
+          </div>
+
+          {/* Ticket Footer */}
+          <div className="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 p-8 sm:p-10">
+            <h3 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-widest mb-5 flex items-center gap-3">
+               <i className="fa-solid fa-circle-info text-amber-500"></i> Informasi Penting
+            </h3>
+            <ul className="space-y-3">
+               {[
+                 'Harap bersiap di lokasi penjemputan 15 menit sebelum waktu keberangkatan.',
+                 'Suhu di Bromo bisa mencapai 5-10°C. Sangat disarankan membawa jaket tebal dan sepatu nyaman.',
+                 'Harga sudah termasuk tiket masuk WNI. Peserta WNA akan ada biaya tambahan tiket di lokasi.',
+                 'Darurat? Hubungi Customer Support 24/7 kami di +62 800-1234-5678.'
+               ].map((note, i) => (
+                 <li key={i} className="text-[11px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-tight flex items-start gap-3">
+                   <span className="w-1.5 h-1.5 rounded-full bg-brand-primary shrink-0 mt-1"></span>
+                   {note}
+                 </li>
+               ))}
+            </ul>
+          </div>
+          
+        </div>
+
+        {/* Global Footer (Outside Ticket) */}
+        <div className="mt-10 text-center no-print">
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Butuh bantuan dengan pesanan Anda?</p>
+          <button className="text-brand-primary font-black text-[10px] uppercase tracking-widest hover:underline transition-all">
+            Hubungi Customer Support <i className="fa-solid fa-headset ml-2"></i>
           </button>
         </div>
 
-        {/* Boarding Pass Card */}
-        <div className="w-full bg-white rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-[0_20px_50px_rgba(0,0,0,0.1)] print:shadow-none print:border print:border-slate-300">
+      </main>
 
-          {/* Left: Main Details */}
-          <div className="flex-1 p-8 md:p-10 relative">
-            <div className="absolute right-0 top-0 opacity-5 pointer-events-none">
-              <svg width="200" height="200" viewBox="0 0 100 100"><path d="M50 0L100 50L50 100L0 50Z" fill="currentColor" /></svg>
-            </div>
-
-            <div className="flex justify-between items-start mb-10 border-b border-slate-100 pb-6 relative z-10">
-              <h1 className="text-3xl font-extrabold text-brand-primary tracking-tighter flex items-center gap-2">
-                <span className="w-8 h-8 rounded bg-brand-primary text-white flex items-center justify-center text-sm">N</span>
-                NSTR <span className="text-slate-300 font-light mx-2">|</span> E-Ticket
-              </h1>
-              <span className="px-3 py-1 bg-emerald-100 text-emerald-800 font-bold border border-emerald-200 rounded text-sm uppercase tracking-wider">Confirmed</span>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-10">
-              <div>
-                <span className="text-xs uppercase tracking-widest text-slate-400 font-bold block mb-1">Passenger</span>
-                <h2 className="text-xl font-bold text-slate-900">Sarah Chen</h2>
-              </div>
-              <div>
-                <span className="text-xs uppercase tracking-widest text-slate-400 font-bold block mb-1">Booking Ref</span>
-                <h2 className="text-xl font-mono font-bold text-slate-900">{bookingRef}</h2>
-              </div>
-              <div className="col-span-2 md:col-span-1">
-                <span className="text-xs uppercase tracking-widest text-slate-400 font-bold block mb-1">Date & Time</span>
-                <h2 className="text-xl font-bold text-slate-900">Dec 15, 2026</h2>
-                <span className="text-sm font-bold text-red-500 mt-1 block">Meetup: 00:30 AM</span>
-              </div>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 relative z-10">
-              <span className="text-xs uppercase tracking-widest text-slate-400 font-bold block mb-2">Destination</span>
-              <h2 className="text-2xl font-extrabold text-slate-900 mb-1">Midnight Bromo Sunrise Premium</h2>
-              <p className="text-slate-600 font-medium">Pickup: Hotel Majapahit Surabaya • Guide: Budi (A012)</p>
-              <div className="mt-4 pt-4 border-t border-slate-200 grid grid-cols-2 gap-4">
-                <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400">Pax</span>
-                  <p className="font-mono font-bold text-lg text-slate-800">2 Guests</p>
-                </div>
-                <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400">Add-ons</span>
-                  <p className="font-bold text-sm text-slate-800 mt-1">• GoPro Rental (1x)</p>
-                </div>
-              </div>
-            </div>
-
-            <p className="mt-8 text-xs text-slate-400">Present this E-Ticket (digital or printed) to your Tour Guide inside the Jeep. Bring warm clothing and gloves.</p>
-          </div>
-
-          {/* Ticket Divider — Punch Holes */}
-          <div className="hidden md:flex flex-col items-center justify-between py-6 relative w-12 shrink-0">
-            <div className="w-8 h-8 rounded-full bg-slate-100 absolute top-[-16px]"></div>
-            <div className="w-0.5 h-full border-l-2 border-dashed border-slate-300 print:border-slate-400"></div>
-            <div className="w-8 h-8 rounded-full bg-slate-100 absolute bottom-[-16px]"></div>
-          </div>
-
-          {/* Mobile Divider */}
-          <div className="flex md:hidden items-center px-6 relative h-12">
-            <div className="w-8 h-8 rounded-full bg-slate-100 absolute left-[-16px]"></div>
-            <div className="w-full h-0.5 border-t-2 border-dashed border-slate-300"></div>
-            <div className="w-8 h-8 rounded-full bg-slate-100 absolute right-[-16px]"></div>
-          </div>
-
-          {/* Right: Stub / QR */}
-          <div className="w-full md:w-80 p-8 md:p-10 bg-brand-primary text-white flex flex-col items-center justify-center shrink-0 print:bg-white print:text-black print:border-l print:border-slate-300">
-            <div className="text-center w-full mb-8">
-              <h3 className="font-extrabold text-2xl tracking-tighter mb-2 print:text-slate-900">BOARDING</h3>
-              <span className="block text-brand-primary-light font-mono text-sm print:text-slate-500">{bookingRef}</span>
-            </div>
-            <div className="bg-white p-4 rounded-xl shadow-inner mb-6 w-48 h-48 flex items-center justify-center print:border-4 print:border-slate-800">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/240px-QR_code_for_mobile_English_Wikipedia.svg.png" alt="QR Code" className="w-full h-full object-contain grayscale" />
-            </div>
-            <div className="text-center w-full">
-              <p className="text-xs font-bold text-brand-primary-light uppercase tracking-widest mb-1 print:text-slate-400">Validation Hash</p>
-              <p className="font-mono text-[10px] text-white/70 break-all print:text-slate-800">{DUMMY_QR_PAYLOAD}</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
     </div>
   );
 }
