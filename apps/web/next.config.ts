@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // Ini akan memaksa Next.js menghasilkan folder 'out'
+  output: 'export', // <--- BARIS PALING PENTING
+  distDir: 'out',   // Memastikan folder output bernama 'out'
   images: {
-    unoptimized: true, // Wajib jika menggunakan output: export
+    unoptimized: true, // Wajib ada untuk mode export statis
   },
 };
 
