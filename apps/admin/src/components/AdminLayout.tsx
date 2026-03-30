@@ -34,13 +34,33 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">Loading...</div>;
   }
 
-  const menuItems = [
-    { name: 'Dashboard', path: '/', icon: '📊' },
-    { name: 'Master Data', path: '/master', icon: '🗃️' },
-    { name: 'Tours', path: '/tours', icon: '🗺️' },
-    { name: 'Bookings', path: '/bookings', icon: '📝' },
-    { name: 'Custom Trips', path: '/custom-trips', icon: '✨' },
-  ];
+  const userRole = typeof window !== 'undefined' ? sessionStorage.getItem('adminRole') || 'SUPER_ADMIN' : 'SUPER_ADMIN';
+
+  type MenuItem = { name: string; path: string; icon: string; roles: string[]; section?: string };
+  const menuItems: MenuItem[] = [
+    // Core Operations
+    { name: 'Dashboard', path: '/', icon: '📊', roles: ['SUPER_ADMIN', 'FINANCE', 'CONTENT_EDITOR'], section: 'Operations' },
+    { name: 'Bookings', path: '/bookings', icon: '📝', roles: ['SUPER_ADMIN', 'FINANCE'], section: 'Operations' },
+    { name: 'Assigned Trips', path: '/trips', icon: '🧭', roles: ['SUPER_ADMIN', 'GUIDE'], section: 'Operations' },
+    // Content
+    { name: 'Tours', path: '/tours', icon: '🗺️', roles: ['SUPER_ADMIN', 'CONTENT_EDITOR'], section: 'Content' },
+    { name: 'Bulk Import', path: '/tours/bulk-import', icon: '📤', roles: ['SUPER_ADMIN', 'CONTENT_EDITOR'], section: 'Content' },
+    { name: 'Master Data', path: '/master', icon: '🗃️', roles: ['SUPER_ADMIN', 'CONTENT_EDITOR'], section: 'Content' },
+    // Intelligence
+    { name: 'Analytics', path: '/analytics', icon: '📈', roles: ['SUPER_ADMIN', 'FINANCE'], section: 'Intelligence' },
+    { name: 'Audit Logs', path: '/audit-logs', icon: '🔍', roles: ['SUPER_ADMIN'], section: 'Intelligence' },
+    // Admin
+    { name: 'Staff & Roles', path: '/users', icon: '👥', roles: ['SUPER_ADMIN'], section: 'Admin' },
+    { name: 'Payment Config', path: '/settings/payments', icon: '💳', roles: ['SUPER_ADMIN'], section: 'Admin' },
+  ].filter(item => item.roles.includes(userRole));
+
+  // Group by section for sidebar rendering
+  const sections = menuItems.reduce<Record<string, MenuItem[]>>((acc, item) => {
+    const s = item.section || 'Other';
+    if (!acc[s]) acc[s] = [];
+    acc[s].push(item);
+    return acc;
+  }, {});
 
   return (
     <div className="min-h-screen flex bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
@@ -55,21 +75,39 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           )}
         </div>
         
-        <nav className="flex-1 py-4 space-y-2 px-3 overflow-y-auto">
-          {menuItems.map((item) => {
-            const isActive = pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path));
-            return (
-              <Link 
-                key={item.path} 
-                href={item.path}
-                className={`flex items-center px-3 py-3 rounded-lg transition-colors ${isActive ? 'bg-brand-accent text-white font-bold shadow-md' : 'text-slate-300 hover:bg-brand-primary-light hover:text-white'}`}
-                title={item.name}
-              >
-                <span className={`text-xl ${isSidebarOpen ? 'mr-3' : 'mx-auto'}`}>{item.icon}</span>
-                {isSidebarOpen && <span>{item.name}</span>}
-              </Link>
-            );
-          })}
+        <nav className="flex-1 py-4 px-3 overflow-y-auto space-y-1">
+          {Object.entries(sections).map(([section, items]) => (
+            <div key={section} className="mb-2">
+              {isSidebarOpen && (
+                <p className="text-[10px] font-extrabold tracking-[0.15em] uppercase text-white/30 px-3 pt-3 pb-1.5 select-none">
+                  {section}
+                </p>
+              )}
+              {items.map((item) => {
+                const isActive = pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path));
+                return (
+                  <Link
+                    key={item.path}
+                    href={item.path}
+                    className={`flex items-center px-3 py-2.5 rounded-xl transition-all duration-200 ${
+                      isActive
+                        ? 'bg-white/15 text-white font-bold shadow-inner backdrop-blur-sm'
+                        : 'text-white/60 hover:bg-white/10 hover:text-white'
+                    }`}
+                    title={item.name}
+                  >
+                    <span className={`text-base ${isSidebarOpen ? 'mr-3' : 'mx-auto'}`}>{item.icon}</span>
+                    {isSidebarOpen && (
+                      <span className="text-sm font-semibold truncate">{item.name}</span>
+                    )}
+                    {isSidebarOpen && isActive && (
+                      <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white"></div>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
         <div className="p-4 border-t border-brand-primary-light">
