@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox & Support | Admin NusantaraTrip</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 900: '#312e81', 950: '#1e1b4b' },
+                        accent: { 500: '#f97316' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        .admin-nav-item { transition: all 0.2s ease; border-left: 3px solid transparent; opacity: 0.7; }
+        .admin-nav-item:hover, .admin-nav-item.active { background-color: rgba(255, 255, 255, 0.05); border-left-color: #f97316; opacity: 1; color: white; }
+        
+        .chat-list-item { transition: background 0.2s; cursor: pointer; border-left: 3px solid transparent; }
+        .chat-list-item:hover { background-color: #f8fafc; }
+        .chat-list-item.active { background-color: #eef2ff; border-left-color: #4f46e5; }
+        
+        /* Chat bubble styles */
+        .bubble-user { background-color: #f1f5f9; border-bottom-left-radius: 4px; }
+        .bubble-admin { background-color: #4f46e5; color: white; border-bottom-right-radius: 4px; }
+        
+        .input-saas { transition: all 0.3s ease; border: 1px solid #e2e8f0; }
+        .input-saas:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); outline: none; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased h-screen flex overflow-hidden bg-slate-50">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-brand-900 text-white flex-shrink-0 hidden md:flex flex-col h-full z-20">
+        <div class="h-16 flex items-center px-6 bg-brand-950">
+            <div class="font-black text-xl tracking-tighter flex items-center gap-2">
+                <div class="w-8 h-8 rounded bg-white text-brand-900 flex items-center justify-center shadow"><i class="fa-solid fa-n text-xs"></i></div>
+                NSTR Admin
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto py-6">
+            <nav class="flex flex-col gap-1 px-3">
+                <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Operations</p>
+                <a href="admin-dashboard.html" class="admin-nav-item px-4 py-2.5 rounded-lg text-sm flex items-center gap-3">
+                    <i class="fa-solid fa-chart-pie w-5 text-center"></i> Dashboard
+                </a>
+                <a href="admin-orders.html" class="admin-nav-item px-4 py-2.5 rounded-lg text-sm flex items-center gap-3">
+                    <i class="fa-solid fa-receipt w-5 text-center"></i> Bookings
+                </a>
+                
+                <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-6 mb-2">Customer Success</p>
+                <!-- MENU AKTIF -->
+                <a href="#" class="admin-nav-item active px-4 py-2.5 rounded-lg text-sm flex items-center gap-3 font-bold">
+                    <i class="fa-solid fa-headset w-5 text-center text-accent-500"></i> Inbox & Support
+                </a>
+                <a href="admin-users.html" class="admin-nav-item px-4 py-2.5 rounded-lg text-sm flex items-center gap-3">
+                    <i class="fa-solid fa-users w-5 text-center"></i> Customers
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT (SPLIT PANE LAYOUT) -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden bg-white">
+        
+        <!-- HEADER -->
+        <header class="h-16 border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 flex-shrink-0 z-10 bg-white">
+            <div class="flex items-center gap-4">
+                <button class="md:hidden text-slate-500"><i class="fa-solid fa-bars-staggered"></i></button>
+                <h2 class="font-extrabold text-slate-800 tracking-tight text-lg">CS Helpdesk</h2>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="bg-green-100 text-green-700 border border-green-200 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 hidden sm:flex">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Online (Accepting Chats)
+                </span>
+                <img src="https://ui-avatars.com/api/?name=CS+Agent&background=e0e7ff&color=4f46e5" class="w-8 h-8 rounded-full border border-slate-200">
+            </div>
+        </header>
+
+        <!-- HELPDESK WORKSPACE -->
+        <div class="flex-1 flex overflow-hidden">
+            
+            <!-- LEFT PANE: TICKET LIST -->
+            <div class="w-full md:w-80 lg:w-96 flex flex-col border-r border-slate-200 bg-white flex-shrink-0" id="inbox-list">
+                
+                <!-- Search & Filters -->
+                <div class="p-4 border-b border-slate-100 bg-slate-50/50">
+                    <div class="relative mb-3">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" placeholder="Cari nama atau ID Tiket..." class="w-full pl-8 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="flex-1 bg-brand-50 text-brand-700 border border-brand-200 text-[10px] font-bold py-1.5 rounded uppercase tracking-wider">Open (3)</button>
+                        <button class="flex-1 bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 text-[10px] font-bold py-1.5 rounded uppercase tracking-wider">Resolved</button>
+                    </div>
+                </div>
+
+                <!-- Chat List Scrollable -->
+                <div class="flex-1 overflow-y-auto">
+                    
+                    <!-- Chat Item 1 (Active) -->
+                    <div class="chat-list-item active p-4 border-b border-slate-100">
+                        <div class="flex justify-between items-start mb-1">
+                            <div class="flex items-center gap-2">
+                                <div class="relative">
+                                    <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=f1f5f9" class="w-8 h-8 rounded-full">
+                                    <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-900 text-xs line-clamp-1">Budi Santoso</p>
+                                    <span class="text-[9px] font-mono text-slate-400">#TK-8891</span>
+                                </div>
+                            </div>
+                            <span class="text-[9px] font-bold text-brand-600">10:45 AM</span>
+                        </div>
+                        <h4 class="text-xs font-bold text-slate-800 mt-2 mb-1 truncate">Cara reschedule paket Bromo?</h4>
+                        <p class="text-[10px] text-slate-500 line-clamp-1">Halo admin, saya ingin mengubah jadwal keberangkatan untuk pesanan saya...</p>
+                    </div>
+
+                    <!-- Chat Item 2 -->
+                    <div class="chat-list-item p-4 border-b border-slate-100">
+                        <div class="flex justify-between items-start mb-1">
+                            <div class="flex items-center gap-2">
+                                <img src="https://ui-avatars.com/api/?name=PT+Maju&background=fef3c7&color=d97706" class="w-8 h-8 rounded-full">
+                                <div>
+                                    <p class="font-bold text-slate-900 text-xs line-clamp-1">PT Maju Bersama (HR)</p>
+                                    <span class="text-[9px] font-mono text-slate-400">#TK-8890</span>
+                                </div>
+                            </div>
+                            <span class="text-[9px] font-medium text-slate-400">Kemarin</span>
+                        </div>
+                        <h4 class="text-xs font-bold text-slate-800 mt-2 mb-1 truncate">Request Penawaran Bali Group</h4>
+                        <p class="text-[10px] text-slate-500 line-clamp-1">Kami menunggu revisi proposal untuk 50 pax, apakah sudah dikirim?</p>
+                    </div>
+
+                    <!-- Chat Item 3 -->
+                    <div class="chat-list-item p-4 border-b border-slate-100">
+                        <div class="flex justify-between items-start mb-1">
+                            <div class="flex items-center gap-2">
+                                <img src="https://ui-avatars.com/api/?name=Siska+Travel&background=d1fae5&color=059669" class="w-8 h-8 rounded-full">
+                                <div>
+                                    <p class="font-bold text-slate-900 text-xs line-clamp-1">Siska (Mitra Afiliasi)</p>
+                                    <span class="text-[9px] font-mono text-slate-400">#TK-8885</span>
+                                </div>
+                            </div>
+                            <span class="text-[9px] font-medium text-slate-400">Kemarin</span>
+                        </div>
+                        <h4 class="text-xs font-bold text-slate-800 mt-2 mb-1 truncate">Kapan komisi cair?</h4>
+                        <p class="text-[10px] text-slate-500 line-clamp-1">Tolong cek penarikan dana saya bulan lalu.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- RIGHT PANE: CHAT THREAD -->
+            <div class="hidden md:flex flex-1 flex-col bg-slate-50 relative" id="chat-thread">
+                
+                <!-- Chat Header -->
+                <div class="h-[72px] bg-white border-b border-slate-200 px-6 flex justify-between items-center flex-shrink-0 shadow-sm z-10">
+                    <div class="flex items-center gap-3">
+                        <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=f1f5f9" class="w-10 h-10 rounded-full">
+                        <div>
+                            <h2 class="font-bold text-slate-900 text-sm">Budi Santoso <span class="bg-brand-100 text-brand-700 text-[9px] px-1.5 py-0.5 rounded font-bold ml-1">Reguler</span></h2>
+                            <p class="text-[10px] text-slate-500 font-medium">Ticket #TK-8891 • <a href="admin-order-detail.html" class="text-brand-600 hover:underline font-bold">INV-20261024-001</a></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] rounded-lg transition-colors border border-slate-200">
+                            Mark as Resolved
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Messages Area -->
+                <div class="flex-1 overflow-y-auto p-6 space-y-6">
+                    
+                    <!-- Timestamp Label -->
+                    <div class="text-center">
+                        <span class="text-[9px] font-bold text-slate-400 bg-slate-200/50 px-3 py-1 rounded-full uppercase tracking-wider">Hari Ini, 10:45 AM</span>
+                    </div>
+
+                    <!-- User Message -->
+                    <div class="flex gap-3 max-w-2xl">
+                        <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=f1f5f9" class="w-8 h-8 rounded-full flex-shrink-0 mt-1">
+                        <div>
+                            <div class="flex items-baseline gap-2 mb-1">
+                                <span class="font-bold text-slate-800 text-xs">Budi Santoso</span>
+                                <span class="text-[9px] text-slate-400">10:45 AM</span>
+                            </div>
+                            <div class="bubble-user p-4 rounded-2xl rounded-tl-none shadow-sm text-sm text-slate-700 leading-relaxed border border-slate-100">
+                                <p>Halo admin, saya ingin mengubah jadwal keberangkatan untuk pesanan saya (Private Tour Bromo). Seharusnya tanggal 24 Oktober, apakah bisa diundur ke tanggal 26 Oktober?</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Reply -->
+                    <div class="flex flex-row-reverse gap-3 max-w-2xl ml-auto">
+                        <img src="https://ui-avatars.com/api/?name=CS+Agent&background=e0e7ff&color=4f46e5" class="w-8 h-8 rounded-full flex-shrink-0 mt-1">
+                        <div class="text-right">
+                            <div class="flex flex-row-reverse items-baseline gap-2 mb-1">
+                                <span class="font-bold text-slate-800 text-xs">Anda (CS Agent)</span>
+                                <span class="text-[9px] text-slate-400">10:50 AM</span>
+                            </div>
+                            <div class="bubble-admin p-4 rounded-2xl rounded-tr-none shadow-sm text-sm leading-relaxed text-left inline-block">
+                                <p>Halo Kak Budi, terima kasih telah menghubungi NusaTrip.</p>
+                                <p class="mt-2">Untuk perubahan jadwal (Reschedule) ke tanggal 26 Oktober saat ini masih memungkinkan. Namun, dikarenakan perubahan dilakukan kurang dari H-7, akan dikenakan biaya penyesuaian administrasi sebesar Rp 150.000.</p>
+                                <p class="mt-2">Apakah Kakak setuju untuk kami proses lebih lanjut tagihannya?</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Internal Note (Admin Only) -->
+                    <div class="flex justify-center my-4">
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 max-w-md w-full text-center shadow-sm">
+                            <p class="text-[10px] font-bold text-amber-700 uppercase tracking-widest mb-1"><i class="fa-solid fa-lock mr-1"></i> Internal Note</p>
+                            <p class="text-[10px] text-amber-800 font-medium">Sudah cek ketersediaan Jeep di tanggal 26 Okt ke Vendor Agus, masih ada slot kosong.</p>
+                        </div>
+                    </div>
+
+                    <!-- User Reply -->
+                    <div class="flex gap-3 max-w-2xl">
+                        <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=f1f5f9" class="w-8 h-8 rounded-full flex-shrink-0 mt-1">
+                        <div>
+                            <div class="flex items-baseline gap-2 mb-1">
+                                <span class="font-bold text-slate-800 text-xs">Budi Santoso</span>
+                                <span class="text-[9px] text-slate-400">11:05 AM</span>
+                            </div>
+                            <div class="bubble-user p-4 rounded-2xl rounded-tl-none shadow-sm text-sm text-slate-700 leading-relaxed border border-slate-100">
+                                <p>Oh begitu ya. Boleh min, tolong diproses saja tagihan tambahannya ke email saya. Terima kasih infonya cepat sekali.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Chat Input Area -->
+                <div class="p-4 bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.02)] z-10">
+                    
+                    <!-- Tool bar -->
+                    <div class="flex gap-2 mb-2 px-2">
+                        <button class="text-slate-400 hover:text-brand-600 text-sm p-1 transition-colors" title="Balasan Tersimpan (Templates)"><i class="fa-solid fa-bolt"></i></button>
+                        <button class="text-slate-400 hover:text-brand-600 text-sm p-1 transition-colors" title="Tambahkan Internal Note"><i class="fa-solid fa-lock"></i></button>
+                    </div>
+
+                    <div class="relative bg-slate-50 border border-slate-200 rounded-xl input-saas flex items-end p-2">
+                        <button class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-brand-600 flex-shrink-0 transition-colors mb-1">
+                            <i class="fa-solid fa-paperclip"></i>
+                        </button>
+                        <textarea class="w-full bg-transparent border-none focus:ring-0 resize-none text-sm text-slate-700 py-2.5 px-2 max-h-32 min-h-[44px]" placeholder="Ketik balasan Anda ke Budi Santoso..."></textarea>
+                        <button class="w-10 h-10 bg-brand-600 hover:bg-brand-700 text-white rounded-lg flex items-center justify-center flex-shrink-0 shadow-md transition-colors mb-0.5 ml-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

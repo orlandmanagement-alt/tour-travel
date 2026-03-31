@@ -2,20 +2,45 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate API registration delay
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const res = await fetch('http://localhost:8787/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          role: 'user'
+        })
+      });
+
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.message || 'Gagal mendaftar');
+      }
+
       setIsSuccess(true);
-    }, 1500);
+      // Auto-login shortly after
+      setTimeout(() => {
+        login(data.token, data.user);
+      }, 1500);
+
+    } catch (err: any) {
+      alert(err.message);
+      setIsLoading(false);
+    }
   };
 
   if (isSuccess) {

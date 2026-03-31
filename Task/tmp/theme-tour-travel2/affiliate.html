@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program Mitra Afiliasi & Agen | NusantaraTrip</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', // Primary Indigo
+                            700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', // Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+        
+        /* Hide scrollbar */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Custom Input */
+        .input-saas { transition: all 0.3s ease; border: 1px solid #cbd5e1; }
+        .input-saas:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); outline: none; }
+
+        /* Card Hover */
+        .benefit-card { transition: all 0.3s ease; }
+        .benefit-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(79, 70, 229, 0.1); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased overflow-x-hidden">
+
+    <!-- HEADER -->
+    <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 py-3 sm:py-4 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            
+            <!-- Logo -->
+            <a href="/" class="font-extrabold text-xl tracking-tighter text-brand-900 flex items-center gap-2">
+                <div class="w-8 h-8 rounded bg-gradient-to-br from-brand-600 to-accent-500 text-white flex items-center justify-center shadow"><span class="text-sm"><i class="fa-solid fa-paper-plane"></i></span></div>
+                NusaTrip <span class="text-brand-600 font-light hidden sm:inline">| Partner</span>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="#keuntungan" class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Keuntungan</a>
+                <a href="#cara-kerja" class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Cara Kerja</a>
+                <a href="#komisi" class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Skema Komisi</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <a href="#daftar" class="px-5 py-2 sm:py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm rounded-lg shadow-md shadow-brand-500/30 transition-all transform hover:-translate-y-0.5">
+                    Daftar Sekarang
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative bg-slate-900 pt-20 pb-32 lg:pt-24 lg:pb-36 overflow-hidden">
+        <!-- Background Ornaments -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-brand-500 rounded-full mix-blend-multiply filter blur-3xl opacity-40"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-accent-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+        
+        <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-12 lg:gap-8">
+            
+            <div class="w-full lg:w-1/2 text-center lg:text-left">
+                <span class="inline-block py-1.5 px-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-accent-400 text-[10px] font-bold uppercase tracking-widest mb-6">
+                    Program Afiliasi & Keagenan
+                </span>
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-6 leading-tight">
+                    Ubah Jaringan Anda Menjadi <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent-400 to-yellow-400">Pemasukan Nyata.</span>
+                </h1>
+                <p class="text-sm md:text-base text-slate-300 font-medium mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                    Bergabunglah dengan program kemitraan NusantaraTrip. Promosikan ribuan paket tour & rental mobil kami, dan dapatkan komisi instan hingga 10% untuk setiap transaksi berhasil.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                    <a href="#daftar" class="w-full sm:w-auto px-8 py-3.5 bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-brand-500/50 transition-all flex items-center justify-center gap-2">
+                        Mulai Hasilkan Uang
+                    </a>
+                    <a href="#cara-kerja" class="w-full sm:w-auto px-8 py-3.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm rounded-xl backdrop-blur transition-all text-center">
+                        Pelajari Lebih Lanjut
+                    </a>
+                </div>
+            </div>
+
+            <!-- Hero Image / Dashboard Mockup -->
+            <div class="w-full lg:w-1/2 relative">
+                <div class="bg-white rounded-2xl shadow-2xl p-2 transform rotate-2 hover:rotate-0 transition-transform duration-500">
+                    <div class="bg-slate-50 rounded-xl border border-slate-100 p-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-slate-800 text-sm">Dashboard Pendapatan</h3>
+                            <span class="bg-emerald-100 text-emerald-600 text-[10px] font-bold px-2 py-0.5 rounded">Bulan Ini</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+                                <p class="text-[10px] text-slate-500 font-medium">Total Komisi</p>
+                                <p class="text-lg font-extrabold text-brand-600">Rp 4.520.000</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+                                <p class="text-[10px] text-slate-500 font-medium">Konversi Penjualan</p>
+                                <p class="text-lg font-extrabold text-slate-800">12 Transaksi</p>
+                            </div>
+                        </div>
+                        <!-- Mini chart simulation -->
+                        <div class="h-20 flex items-end gap-2 pt-4">
+                            <div class="w-1/6 bg-brand-200 rounded-t-sm h-1/3"></div>
+                            <div class="w-1/6 bg-brand-300 rounded-t-sm h-1/2"></div>
+                            <div class="w-1/6 bg-brand-400 rounded-t-sm h-2/3"></div>
+                            <div class="w-1/6 bg-brand-500 rounded-t-sm h-full"></div>
+                            <div class="w-1/6 bg-brand-600 rounded-t-sm h-3/4"></div>
+                            <div class="w-1/6 bg-brand-400 rounded-t-sm h-1/2"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Floating Element -->
+                <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl border border-slate-100 flex items-center gap-3 animate-bounce" style="animation-duration: 3s;">
+                    <div class="w-10 h-10 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-check-double"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase">Pencairan Berhasil</p>
+                        <p class="text-sm font-extrabold text-slate-900">Rp 1.200.000 ke BCA</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CARA KERJA (How it Works) -->
+    <section class="relative z-20 -mt-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mb-20" id="cara-kerja">
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 sm:p-12">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">3 Langkah Mudah Hasilkan Cuan</h2>
+                <p class="text-sm text-slate-500 font-medium">Tanpa modal, tanpa ribet urus operasional tour.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+                <!-- Connector Line -->
+                <div class="hidden md:block absolute top-1/2 left-1/6 right-1/6 h-0.5 bg-slate-100 -z-10 transform -translate-y-1/2 w-2/3 mx-auto"></div>
+
+                <!-- Step 1 -->
+                <div class="text-center relative bg-white">
+                    <div class="w-16 h-16 bg-brand-50 text-brand-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-4 border-4 border-white shadow-sm">
+                        1
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg mb-2">Daftar & Dapatkan Link</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed px-4">Buat akun mitra Anda secara gratis dan dapatkan Link Referral unik serta kode promo atas nama Anda.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="text-center relative bg-white">
+                    <div class="w-16 h-16 bg-accent-50 text-accent-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-4 border-4 border-white shadow-sm">
+                        2
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg mb-2">Sebarkan & Promosikan</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed px-4">Bagikan link tersebut di media sosial, blog, grup WhatsApp, atau tawarkan langsung ke klien korporat Anda.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="text-center relative bg-white">
+                    <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center text-2xl mx-auto mb-4 border-4 border-white shadow-sm">
+                        3
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg mb-2">Terima Komisi</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed px-4">Setiap transaksi sukses melalui link Anda, komisi otomatis masuk ke dashboard dan siap ditarik (withdraw).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KEUNTUNGAN (Benefits) -->
+    <section class="py-16 bg-slate-50 border-y border-slate-200" id="keuntungan">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-4">Mengapa Bermitra Bersama Kami?</h2>
+                <p class="text-sm text-slate-500">Sistem SaaS kami memastikan transparansi dan mempermudah kerja Anda sebagai agen penjualan.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Benefit 1 -->
+                <div class="benefit-card bg-white p-6 sm:p-8 rounded-3xl border border-slate-100">
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center text-xl mb-5">
+                        <i class="fa-solid fa-sack-dollar"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 mb-2 text-base">Komisi Kompetitif</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">Nikmati bagi hasil (commission rate) mulai dari 5% hingga 10% untuk setiap transaksi yang berhasil diselesaikan.</p>
+                </div>
+                
+                <!-- Benefit 2 -->
+                <div class="benefit-card bg-white p-6 sm:p-8 rounded-3xl border border-slate-100">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center text-xl mb-5">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 mb-2 text-base">Dashboard Real-Time</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">Pantau klik link, jumlah transaksi *pending* atau sukses, dan komisi masuk secara *real-time* di panel agen Anda.</p>
+                </div>
+
+                <!-- Benefit 3 -->
+                <div class="benefit-card bg-white p-6 sm:p-8 rounded-3xl border border-slate-100">
+                    <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-xl flex items-center justify-center text-xl mb-5">
+                        <i class="fa-solid fa-boxes-packing"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 mb-2 text-base">Produk Beragam</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">Ribuan pilihan produk mulai dari Open Trip harian, Private Tour mewah, hingga layanan sewa mobil di seluruh Indonesia.</p>
+                </div>
+
+                <!-- Benefit 4 -->
+                <div class="benefit-card bg-white p-6 sm:p-8 rounded-3xl border border-slate-100">
+                    <div class="w-12 h-12 bg-purple-50 text-purple-500 rounded-xl flex items-center justify-center text-xl mb-5">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 mb-2 text-base">Terima Beres</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">Anda cukup mencari pelanggan. Urusan operasional di lapangan, asuransi, dan komplain diurus 100% oleh tim NusaTrip.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SKEMA KOMISI & FORM PENDAFTARAN -->
+    <section class="py-16 lg:py-24 bg-white" id="daftar">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-brand-900 rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col lg:flex-row relative">
+                
+                <!-- Background Decor -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-brand-500 rounded-full mix-blend-multiply filter blur-3xl opacity-50 pointer-events-none"></div>
+                <div class="absolute bottom-0 left-0 w-64 h-64 bg-accent-500 rounded-full mix-blend-multiply filter blur-3xl opacity-50 pointer-events-none"></div>
+
+                <!-- Kiri: Info Komisi -->
+                <div class="w-full lg:w-5/12 p-8 lg:p-12 text-white relative z-10 flex flex-col justify-center">
+                    <h2 class="text-3xl font-extrabold mb-4">Skema Komisi Transparan.</h2>
+                    <p class="text-sm text-brand-100 mb-8 leading-relaxed">
+                        Kami menghargai setiap usaha Anda. Semakin banyak transaksi yang Anda hasilkan, semakin tinggi persentase komisi yang Anda peroleh setiap bulannya.
+                    </p>
+
+                    <div class="space-y-4">
+                        <!-- Tier 1 -->
+                        <div class="bg-white/10 border border-white/20 rounded-xl p-4 flex items-center justify-between backdrop-blur-sm">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-slate-300 rounded-full flex items-center justify-center text-slate-700 font-bold"><i class="fa-solid fa-medal"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-sm">Mitra Silver</h4>
+                                    <p class="text-[10px] text-brand-200">0 - 10 Transaksi / Bulan</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-extrabold text-xl">5%</span>
+                            </div>
+                        </div>
+
+                        <!-- Tier 2 -->
+                        <div class="bg-white/10 border border-amber-400/40 rounded-xl p-4 flex items-center justify-between backdrop-blur-sm">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-amber-400 rounded-full flex items-center justify-center text-white font-bold"><i class="fa-solid fa-crown"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-amber-300">Mitra Gold</h4>
+                                    <p class="text-[10px] text-brand-200">11 - 50 Transaksi / Bulan</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-extrabold text-xl text-amber-300">7.5%</span>
+                            </div>
+                        </div>
+
+                        <!-- Tier 3 -->
+                        <div class="bg-white/10 border border-white/20 rounded-xl p-4 flex items-center justify-between backdrop-blur-sm">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-gradient-to-r from-slate-200 to-slate-400 rounded-full flex items-center justify-center text-slate-800 font-bold"><i class="fa-regular fa-gem"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-200">Mitra Platinum</h4>
+                                    <p class="text-[10px] text-brand-200">> 50 Transaksi / Bulan</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-extrabold text-xl text-slate-200">10%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kanan: Form Pendaftaran -->
+                <div class="w-full lg:w-7/12 bg-white p-8 lg:p-12 relative z-10">
+                    <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Formulir Pendaftaran Mitra</h3>
+                    <p class="text-xs text-slate-500 mb-6">Isi data diri Anda. Proses persetujuan akun memakan waktu maksimal 1x24 jam kerja.</p>
+
+                    <form onsubmit="submitForm(event)" class="space-y-5">
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Nama Lengkap / Instansi <span class="text-red-500">*</span></label>
+                                <input type="text" class="w-full bg-slate-50 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800 font-medium" placeholder="Sesuai KTP/Legalitas" required>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Tipe Kemitraan <span class="text-red-500">*</span></label>
+                                <select class="w-full bg-slate-50 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800 font-medium appearance-none cursor-pointer" required>
+                                    <option value="" disabled selected>Pilih Kategori</option>
+                                    <option value="individu">Individu / Freelance</option>
+                                    <option value="influencer">Blogger / Influencer (KOL)</option>
+                                    <option value="agent">Agen Travel Kecil</option>
+                                    <option value="corporate">Perusahaan (HR / GA)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Email Aktif <span class="text-red-500">*</span></label>
+                                <input type="email" class="w-full bg-slate-50 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800 font-medium" placeholder="email@contoh.com" required>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1.5 uppercase tracking-wide">No. WhatsApp <span class="text-red-500">*</span></label>
+                                <input type="tel" class="w-full bg-slate-50 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800 font-medium" placeholder="0812xxxx" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Link Media Sosial / Website Anda</label>
+                            <input type="url" class="w-full bg-slate-50 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800 font-medium" placeholder="https://instagram.com/akun_anda">
+                            <p class="text-[10px] text-slate-400 mt-1">Sangat disarankan untuk diisi jika Anda seorang Influencer/Blogger.</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Metode Pemasaran (Opsional)</label>
+                            <textarea class="w-full bg-slate-50 text-sm rounded-lg px-4 py-3 input-saas text-slate-800 font-medium h-24 resize-none" placeholder="Ceritakan sedikit bagaimana Anda akan memasarkan paket NusaTrip (contoh: melalui Iklan FB, share grup WA, atau tawarkan ke tamu korporat)"></textarea>
+                        </div>
+
+                        <!-- Checkbox S&K -->
+                        <label class="flex items-start gap-2 cursor-pointer mt-4">
+                            <input type="checkbox" class="mt-1 border-slate-300 rounded" required>
+                            <span class="text-[10px] sm:text-xs text-slate-500 leading-relaxed">Saya setuju dengan <a href="#" class="text-brand-600 font-bold hover:underline">Syarat & Ketentuan Kemitraan</a> serta memahami bahwa pencairan komisi minimum adalah Rp 200.000.</span>
+                        </label>
+
+                        <button type="submit" id="btn-submit" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2 mt-2">
+                            <i id="btn-spinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
+                            <span id="btn-text">Kirim Permintaan Bergabung</span>
+                        </button>
+
+                    </form>
+
+                    <!-- Sukses Message -->
+                    <div id="success-msg" class="hidden mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700 text-sm font-bold text-center">
+                        <i class="fa-solid fa-circle-check text-xl mb-1"></i><br>
+                        Pendaftaran berhasil! Silakan cek email Anda untuk verifikasi dan panduan login ke Dashboard Mitra.
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER SIMPLE -->
+    <footer class="bg-slate-50 border-t border-slate-200">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+            <div>
+                <div class="flex items-center justify-center sm:justify-start gap-2 font-extrabold text-lg text-brand-900">
+                    <div class="w-6 h-6 rounded bg-brand-600 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-paper-plane"></i></div>
+                    NusaTrip Affiliate
+                </div>
+                <p class="text-[10px] text-slate-500 font-medium mt-1">Divisi Kemitraan B2B PT Nusantara Trip System</p>
+            </div>
+            <div class="flex gap-4 text-xs font-bold text-slate-500">
+                <a href="#" class="hover:text-brand-600 transition-colors">Login Mitra</a>
+                <a href="help-center.html" class="hover:text-brand-600 transition-colors">Bantuan</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        function submitForm(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-text');
+            const spinner = document.getElementById('btn-spinner');
+            const submitBtn = document.getElementById('btn-submit');
+            const successMsg = document.getElementById('success-msg');
+
+            // State Loading
+            btn.innerText = "Memproses Data...";
+            spinner.classList.remove('hidden');
+            submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            // Simulasi proses API (1.5 detik)
+            setTimeout(() => {
+                // Kembalikan tombol dan form
+                btn.innerText = "Kirim Permintaan Bergabung";
+                spinner.classList.add('hidden');
+                submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+                
+                // Tampilkan sukses, reset form
+                e.target.reset();
+                successMsg.classList.remove('hidden');
+
+                // Hilangkan pesan sukses setelah 5 detik
+                setTimeout(() => {
+                    successMsg.classList.add('hidden');
+                }, 5000);
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

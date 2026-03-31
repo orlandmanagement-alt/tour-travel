@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menunggu Pembayaran | NusantaraTrip</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', // Primary Indigo
+                            700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', // Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
+        
+        /* Accordion transition */
+        .step-content {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .step-content.open {
+            max-height: 400px;
+            opacity: 1;
+        }
+        .step-icon { transition: transform 0.3s ease; }
+        .step-icon.rotate { transform: rotate(180deg); }
+
+        /* Dashed Box */
+        .dashed-box {
+            background-image: repeating-linear-gradient(0deg, #cbd5e1, #cbd5e1 6px, transparent 6px, transparent 12px, #cbd5e1 12px), repeating-linear-gradient(90deg, #cbd5e1, #cbd5e1 6px, transparent 6px, transparent 12px, #cbd5e1 12px), repeating-linear-gradient(180deg, #cbd5e1, #cbd5e1 6px, transparent 6px, transparent 12px, #cbd5e1 12px), repeating-linear-gradient(270deg, #cbd5e1, #cbd5e1 6px, transparent 6px, transparent 12px, #cbd5e1 12px);
+            background-size: 2px 100%, 100% 2px, 2px 100% , 100% 2px;
+            background-position: 0 0, 0 0, 100% 0, 0 100%;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased flex flex-col min-h-screen">
+
+    <!-- Notifikasi Toast Copy -->
+    <div id="copy-toast" class="fixed top-5 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-4 py-2 rounded-lg shadow-2xl z-[100] font-bold text-sm flex items-center gap-2 transition-all duration-300 opacity-0 translate-y-[-20px] pointer-events-none">
+        <i class="fa-solid fa-circle-check text-green-400"></i> <span id="toast-msg">Berhasil disalin!</span>
+    </div>
+
+    <!-- HEADER MINIMALIS -->
+    <header class="bg-white border-b border-slate-200 py-4 shadow-sm">
+        <div class="max-w-[800px] mx-auto px-4 flex justify-center items-center">
+            <a href="/" class="font-extrabold text-xl tracking-tighter text-brand-900 flex items-center gap-2">
+                <div class="w-8 h-8 rounded bg-brand-600 text-white flex items-center justify-center shadow"><span class="text-sm"><i class="fa-solid fa-paper-plane"></i></span></div>
+                NusaTrip
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow flex items-start justify-center p-4 sm:p-8">
+        
+        <div class="w-full max-w-[600px] bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+            
+            <!-- HEADER STATUS (KUNING/AMBER KARENA PENDING) -->
+            <div class="bg-amber-50 border-b border-amber-100 p-6 text-center">
+                <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 mb-2">Selesaikan Pembayaran Anda</h1>
+                <p class="text-sm text-slate-600 mb-4">Segera lakukan pembayaran sebelum batas waktu berakhir agar pesanan tidak dibatalkan otomatis.</p>
+                
+                <div class="inline-flex flex-col items-center bg-white px-6 py-3 rounded-2xl shadow-sm border border-amber-200">
+                    <span class="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-1">Sisa Waktu Pembayaran</span>
+                    <div class="flex items-center gap-2 text-2xl sm:text-3xl font-mono font-extrabold text-red-500" id="countdown-timer">
+                        <span>00</span><span class="text-slate-300 pb-1">:</span><span>59</span><span class="text-slate-300 pb-1">:</span><span>59</span>
+                    </div>
+                    <span class="text-xs text-slate-500 mt-1 font-medium">Jatuh tempo: 25 Okt 2026, 14:30 WIB</span>
+                </div>
+            </div>
+
+            <!-- PAYMENT DETAILS -->
+            <div class="p-6 sm:p-8">
+                
+                <!-- Bank Info -->
+                <div class="flex items-center justify-between mb-6 pb-6 border-b border-slate-100">
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Metode Pembayaran</p>
+                        <h2 class="font-bold text-slate-800">BCA Virtual Account</h2>
+                    </div>
+                    <div class="w-16 h-10 bg-white border border-slate-200 rounded flex items-center justify-center p-1.5 shadow-sm">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" alt="BCA" class="w-full h-full object-contain">
+                    </div>
+                </div>
+
+                <!-- VA Number (Copyable) -->
+                <div class="mb-6">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Nomor Virtual Account</p>
+                    <div class="dashed-box bg-slate-50 rounded-xl p-4 flex justify-between items-center">
+                        <span class="font-mono text-xl sm:text-2xl font-extrabold text-brand-600 tracking-wider" id="va-number">8077 0812 3456 7890</span>
+                        <button onclick="copyToClipboard('va-number', 'Nomor VA disalin!')" class="text-brand-600 hover:text-white bg-brand-50 hover:bg-brand-600 border border-brand-200 w-10 h-10 rounded-lg flex items-center justify-center transition-colors focus:outline-none" title="Salin">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Amount (Copyable) -->
+                <div class="mb-8">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Total Pembayaran</p>
+                    <div class="dashed-box bg-slate-50 rounded-xl p-4 flex justify-between items-center">
+                        <div>
+                            <span class="text-sm font-bold text-slate-500 mr-1">Rp</span>
+                            <span class="font-mono text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" id="pay-amount">2.500.000</span>
+                        </div>
+                        <button onclick="copyToClipboard('pay-amount', 'Nominal disalin!')" class="text-slate-600 hover:text-white bg-white hover:bg-slate-800 border border-slate-200 w-10 h-10 rounded-lg flex items-center justify-center transition-colors focus:outline-none" title="Salin">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                    <p class="text-[10px] text-amber-600 font-medium mt-2 flex items-center gap-1.5 bg-amber-50 p-2 rounded border border-amber-100">
+                        <i class="fa-solid fa-circle-exclamation"></i> Pastikan nominal transfer sesuai hingga 3 digit terakhir.
+                    </p>
+                </div>
+
+                <!-- INSTRUCTIONS ACCORDION -->
+                <h3 class="font-bold text-slate-900 mb-4 text-sm">Cara Pembayaran</h3>
+                <div class="space-y-3 mb-8">
+                    
+                    <!-- ATM BCA -->
+                    <div class="border border-slate-200 rounded-xl bg-white overflow-hidden">
+                        <button class="w-full text-left px-4 py-3 flex justify-between items-center focus:outline-none hover:bg-slate-50" onclick="toggleStep('step-1', 'icon-step-1')">
+                            <span class="font-bold text-sm text-slate-700">ATM BCA</span>
+                            <i id="icon-step-1" class="fa-solid fa-chevron-down text-slate-400 text-xs step-icon"></i>
+                        </button>
+                        <div id="step-1" class="step-content bg-slate-50 border-t border-slate-100">
+                            <ol class="list-decimal pl-8 pr-4 py-4 text-xs text-slate-600 space-y-2">
+                                <li>Masukkan Kartu ATM BCA & PIN.</li>
+                                <li>Pilih menu <strong>Transaksi Lainnya</strong> > <strong>Transfer</strong> > <strong>ke Rekening BCA Virtual Account</strong>.</li>
+                                <li>Masukkan Nomor Virtual Account Anda (<strong>8077 0812 3456 7890</strong>).</li>
+                                <li>Di halaman konfirmasi, pastikan detail pembayaran sudah sesuai seperti No VA, Nama, dan Total Tagihan.</li>
+                                <li>Pilih <strong>Benar/Ya</strong>.</li>
+                                <li>Simpan struk transaksi sebagai bukti pembayaran.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- m-BCA -->
+                    <div class="border border-slate-200 rounded-xl bg-white overflow-hidden">
+                        <button class="w-full text-left px-4 py-3 flex justify-between items-center focus:outline-none hover:bg-slate-50" onclick="toggleStep('step-2', 'icon-step-2')">
+                            <span class="font-bold text-sm text-slate-700">m-BCA (BCA Mobile)</span>
+                            <i id="icon-step-2" class="fa-solid fa-chevron-down text-slate-400 text-xs step-icon"></i>
+                        </button>
+                        <div id="step-2" class="step-content bg-slate-50 border-t border-slate-100">
+                            <ol class="list-decimal pl-8 pr-4 py-4 text-xs text-slate-600 space-y-2">
+                                <li>Lakukan log in pada aplikasi <strong>BCA Mobile</strong>.</li>
+                                <li>Pilih menu <strong>m-BCA</strong>, kemudian masukkan kode akses m-BCA.</li>
+                                <li>Pilih <strong>m-Transfer</strong> > <strong>BCA Virtual Account</strong>.</li>
+                                <li>Pilih dari Daftar Transfer, atau masukkan No. Virtual Account (<strong>8077 0812 3456 7890</strong>).</li>
+                                <li>Masukkan pin m-BCA Anda.</li>
+                                <li>Pembayaran selesai. Simpan notifikasi yang muncul sebagai bukti pembayaran.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- KlikBCA -->
+                    <div class="border border-slate-200 rounded-xl bg-white overflow-hidden">
+                        <button class="w-full text-left px-4 py-3 flex justify-between items-center focus:outline-none hover:bg-slate-50" onclick="toggleStep('step-3', 'icon-step-3')">
+                            <span class="font-bold text-sm text-slate-700">KlikBCA (Internet Banking)</span>
+                            <i id="icon-step-3" class="fa-solid fa-chevron-down text-slate-400 text-xs step-icon"></i>
+                        </button>
+                        <div id="step-3" class="step-content bg-slate-50 border-t border-slate-100">
+                            <ol class="list-decimal pl-8 pr-4 py-4 text-xs text-slate-600 space-y-2">
+                                <li>Login pada aplikasi <strong>KlikBCA</strong>.</li>
+                                <li>Pilih <strong>Transfer Dana</strong> > <strong>Transfer ke BCA Virtual Account</strong>.</li>
+                                <li>Masukkan Nomor Virtual Account (<strong>8077 0812 3456 7890</strong>).</li>
+                                <li>Rincian pembayaran Anda akan muncul pada halaman konfirmasi transaksi.</li>
+                                <li>Masukkan password / KeyBCA Anda.</li>
+                                <li>Transaksi selesai.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="flex flex-col gap-3">
+                    <a href="user-dashboard.html" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all text-center flex justify-center items-center gap-2">
+                        Saya Sudah Membayar
+                    </a>
+                    <a href="user-dashboard.html" class="w-full py-3.5 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-sm rounded-xl transition-all text-center">
+                        Cek Status Nanti (Ke Dashboard)
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="py-6 text-center text-[10px] sm:text-xs text-slate-400 font-medium">
+        <p>No. Pesanan: <span class="font-bold">INV-20261024-001</span></p>
+        <p class="mt-1">Butuh bantuan? Hubungi <a href="help-center.html" class="text-brand-600 hover:underline">Customer Service</a></p>
+    </footer>
+
+    <!-- Elemen tersembunyi untuk copy -->
+    <textarea id="hidden-clipboard" style="position: absolute; left: -9999px;"></textarea>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- COUNTDOWN TIMER (1 JAM SIMULASI) ---
+        function startPaymentTimer(durationInSeconds) {
+            let timer = durationInSeconds, hours, minutes, seconds;
+            const display = document.getElementById('countdown-timer');
+            
+            setInterval(function () {
+                hours = parseInt(timer / 3600, 10);
+                minutes = parseInt((timer % 3600) / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                hours = hours < 10 ? "0" + hours : hours;
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.innerHTML = `<span>${hours}</span><span class="text-slate-300 pb-1">:</span><span>${minutes}</span><span class="text-slate-300 pb-1">:</span><span>${seconds}</span>`;
+
+                if (--timer < 0) {
+                    timer = 0;
+                    display.innerHTML = '<span class="text-slate-400">EXPIRED</span>';
+                }
+            }, 1000);
+        }
+
+        // Mulai timer (contoh: 1 jam = 3600 detik)
+        window.onload = function () {
+            startPaymentTimer(3599); 
+            // Buka step 1 secara default
+            toggleStep('step-2', 'icon-step-2');
+        };
+
+        // --- COPY TO CLIPBOARD ---
+        function copyToClipboard(elementId, successMessage) {
+            // Ambil teks asli, hilangkan titik jika itu nominal uang
+            let textToCopy = document.getElementById(elementId).innerText;
+            if (elementId === 'pay-amount') {
+                textToCopy = textToCopy.replace(/\./g, ''); // Hapus titik pemisah ribuan
+            } else if (elementId === 'va-number') {
+                textToCopy = textToCopy.replace(/\s/g, ''); // Hapus spasi di no VA
+            }
+
+            const textArea = document.getElementById('hidden-clipboard');
+            textArea.value = textToCopy;
+            textArea.select();
+            document.execCommand('copy');
+
+            // Tampilkan Toast
+            const toast = document.getElementById('copy-toast');
+            document.getElementById('toast-msg').innerText = successMessage;
+            
+            toast.classList.remove('opacity-0', 'translate-y-[-20px]');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-[-20px]');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 2500);
+        }
+
+        // --- ACCORDION INSTRUCTIONS ---
+        function toggleStep(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                icon.classList.remove('rotate');
+            } else {
+                content.classList.add('open');
+                icon.classList.add('rotate');
+            }
+        }
+    </script>
+</body>
+</html>

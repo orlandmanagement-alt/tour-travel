@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan Profil | NusantaraTrip</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', // Primary Indigo
+                            700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', // Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+        
+        /* Hide scrollbar */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Sidebar Nav Active State */
+        .nav-item { transition: all 0.2s; border-left: 3px solid transparent; }
+        .nav-item.active { border-left-color: #4f46e5; background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
+        .nav-item:hover:not(.active) { background-color: #f1f5f9; }
+
+        /* Profile Tabs */
+        .profile-tab { transition: all 0.2s; border-bottom: 2px solid transparent; }
+        .profile-tab.active { border-bottom-color: #4f46e5; color: #4f46e5; font-weight: 700; }
+        
+        /* Input SaaS */
+        .input-saas { transition: all 0.3s ease; }
+        .input-saas:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            outline: none;
+        }
+
+        /* Avatar Upload Hover */
+        .avatar-container:hover .avatar-overlay { opacity: 1; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased overflow-x-hidden">
+
+    <!-- HEADER (Dashboard Header) -->
+    <header class="bg-white border-b border-slate-200 py-3 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            
+            <!-- Logo -->
+            <a href="/" class="font-extrabold text-xl tracking-tighter text-brand-900 flex items-center gap-2">
+                <div class="w-8 h-8 rounded bg-gradient-to-br from-brand-600 to-accent-500 text-white flex items-center justify-center shadow"><span class="text-sm"><i class="fa-solid fa-paper-plane"></i></span></div>
+                <span class="hidden sm:block">NusaTrip</span>
+            </a>
+
+            <!-- User Profile Info -->
+            <div class="flex items-center gap-4 sm:gap-6">
+                <button class="text-slate-400 hover:text-brand-600 transition-colors relative">
+                    <i class="fa-regular fa-bell text-xl"></i>
+                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+                </button>
+                
+                <div class="flex items-center gap-3 border-l border-slate-200 pl-4 sm:pl-6 cursor-pointer group">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-bold text-slate-800 group-hover:text-brand-600 transition-colors">Budi Santoso</p>
+                        <p class="text-[10px] text-slate-500 font-medium">Member Silver <i class="fa-solid fa-medal text-slate-400 ml-0.5"></i></p>
+                    </div>
+                    <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=e0e7ff&color=4f46e5&rounded=true&bold=true" alt="Profile" class="w-9 h-9 rounded-full shadow-sm border border-slate-200 group-hover:border-brand-400 transition-colors">
+                    <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 hidden sm:block"></i>
+                </div>
+            </div>
+            
+        </div>
+    </header>
+
+    <!-- MAIN DASHBOARD CONTAINER -->
+    <main class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col md:flex-row gap-6 lg:gap-8 min-h-[80vh]">
+        
+        <!-- ========================================== -->
+        <!-- LEFT SIDEBAR (Navigasi Menu)               -->
+        <!-- ========================================== -->
+        <aside class="w-full md:w-[240px] flex-shrink-0">
+            <!-- Mobile Horizontal Nav (Scrollable) -->
+            <div class="md:hidden flex overflow-x-auto hide-scrollbar gap-2 mb-4 pb-2 border-b border-slate-200">
+                <a href="user-dashboard.html" class="whitespace-nowrap px-4 py-2 bg-white text-slate-600 hover:bg-slate-50 font-medium text-xs rounded-full border border-slate-200"><i class="fa-solid fa-clipboard-list mr-1.5"></i> Pesanan Saya</a>
+                <a href="#" class="whitespace-nowrap px-4 py-2 bg-white text-slate-600 hover:bg-slate-50 font-medium text-xs rounded-full border border-slate-200"><i class="fa-solid fa-ticket mr-1.5"></i> Promo Saya</a>
+                <a href="#" class="whitespace-nowrap px-4 py-2 bg-white text-slate-600 hover:bg-slate-50 font-medium text-xs rounded-full border border-slate-200"><i class="fa-regular fa-heart mr-1.5"></i> Wishlist</a>
+                <a href="#" class="whitespace-nowrap px-4 py-2 bg-brand-50 text-brand-600 font-bold text-xs rounded-full border border-brand-200"><i class="fa-regular fa-user mr-1.5"></i> Pengaturan Profil</a>
+            </div>
+
+            <!-- Desktop Vertical Nav -->
+            <div class="hidden md:block bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden sticky top-24">
+                <div class="p-5 border-b border-slate-100 bg-brand-50/50 flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-amber-100 border-2 border-amber-300 flex items-center justify-center text-amber-600 text-xl shadow-sm">
+                        <i class="fa-solid fa-coins"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">NusaPoin</p>
+                        <p class="font-extrabold text-brand-900 text-lg leading-none mt-0.5">12.500</p>
+                    </div>
+                </div>
+                <nav class="flex flex-col py-3">
+                    <a href="user-dashboard.html" class="nav-item px-5 py-3 text-sm text-slate-600 font-medium flex items-center gap-3">
+                        <i class="fa-solid fa-clipboard-list w-5 text-center text-slate-400"></i> Pesanan Saya
+                    </a>
+                    <a href="#" class="nav-item px-5 py-3 text-sm text-slate-600 font-medium flex items-center gap-3">
+                        <i class="fa-solid fa-ticket w-5 text-center text-slate-400"></i> Promo & Kupon <span class="bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded-full ml-auto font-bold">2</span>
+                    </a>
+                    <a href="#" class="nav-item px-5 py-3 text-sm text-slate-600 font-medium flex items-center gap-3">
+                        <i class="fa-regular fa-heart w-5 text-center text-slate-400"></i> Wishlist Tersimpan
+                    </a>
+                    <div class="border-t border-slate-100 my-2 mx-5"></div>
+                    <a href="#" class="nav-item active px-5 py-3 text-sm text-slate-600 flex items-center gap-3">
+                        <i class="fa-regular fa-user w-5 text-center text-brand-500"></i> Pengaturan Profil
+                    </a>
+                    <a href="#" class="nav-item px-5 py-3 text-sm text-slate-600 font-medium flex items-center gap-3 text-red-500 hover:bg-red-50">
+                        <i class="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i> Keluar
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- ========================================== -->
+        <!-- RIGHT CONTENT (Form Pengaturan Profil)     -->
+        <!-- ========================================== -->
+        <div class="flex-1 w-full min-w-0">
+            
+            <h1 class="text-2xl font-extrabold text-slate-900 mb-2">Pengaturan Akun</h1>
+            <p class="text-sm text-slate-500 mb-6">Kelola informasi pribadi, keamanan, dan preferensi akun Anda.</p>
+
+            <!-- TABS PENGATURAN -->
+            <div class="flex overflow-x-auto hide-scrollbar border-b border-slate-200 mb-6">
+                <button class="profile-tab active px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap" onclick="switchTab('tab-personal', this)">Data Pribadi</button>
+                <button class="profile-tab px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap" onclick="switchTab('tab-security', this)">Keamanan & Password</button>
+                <button class="profile-tab px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap" onclick="switchTab('tab-notification', this)">Preferensi Notifikasi</button>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                
+                <!-- TAB 1: DATA PRIBADI -->
+                <div id="tab-personal" class="tab-content block">
+                    <form onsubmit="simulateSave(event, 'personal-btn', 'personal-spinner')" class="p-5 sm:p-8">
+                        
+                        <!-- Avatar Section -->
+                        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8 pb-8 border-b border-slate-100">
+                            <div class="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg avatar-container cursor-pointer bg-slate-100 flex-shrink-0">
+                                <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=e0e7ff&color=4f46e5&rounded=true&bold=true&size=128" alt="Profile" class="w-full h-full object-cover">
+                                <div class="avatar-overlay absolute inset-0 bg-slate-900/50 flex items-center justify-center opacity-0 transition-opacity">
+                                    <i class="fa-solid fa-camera text-white text-xl"></i>
+                                </div>
+                            </div>
+                            <div class="text-center sm:text-left">
+                                <h3 class="font-bold text-slate-900 text-lg">Foto Profil</h3>
+                                <p class="text-xs text-slate-500 mt-1 mb-3">Format JPG, PNG atau GIF. Ukuran maksimal 2MB.</p>
+                                <div class="flex justify-center sm:justify-start gap-2">
+                                    <button type="button" class="px-4 py-2 bg-brand-50 text-brand-600 font-bold text-xs rounded-lg hover:bg-brand-100 transition-colors">Ubah Foto</button>
+                                    <button type="button" class="px-4 py-2 bg-white border border-slate-200 text-red-500 hover:bg-red-50 font-bold text-xs rounded-lg transition-colors">Hapus</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Fields -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Depan <span class="text-red-500">*</span></label>
+                                <input type="text" class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" value="Budi" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Belakang</label>
+                                <input type="text" class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" value="Santoso">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Alamat Email <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <input type="email" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg px-4 py-2.5 text-slate-500 cursor-not-allowed" value="budi.santoso@email.com" readonly>
+                                    <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[10px] font-bold text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded"><i class="fa-solid fa-check mr-1"></i>Terverifikasi</span>
+                                </div>
+                                <p class="text-[10px] text-slate-400 mt-1">Email tidak dapat diubah. Hubungi CS untuk bantuan.</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Nomor Handphone <span class="text-red-500">*</span></label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 text-slate-500 text-sm font-medium">+62</span>
+                                    <input type="tel" class="flex-1 w-full bg-white border border-slate-300 text-sm rounded-r-lg px-4 py-2.5 input-saas text-slate-800" value="81234567890" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Tanggal Lahir</label>
+                                <input type="date" class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800 cursor-pointer" value="1990-05-15">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Jenis Kelamin</label>
+                                <select class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800 appearance-none cursor-pointer">
+                                    <option value="l" selected>Laki-laki</option>
+                                    <option value="p">Perempuan</option>
+                                    <option value="o">Lainnya / Tidak ingin menyebutkan</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Save Button -->
+                        <div class="flex justify-end pt-5 border-t border-slate-100">
+                            <button type="submit" class="px-8 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2">
+                                <i id="personal-spinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
+                                <span id="personal-btn">Simpan Perubahan</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- TAB 2: KEAMANAN & PASSWORD -->
+                <div id="tab-security" class="tab-content hidden">
+                    <form onsubmit="simulateSave(event, 'security-btn', 'security-spinner')" class="p-5 sm:p-8">
+                        <h3 class="font-bold text-slate-900 text-lg mb-2">Ubah Kata Sandi</h3>
+                        <p class="text-xs text-slate-500 mb-6 pb-6 border-b border-slate-100">Pastikan akun Anda menggunakan kata sandi yang kuat (kombinasi huruf, angka, dan simbol).</p>
+                        
+                        <div class="max-w-md space-y-5 mb-8">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Password Saat Ini</label>
+                                <div class="relative">
+                                    <input type="password" id="pwd-old" class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800 pr-10" required>
+                                    <button type="button" onclick="togglePwd('pwd-old', 'eye-old')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-brand-600 focus:outline-none">
+                                        <i id="eye-old" class="fa-regular fa-eye-slash text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Password Baru</label>
+                                <div class="relative">
+                                    <input type="password" id="pwd-new" class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800 pr-10" required>
+                                    <button type="button" onclick="togglePwd('pwd-new', 'eye-new')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-brand-600 focus:outline-none">
+                                        <i id="eye-new" class="fa-regular fa-eye-slash text-sm"></i>
+                                    </button>
+                                </div>
+                                <p class="text-[10px] text-slate-400 mt-1">Minimal 8 karakter.</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Konfirmasi Password Baru</label>
+                                <div class="relative">
+                                    <input type="password" id="pwd-confirm" class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800 pr-10" required>
+                                    <button type="button" onclick="togglePwd('pwd-confirm', 'eye-confirm')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-brand-600 focus:outline-none">
+                                        <i id="eye-confirm" class="fa-regular fa-eye-slash text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save Button -->
+                        <div class="flex justify-end pt-5 border-t border-slate-100">
+                            <button type="submit" class="px-8 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2">
+                                <i id="security-spinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
+                                <span id="security-btn">Update Password</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- TAB 3: PREFERENSI NOTIFIKASI -->
+                <div id="tab-notification" class="tab-content hidden">
+                    <form onsubmit="simulateSave(event, 'notif-btn', 'notif-spinner')" class="p-5 sm:p-8">
+                        <h3 class="font-bold text-slate-900 text-lg mb-2">Pengaturan Notifikasi</h3>
+                        <p class="text-xs text-slate-500 mb-6 pb-6 border-b border-slate-100">Pilih jenis informasi yang ingin Anda terima dari kami melalui Email atau WhatsApp.</p>
+                        
+                        <div class="space-y-6 mb-8">
+                            
+                            <!-- Toggle Item 1 -->
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Info Pesanan & Transaksi</h4>
+                                    <p class="text-xs text-slate-500 mt-0.5">E-Ticket, invoice, dan status pembayaran (Wajib).</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer" checked disabled>
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-slate-400 opacity-70"></div>
+                                </label>
+                            </div>
+
+                            <!-- Toggle Item 2 -->
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Promo Spesial & Diskon</h4>
+                                    <p class="text-xs text-slate-500 mt-0.5">Penawaran eksklusif, flash sale, dan kode voucher.</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-500"></div>
+                                </label>
+                            </div>
+
+                            <!-- Toggle Item 3 -->
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">NusaPoin & Membership</h4>
+                                    <p class="text-xs text-slate-500 mt-0.5">Update poin yang hangus atau naik level membership.</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-500"></div>
+                                </label>
+                            </div>
+
+                            <!-- Toggle Item 4 -->
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Artikel Travel & Rekomendasi</h4>
+                                    <p class="text-xs text-slate-500 mt-0.5">Inspirasi liburan dan panduan wisata terbaru.</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-500"></div>
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <!-- Save Button -->
+                        <div class="flex justify-end pt-5 border-t border-slate-100">
+                            <button type="submit" class="px-8 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2">
+                                <i id="notif-spinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
+                                <span id="notif-btn">Simpan Preferensi</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER SIMPLE -->
+    <footer class="border-t border-slate-200 bg-white mt-10">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2 font-extrabold text-lg text-brand-900">
+                <div class="w-6 h-6 rounded bg-brand-600 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-n"></i></div>
+                NusaTrip
+            </div>
+            <p class="text-xs text-slate-500 font-medium">© 2026 PT Nusantara Trip System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Notifikasi Sukses Global -->
+    <div id="toast-success" class="fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl z-[100] font-bold text-sm flex items-center gap-3 transition-all duration-300 opacity-0 translate-y-10 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i> 
+        <span>Pengaturan berhasil disimpan!</span>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- Fungsi Ganti Tab ---
+        function switchTab(tabId, btnElement) {
+            // Sembunyikan semua tab
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            // Hapus kelas active dari semua tombol
+            document.querySelectorAll('.profile-tab').forEach(el => el.classList.remove('active'));
+
+            // Tampilkan tab yang dipilih
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById(tabId).classList.add('block');
+            btnElement.classList.add('active');
+        }
+
+        // --- Fungsi Toggle Show/Hide Password ---
+        function togglePwd(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                input.type = "password";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        }
+
+        // --- Fungsi Simulasi Save (Loading State) ---
+        function simulateSave(e, textId, spinnerId) {
+            e.preventDefault();
+            const btnText = document.getElementById(textId);
+            const spinner = document.getElementById(spinnerId);
+            const originalText = btnText.innerText;
+
+            // Loading state
+            btnText.innerText = "Menyimpan...";
+            spinner.classList.remove('hidden');
+
+            setTimeout(() => {
+                // Restore state
+                btnText.innerText = originalText;
+                spinner.classList.add('hidden');
+                
+                // Show Success Toast
+                const toast = document.getElementById('toast-success');
+                toast.classList.remove('opacity-0', 'translate-y-10');
+                toast.classList.add('opacity-100', 'translate-y-0');
+
+                // Hide Toast after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    toast.classList.add('opacity-0', 'translate-y-10');
+                }, 3000);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

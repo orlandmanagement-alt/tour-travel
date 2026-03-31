@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import CheckoutStepper from '@/components/CheckoutStepper';
 import OrderSummaryWidget from '@/components/OrderSummaryWidget';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Inline schema (safe on client — no server-only imports)
 const BookingFormSchema = z.object({
@@ -27,28 +29,45 @@ interface CheckoutClientProps {
 export default function CheckoutClient({ tourId }: CheckoutClientProps) {
   const [step, setStep] = useState(1);
   const [pax, setPax] = useState(2);
-  const [selectedAddons, setSelectedAddons] = useState<{ id: string; name: string; price: number }[]>([]);
+  const [selectedAddons, setSelectedAddons] = useState<{ id: string; name: string; price: number, charge_type?: string }[]>([]);
+  const [tourData, setTourData] = useState<any>(null);
+  const [isLoadingTour, setIsLoadingTour] = useState(true);
 
-  const tourMock = {
-    id: tourId,
-    name: 'Midnight Bromo Sunrise Premium',
-    basePrice: 350000,
-    availableAddons: [
-      { id: 'ADD-01', name: 'GoPro Rental', price: 250000 },
-      { id: 'ADD-02', name: 'Drone Documentation', price: 1500000 },
-    ],
-  };
+  const router = useRouter();
+  const { user } = useAuth();
 
-  const { register, handleSubmit, trigger, formState: { errors } } = useForm({
+  const { register, handleSubmit, trigger, formState: { errors }, setValue } = useForm({
     resolver: zodResolver(BookingFormSchema),
     defaultValues: {
       tour_id: tourId,
       pax: 2,
       booking_date: '',
-      customer_info: { full_name: '', email: '', whatsapp: '' },
+      customer_info: { full_name: user?.name || '', email: user?.email || '', whatsapp: '' },
     },
     mode: 'onChange',
   });
+
+  // Auto-fill form if user is logged in
+  useEffect(() => {
+    if (user) {
+      setValue('customer_info.full_name', user.name);
+      setValue('customer_info.email', user.email);
+    }
+  }, [user, setValue]);
+
+  // Fetch true tour data
+  useEffect(() => {
+    fetch(`http://localhost:8787/api/tours/${tourId}`)
+      .then(res => res.json())
+      .then(data => {
+        setTourData(data);
+        setIsLoadingTour(false);
+      })
+      .catch(err => {
+        console.error("Failed fetching tour", err);
+        setIsLoadingTour(false);
+      });
+  }, [tourId]);
 
   const nextStep = async (currentStep: number) => {
     let valid = false;
@@ -59,22 +78,39 @@ export default function CheckoutClient({ tourId }: CheckoutClientProps) {
   };
 
   const onSubmit = async (data: any) => {
-    const payload = { ...data, pax, addons: selectedAddons.map(a => a.id) };
-    // POST to Cloudflare Worker API (not Next.js API route — static export incompatible)
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const payload = { 
+      customer_name: data.customer_info.full_name,
+      customer_email: data.customer_info.email,
+      customer_phone: data.customer_info.whatsapp,
+      tour_id: Number(data.tour_id),
+      travel_date: data.booking_date,
+      total_pax: pax,
+      addons: selectedAddons.map((a: any) => ({ 
+          id: Number(a.id), 
+          quantity: a.charge_type === 'per_group' ? 1 : pax 
+      }))
+    };
+
     try {
-      const res = await fetch(`${apiUrl}/api/checkout`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      const res = await fetch(`http://localhost:8787/api/bookings`, {
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(payload),
       });
       const result = await res.json();
-      if (result?.booking_ref) alert(`Booking confirmed! Ref: ${result.booking_ref}`);
-    } catch {
-      console.error('Checkout API error. Verify NEXT_PUBLIC_API_URL env var.');
+      if (!res.ok) throw new Error(result.message || 'Booking failed');
+      
+      if (result?.booking_reference) {
+          router.push(`/checkout/success?ref=${result.booking_reference}`);
+      }
+    } catch (e: any) {
+      alert(e.message);
+      console.error('Checkout API error:', e);
     }
   };
 
-  const handleAddonToggle = (addon: { id: string; name: string; price: number }) => {
-    setSelectedAddons(prev =>
+  const handleAddonToggle = (addon: { id: string; name: string; price: number, charge_type?: string }) => {
+    setSelectedAddons((prev: any[]) =>
       prev.find(a => a.id === addon.id)
         ? prev.filter(a => a.id !== addon.id)
         : [...prev, addon]
@@ -153,23 +189,27 @@ export default function CheckoutClient({ tourId }: CheckoutClientProps) {
                   </div>
 
                   <h3 className="font-bold text-slate-800 mb-4">Add-ons</h3>
-                  <div className="space-y-3">
-                    {tourMock.availableAddons.map(addon => {
-                      const selected = !!selectedAddons.find(a => a.id === addon.id);
-                      return (
-                        <div key={addon.id} onClick={() => handleAddonToggle(addon)}
-                          className={`p-4 border-2 rounded-xl cursor-pointer flex justify-between items-center transition-all ${selected ? 'border-brand-primary bg-brand-primary/5' : 'border-slate-200 hover:border-slate-300'}`}>
-                          <div className="flex items-center gap-4">
-                            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${selected ? 'bg-brand-primary border-brand-primary text-white' : 'border-slate-300'}`}>
-                              {selected && <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
+                  {tourData?.addons && tourData.addons.length > 0 ? (
+                    <div className="space-y-3">
+                      {tourData.addons.map((addon: any) => {
+                        const selected = !!selectedAddons.find(a => a.id === addon.id);
+                        return (
+                          <div key={addon.id} onClick={() => handleAddonToggle({id: addon.id, name: addon.addon_name, price: addon.charge_type === 'per_pax' ? (addon.price * pax) : addon.price, charge_type: addon.charge_type})}
+                            className={`p-4 border-2 rounded-xl cursor-pointer flex justify-between items-center transition-all ${selected ? 'border-brand-primary bg-brand-primary/5' : 'border-slate-200 hover:border-slate-300'}`}>
+                            <div className="flex items-center gap-4">
+                              <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${selected ? 'bg-brand-primary border-brand-primary text-white' : 'border-slate-300'}`}>
+                                {selected && <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
+                              </div>
+                              <span className={`font-bold ${selected ? 'text-brand-primary' : 'text-slate-700'}`}>{addon.addon_name} <span className="text-xs font-medium text-slate-400">({addon.charge_type === 'per_pax' ? 'Per Pax' : 'Per Group'})</span></span>
                             </div>
-                            <span className={`font-bold ${selected ? 'text-brand-primary' : 'text-slate-700'}`}>{addon.name}</span>
+                            <span className="font-mono text-sm text-slate-500">+ Rp {addon.price.toLocaleString('id-ID')}</span>
                           </div>
-                          <span className="font-mono text-sm text-slate-500">+ Rp {addon.price.toLocaleString('id-ID')}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-slate-500 italic">No add-ons available for this trip.</p>
+                  )}
                 </div>
               )}
 
@@ -214,7 +254,19 @@ export default function CheckoutClient({ tourId }: CheckoutClientProps) {
 
           {/* Sticky Summary */}
           <div className="w-full lg:w-1/3">
-            <OrderSummaryWidget tourId={tourMock.id} tourName={tourMock.name} basePrice={tourMock.basePrice} pax={pax} addonsList={selectedAddons} />
+            {isLoadingTour ? (
+              <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex justify-center items-center h-[300px]">
+                 <p className="text-slate-400 font-bold">Kalkulasi biaya...</p>
+              </div>
+            ) : (
+              <OrderSummaryWidget 
+                tourId={tourId} 
+                tourName={tourData?.name || 'Menunggu data...'} 
+                basePrice={tourData?.base_price || 0} 
+                pax={pax} 
+                addonsList={selectedAddons} 
+              />
+            )}
           </div>
         </div>
       </div>

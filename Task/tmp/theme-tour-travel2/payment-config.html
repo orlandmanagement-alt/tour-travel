@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Config | Admin NusantaraTrip</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 900: '#312e81' },
+                        accent: { 400: '#fb923c', 500: '#f97316', 600: '#ea580c' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        .admin-nav-item { transition: all 0.2s ease; border-left: 3px solid transparent; }
+        .admin-nav-item:hover, .admin-nav-item.active { background-color: rgba(255, 255, 255, 0.1); border-left-color: #f97316; color: white; }
+        
+        .input-saas { transition: all 0.3s ease; border: 1px solid #cbd5e1; }
+        .input-saas:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); outline: none; }
+
+        /* Toggle Switch iOS Style */
+        .toggle-switch {
+            appearance: none; width: 44px; height: 24px; background: #cbd5e1;
+            border-radius: 12px; position: relative; cursor: pointer; outline: none; transition: 0.3s;
+        }
+        .toggle-switch::after {
+            content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
+            background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .toggle-switch:checked { background: #10b981; }
+        .toggle-switch:checked::after { left: calc(100% - 2px); transform: translateX(-100%); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased h-screen flex overflow-hidden bg-slate-50">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="w-64 bg-brand-900 text-brand-200 flex-shrink-0 hidden md:flex flex-col h-full shadow-xl z-20">
+        <div class="h-16 flex items-center px-6 border-b border-white/10 bg-brand-950">
+            <a href="/" class="font-extrabold text-xl tracking-tighter text-white flex items-center gap-2">
+                <div class="w-7 h-7 rounded bg-accent-500 text-white flex items-center justify-center shadow"><span class="text-xs"><i class="fa-solid fa-paper-plane"></i></span></div>
+                NusaTrip <span class="text-xs font-normal text-brand-300 ml-1">Admin</span>
+            </a>
+        </div>
+        <div class="flex-1 overflow-y-auto py-4">
+            <p class="px-6 text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2">Main Menu</p>
+            <nav class="flex flex-col gap-1 mb-6">
+                <a href="admin-dashboard.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-chart-pie w-5 text-center"></i> Dashboard
+                </a>
+                <a href="admin-orders.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-receipt w-5 text-center"></i> Bookings
+                </a>
+            </nav>
+
+            <p class="px-6 text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2">Sistem & Admin</p>
+            <nav class="flex flex-col gap-1 mb-6">
+                <a href="admin-users.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-users w-5 text-center"></i> Pelanggan & Mitra
+                </a>
+                <a href="admin-staff.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-id-badge w-5 text-center"></i> Staff & Roles
+                </a>
+                <!-- MENU AKTIF -->
+                <a href="#" class="admin-nav-item active px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-credit-card w-5 text-center"></i> Payment Config
+                </a>
+                <a href="admin-settings.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-gear w-5 text-center"></i> Pengaturan
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- RIGHT MAIN CONTENT -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 z-10 shadow-sm flex-shrink-0">
+            <div class="flex items-center gap-4">
+                <button class="md:hidden text-slate-500 hover:text-brand-600 text-xl focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h2 class="font-bold text-slate-800 hidden sm:block">Infrastruktur Pembayaran</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 cursor-pointer border-slate-200 pl-4">
+                    <img src="https://ui-avatars.com/api/?name=Super+Admin&background=f97316&color=fff" alt="Admin" class="w-8 h-8 rounded-full">
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-50">
+            
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 max-w-5xl mx-auto">
+                <div>
+                    <h1 class="text-2xl font-extrabold text-slate-900 mb-1">Payment Orchestrator Routing</h1>
+                    <p class="text-sm text-slate-500 font-medium">Sistem dirancang Vendor-Agnostic. Pilih gateway utama, sistem akan otomatis beralih (failover) ke gateway sekunder jika utama down.</p>
+                </div>
+                <button class="px-5 py-2.5 bg-slate-800 hover:bg-black text-white font-bold text-sm rounded-xl shadow-lg transition-all whitespace-nowrap">
+                    Save Routing Rules
+                </button>
+            </div>
+
+            <!-- PAYMENT GATEWAY GRID -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                
+                <!-- Card: Midtrans (PRIMARY) -->
+                <div class="bg-white border-2 border-emerald-400 rounded-2xl p-6 shadow-lg shadow-emerald-500/10 relative overflow-hidden flex flex-col">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-black text-slate-900 tracking-tight">Midtrans</h3>
+                        <div class="flex flex-col items-end gap-1">
+                            <span class="text-[9px] font-black text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded uppercase tracking-widest">PRIMARY</span>
+                            <input type="checkbox" class="toggle-switch" checked>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3 mb-8">
+                        <div class="flex justify-between text-xs border-b border-slate-100 pb-2">
+                            <span class="text-slate-500">Connection</span>
+                            <span class="font-bold text-emerald-600"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block mb-0.5 mr-1 animate-pulse"></span>OK</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-500">Base Fee (MDR)</span>
+                            <span class="font-bold text-slate-800">IDR 4,000 / tx</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto flex gap-2">
+                        <button class="flex-1 py-2 bg-emerald-50 text-emerald-600 font-bold text-xs rounded-lg opacity-50 cursor-not-allowed">Set Primary</button>
+                        <button onclick="openKeyModal('Midtrans')" class="flex-1 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-lg shadow-sm">Edit Keys</button>
+                    </div>
+                </div>
+
+                <!-- Card: Xendit (OFFLINE) -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col opacity-75 hover:opacity-100 transition-opacity">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-black text-slate-400 tracking-tight">Xendit</h3>
+                        <div class="flex flex-col items-end gap-1">
+                            <input type="checkbox" class="toggle-switch">
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3 mb-8">
+                        <div class="flex justify-between text-xs border-b border-slate-100 pb-2">
+                            <span class="text-slate-400">Connection</span>
+                            <span class="font-bold text-slate-400">Offline</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-400">Base Fee (MDR)</span>
+                            <span class="font-bold text-slate-400">IDR 4,500 / tx</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto flex gap-2">
+                        <button class="flex-1 py-2 bg-slate-50 text-slate-400 font-bold text-xs rounded-lg hover:bg-slate-100 transition-colors">Set Primary</button>
+                        <button onclick="openKeyModal('Xendit')" class="flex-1 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-bold text-xs rounded-lg shadow-sm">Edit Keys</button>
+                    </div>
+                </div>
+
+                <!-- Card: Duitku (SECONDARY ACTIVE) -->
+                <div class="bg-white border border-slate-300 rounded-2xl p-6 shadow-md flex flex-col relative overflow-hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-black text-slate-900 tracking-tight">Duitku</h3>
+                        <div class="flex flex-col items-end gap-1">
+                            <span class="text-[9px] font-black text-slate-500 bg-slate-100 px-2 py-0.5 rounded uppercase tracking-widest">FAILOVER (2)</span>
+                            <input type="checkbox" class="toggle-switch" checked>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3 mb-8">
+                        <div class="flex justify-between text-xs border-b border-slate-100 pb-2">
+                            <span class="text-slate-500">Connection</span>
+                            <span class="font-bold text-emerald-600"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block mb-0.5 mr-1"></span>OK</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-500">Base Fee (MDR)</span>
+                            <span class="font-bold text-slate-800">IDR 3,000 / tx</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto flex gap-2">
+                        <button class="flex-1 py-2 bg-slate-50 hover:bg-brand-50 text-slate-600 hover:text-brand-600 font-bold text-xs rounded-lg transition-colors">Set Primary</button>
+                        <button onclick="openKeyModal('Duitku')" class="flex-1 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-lg shadow-sm">Edit Keys</button>
+                    </div>
+                </div>
+
+                <!-- Card: iPaymu (OFFLINE) -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col opacity-75 hover:opacity-100 transition-opacity">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-black text-slate-400 tracking-tight">iPaymu</h3>
+                        <input type="checkbox" class="toggle-switch">
+                    </div>
+                    <div class="space-y-3 mb-8">
+                        <div class="flex justify-between text-xs border-b border-slate-100 pb-2"><span class="text-slate-400">Connection</span><span class="font-bold text-slate-400">Offline</span></div>
+                        <div class="flex justify-between text-xs"><span class="text-slate-400">Base Fee (MDR)</span><span class="font-bold text-slate-400">IDR 3,500 / tx</span></div>
+                    </div>
+                    <div class="mt-auto flex gap-2">
+                        <button class="flex-1 py-2 bg-slate-50 text-slate-400 font-bold text-xs rounded-lg">Set Primary</button>
+                        <button class="flex-1 py-2 bg-white border border-slate-200 text-slate-600 font-bold text-xs rounded-lg">Edit Keys</button>
+                    </div>
+                </div>
+
+                <!-- Card: Doku (OFFLINE) -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col opacity-75 hover:opacity-100 transition-opacity">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-black text-slate-400 tracking-tight">Doku</h3>
+                        <input type="checkbox" class="toggle-switch">
+                    </div>
+                    <div class="space-y-3 mb-8">
+                        <div class="flex justify-between text-xs border-b border-slate-100 pb-2"><span class="text-slate-400">Connection</span><span class="font-bold text-slate-400">Offline</span></div>
+                        <div class="flex justify-between text-xs"><span class="text-slate-400">Base Fee (MDR)</span><span class="font-bold text-slate-400">IDR 4,500 / tx</span></div>
+                    </div>
+                    <div class="mt-auto flex gap-2">
+                        <button class="flex-1 py-2 bg-slate-50 text-slate-400 font-bold text-xs rounded-lg">Set Primary</button>
+                        <button class="flex-1 py-2 bg-white border border-slate-200 text-slate-600 font-bold text-xs rounded-lg">Edit Keys</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL EDIT KEYS -->
+    <div id="key-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl scale-95 transition-transform duration-300" id="modal-content">
+            <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-2xl">
+                <h2 class="text-lg font-extrabold text-slate-900" id="modal-title">Edit API Keys</h2>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-red-500 focus:outline-none"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-6 space-y-5">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Environment Status</label>
+                    <select class="w-full bg-white border border-slate-300 text-sm font-bold rounded-lg px-4 py-2.5 input-saas text-slate-800 cursor-pointer">
+                        <option value="sandbox">Sandbox (Testing)</option>
+                        <option value="production">Production (Live)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Client Key / Public Key</label>
+                    <input type="text" class="w-full bg-slate-50 border border-slate-300 text-sm font-mono rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="e.g. SB-Mid-client-xxx">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Server Key / Secret Key</label>
+                    <input type="password" class="w-full bg-slate-50 border border-slate-300 text-sm font-mono rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="e.g. SB-Mid-server-xxx">
+                </div>
+            </div>
+            <div class="p-5 border-t border-slate-200 bg-slate-50 rounded-b-2xl flex justify-end gap-3">
+                <button onclick="closeModal()" class="px-5 py-2.5 bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 font-bold text-sm rounded-lg">Batal</button>
+                <button onclick="closeModal()" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-lg shadow-md">Simpan Konfigurasi</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('key-modal');
+        const modalContent = document.getElementById('modal-content');
+        
+        function openKeyModal(gatewayName) {
+            document.getElementById('modal-title').innerText = "Konfigurasi API: " + gatewayName;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+    </script>
+</body>
+</html>

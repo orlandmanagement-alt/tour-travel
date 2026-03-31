@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { notFound } from 'next/navigation';
 import StickyBookingWidget from '@/components/StickyBookingWidget';
 import ItineraryTimeline from '@/components/ItineraryTimeline';
+import ReviewSection from '@/components/ReviewSection';
 
 // Mock Data Fallback
 const mockTourDetail = {
@@ -100,6 +101,38 @@ export default function TourDetailClient({ id }: TourDetailClientProps) {
 
   return (
     <div className="bg-slate-50 dark:bg-slate-900 min-h-screen pt-28 pb-20 font-sans">
+      {/* SEO JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            "name": tour.tour_name,
+            "image": [
+              "https://images.unsplash.com/photo-1542898939-5e5f385c5dfa?w=1200&q=80"
+            ],
+            "description": `Nikmati pengalaman tak terlupakan menjelajahi keajaiban alam dengan ${tour.tour_name}.`,
+            "sku": tour.tour_code,
+            "brand": {
+              "@type": "Brand",
+              "name": "NusantaraTrip"
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": tour.average_rating || 4.9,
+              "reviewCount": tour.review_count || 128
+            },
+            "offers": {
+              "@type": "Offer",
+              "url": `https://nusantaratrip.com/tours/${tour.id}`,
+              "priceCurrency": "IDR",
+              "price": tour.base_price,
+              "availability": "https://schema.org/InStock"
+            }
+          })
+        }}
+      />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
@@ -266,34 +299,12 @@ export default function TourDetailClient({ id }: TourDetailClientProps) {
               <ItineraryTimeline itineraries={tour.itineraries || mockTourDetail.itineraries} />
             </section>
 
-            {/* Reviews Sneak Peek */}
-            <section id="ulasan" className="pt-8">
-              <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-8 tracking-tight flex items-center gap-4">
-                Ulasan Pelanggan
-                <div className="h-px flex-grow bg-slate-100 dark:bg-slate-800"></div>
-              </h2>
-              <div className="flex flex-col sm:flex-row gap-8 mb-8 items-stretch">
-                <div className="w-full sm:w-1/3 flex flex-col items-center justify-center p-8 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm">
-                  <span className="text-5xl font-black text-slate-900 dark:text-white mb-3">4.9</span>
-                  <div className="flex text-yellow-400 text-lg mb-3">
-                    {[1,2,3,4,5].map(s => <i key={s} className="fa-solid fa-star"></i>)}
-                  </div>
-                  <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">128 Ulasan</span>
-                </div>
-                <div className="flex-1 flex flex-col justify-center gap-4">
-                  <div className="p-5 border border-slate-100 dark:border-slate-700 rounded-3xl bg-white dark:bg-slate-800/50 shadow-sm relative italic text-slate-600 dark:text-slate-400 text-sm font-medium">
-                    "Supir tepat waktu jemput di hotel Malang jam 12 malam. Jeepnya juga bagus dan driver jeep ramah bantu foto-foto. Madakaripura sangat indah!"
-                    <div className="mt-3 not-italic flex items-center gap-3">
-                      <div className="w-6 h-6 rounded-full bg-brand-primary text-white text-[8px] flex items-center justify-center font-black">AD</div>
-                      <span className="text-[10px] font-black text-slate-800 dark:text-white tracking-widest uppercase">Andi Darmawan</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <button className="w-full py-4 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-white dark:hover:bg-slate-800 transition-all active:scale-95">
-                Lihat Semua Ulasan
-              </button>
-            </section>
+            {/* Reviews Section */}
+            <ReviewSection 
+              tourId={tour.id} 
+              averageRating={tour.average_rating || 4.9} 
+              reviewCount={tour.review_count || 128} 
+            />
 
           </div>
 

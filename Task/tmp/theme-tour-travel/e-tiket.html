@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Ticket INV-20261024-001 | NusantaraTrip</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', // Primary Indigo
+                            700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', // Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
+        
+        /* Print Styles - Menyembunyikan tombol saat di-print */
+        @media print {
+            body { background-color: white; }
+            .no-print { display: none !important; }
+            .ticket-container { box-shadow: none !important; border: 1px solid #cbd5e1 !important; margin-top: 0 !important; }
+        }
+
+        /* Efek Bolong Tiket (Ticket Cutout) */
+        .ticket-cutout-left {
+            position: absolute; left: -10px; top: 50%; transform: translateY(-50%);
+            width: 20px; height: 20px; background-color: #f1f5f9; border-radius: 50%;
+            border-right: 1px solid #e2e8f0; z-index: 10;
+        }
+        .ticket-cutout-right {
+            position: absolute; right: -10px; top: 50%; transform: translateY(-50%);
+            width: 20px; height: 20px; background-color: #f1f5f9; border-radius: 50%;
+            border-left: 1px solid #e2e8f0; z-index: 10;
+        }
+        @media print {
+            .ticket-cutout-left, .ticket-cutout-right { background-color: white; }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased pb-12">
+
+    <!-- HEADER / ACTION BAR (NO PRINT) -->
+    <div class="bg-white border-b border-slate-200 py-4 shadow-sm sticky top-0 z-50 no-print">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <a href="user-dashboard.html" class="text-slate-500 hover:text-brand-600 font-medium text-sm flex items-center gap-2 transition-colors">
+                <i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard
+            </a>
+            <div class="flex items-center gap-3">
+                <button class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-lg transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-download"></i> Unduh PDF
+                </button>
+                <button onclick="window.print()" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-lg shadow-md shadow-brand-500/30 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-print"></i> Cetak E-Ticket
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN TICKET CONTAINER -->
+    <main class="max-w-3xl mx-auto px-4 sm:px-6 mt-8 ticket-container">
+        
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden relative border border-slate-200">
+            
+            <!-- TICKET HEADER -->
+            <div class="bg-brand-900 text-white p-5 sm:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <div class="font-extrabold text-2xl tracking-tighter flex items-center gap-2 mb-1">
+                        <div class="w-8 h-8 rounded bg-white text-brand-900 flex items-center justify-center shadow"><span class="text-sm"><i class="fa-solid fa-paper-plane"></i></span></div>
+                        NusaTrip
+                    </div>
+                    <p class="text-[10px] text-brand-200 font-medium tracking-widest uppercase">E-Voucher Perjalanan Resmi</p>
+                </div>
+                <div class="text-left sm:text-right">
+                    <p class="text-[10px] text-brand-200 uppercase font-bold">No. Pesanan</p>
+                    <p class="text-xl sm:text-2xl font-mono font-extrabold tracking-wider">INV-20261024-001</p>
+                    <span class="inline-block mt-1 bg-emerald-500 text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase">LUNAS / PAID</span>
+                </div>
+            </div>
+
+            <!-- TICKET BODY (SPLIT LAYOUT) -->
+            <div class="flex flex-col sm:flex-row relative">
+                
+                <!-- Efek Potongan Tiket Kiri/Kanan -->
+                <div class="ticket-cutout-left hidden sm:block"></div>
+                <div class="ticket-cutout-right hidden sm:block"></div>
+
+                <!-- LEFT SECTION: DETAILS -->
+                <div class="flex-1 p-5 sm:p-8">
+                    
+                    <div class="mb-6">
+                        <span class="bg-brand-50 text-brand-600 border border-brand-200 text-[9px] font-bold px-2 py-0.5 rounded shadow-sm mb-2 inline-block uppercase">Private Tour</span>
+                        <h1 class="text-lg sm:text-xl font-extrabold text-slate-900 leading-snug">Private Tour Bromo Midnight & Air Terjun Madakaripura</h1>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-y-5 gap-x-4 mb-6">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase mb-0.5"><i class="fa-regular fa-calendar text-brand-500 mr-1"></i> Tanggal Trip</p>
+                            <p class="text-sm font-bold text-slate-800">Sabtu, 24 Okt 2026</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase mb-0.5"><i class="fa-solid fa-users text-brand-500 mr-1"></i> Peserta</p>
+                            <p class="text-sm font-bold text-slate-800">2 Dewasa</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase mb-0.5"><i class="fa-regular fa-clock text-brand-500 mr-1"></i> Waktu Jemput</p>
+                            <p class="text-sm font-bold text-slate-800">00:00 WIB (Tengah Malam)</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase mb-0.5"><i class="fa-solid fa-map-pin text-brand-500 mr-1"></i> Lokasi Jemput</p>
+                            <p class="text-sm font-bold text-slate-800">Hotel Tugu Malang</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-100 pt-5">
+                        <h3 class="text-xs font-bold text-slate-900 mb-3">Detail Penumpang Utama (Lead Guest)</h3>
+                        <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 flex gap-4 items-center">
+                            <div class="w-10 h-10 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-lg flex-shrink-0">
+                                BS
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-900">Tn. Budi Santoso</p>
+                                <p class="text-[10px] text-slate-500">+62 812-3456-7890 • budi.santoso@email.com</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT SECTION: QR CODE (Dashed Border Separator) -->
+                <div class="w-full sm:w-[220px] p-5 sm:p-8 sm:border-l-2 border-dashed border-slate-200 bg-slate-50 flex flex-col justify-center items-center text-center sm:min-h-[350px]">
+                    
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Pindai QR Code</p>
+                    
+                    <!-- Dummy QR Code Generator dari API eksternal -->
+                    <div class="bg-white p-2 rounded-xl shadow-sm border border-slate-200 mb-4 inline-block">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=NUSA-INV-20261024-001" alt="QR Code" class="w-32 h-32 object-contain">
+                    </div>
+                    
+                    <p class="text-[10px] text-slate-500 leading-tight">Tunjukkan QR Code ini kepada Driver / Tour Guide kami saat penjemputan.</p>
+                    
+                </div>
+            </div>
+
+            <!-- TICKET FOOTER: IMPORTANT NOTES -->
+            <div class="bg-white border-t border-slate-200 p-5 sm:p-6">
+                <h3 class="text-xs font-bold text-slate-900 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-amber-500"></i> Informasi Penting
+                </h3>
+                <ul class="space-y-2 text-[10px] text-slate-600 list-disc pl-4">
+                    <li>Harap bersiap di lokasi penjemputan 15 menit sebelum waktu keberangkatan.</li>
+                    <li>Suhu di Gunung Bromo bisa mencapai 5-10°C. Sangat disarankan membawa jaket tebal, sarung tangan, kupluk, dan sepatu yang nyaman untuk trekking.</li>
+                    <li>Harga sudah termasuk tiket masuk WNI. Jika ada peserta WNA (Asing), akan ada penyesuaian biaya tiket di lokasi.</li>
+                    <li>Untuk keadaan darurat atau jika supir belum tiba, silakan hubungi Layanan Pelanggan 24/7 kami di <strong>+62 800-1234-5678</strong>.</li>
+                </ul>
+            </div>
+            
+        </div>
+
+        <!-- Bantuan & Kontak (Outside Ticket) -->
+        <div class="mt-6 text-center text-xs text-slate-500 no-print">
+            <p>Butuh bantuan dengan pesanan Anda? <a href="#" class="text-brand-600 font-bold hover:underline">Hubungi Customer Support</a></p>
+        </div>
+
+    </main>
+
+</body>
+</html>

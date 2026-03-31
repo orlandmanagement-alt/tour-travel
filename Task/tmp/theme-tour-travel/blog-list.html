@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog & Panduan Wisata | NusantaraTrip</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', // Primary Indigo
+                            700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', // Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+        
+        /* Hide scrollbar */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Card Hover Effects */
+        .blog-card { transition: all 0.3s ease; }
+        .blog-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(79, 70, 229, 0.1); }
+        .img-zoom { transition: transform 0.5s ease; }
+        .blog-card:hover .img-zoom { transform: scale(1.05); }
+
+        /* Input Custom */
+        .input-saas:focus-within { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased overflow-x-hidden">
+
+    <!-- HEADER -->
+    <header class="bg-white border-b border-slate-200 py-3 sm:py-4 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            
+            <a href="/" class="font-extrabold text-xl tracking-tighter text-brand-900 flex items-center gap-2">
+                <div class="w-8 h-8 rounded bg-brand-600 text-white flex items-center justify-center shadow"><span class="text-sm"><i class="fa-solid fa-paper-plane"></i></span></div>
+                NusaTrip <span class="text-slate-300 font-light hidden sm:inline">|</span> <span class="text-slate-500 font-medium text-sm hidden sm:inline">Travel Blog</span>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="#" class="text-sm font-bold text-brand-600 border-b-2 border-brand-600 pb-1">Artikel Terbaru</a>
+                <a href="#" class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Tips & Info</a>
+                <a href="#" class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Destinasi</a>
+            </nav>
+
+            <div class="flex items-center gap-4">
+                <a href="/" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-lg transition-colors flex items-center gap-2">
+                    Pesan Tour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO FEATURED POST -->
+    <section class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <a href="#" class="block relative rounded-2xl sm:rounded-3xl overflow-hidden group shadow-md hover:shadow-xl transition-shadow h-[350px] sm:h-[450px]">
+            <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200" alt="Featured Post" class="w-full h-full object-cover img-zoom">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
+            
+            <div class="absolute bottom-0 left-0 p-6 sm:p-10 w-full max-w-3xl">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="bg-brand-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">Panduan Destinasi</span>
+                    <span class="text-slate-300 text-xs font-medium flex items-center gap-1.5"><i class="fa-regular fa-clock"></i> 8 Menit Baca</span>
+                </div>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-3 leading-tight group-hover:text-brand-100 transition-colors">Panduan Lengkap Liburan ke Bali 2026: Rekomendasi Rute, Biaya & Spot Tersembunyi</h1>
+                <p class="text-sm text-slate-300 line-clamp-2 mb-4 hidden sm:block">Bali selalu punya cerita baru. Temukan rekomendasi beach club terbaru, itinerary 4 hari 3 malam yang efektif, hingga perkiraan budget liburan tanpa menguras kantong.</p>
+                <div class="flex items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name=Editor+Nusa&background=fff&color=4f46e5" alt="Author" class="w-8 h-8 rounded-full border-2 border-white shadow-sm">
+                    <span class="text-white text-xs font-bold">Tim Editorial NusaTrip <span class="text-slate-400 font-medium ml-2">• 12 Nov 2026</span></span>
+                </div>
+            </div>
+        </a>
+    </section>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pb-16 flex flex-col lg:flex-row gap-8 lg:gap-10">
+        
+        <!-- ========================================== -->
+        <!-- KIRI: DAFTAR ARTIKEL (70%)                 -->
+        <!-- ========================================== -->
+        <div class="flex-1 min-w-0">
+            
+            <!-- Category Quick Tags -->
+            <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar mb-8 pb-2 border-b border-slate-200">
+                <button class="px-4 py-2 bg-brand-50 text-brand-600 font-bold text-xs rounded-full border border-brand-200 whitespace-nowrap">Semua Topik</button>
+                <button class="px-4 py-2 bg-white text-slate-600 hover:bg-slate-50 font-bold text-xs rounded-full border border-slate-200 whitespace-nowrap transition-colors">Tips & Info</button>
+                <button class="px-4 py-2 bg-white text-slate-600 hover:bg-slate-50 font-bold text-xs rounded-full border border-slate-200 whitespace-nowrap transition-colors">Kuliner</button>
+                <button class="px-4 py-2 bg-white text-slate-600 hover:bg-slate-50 font-bold text-xs rounded-full border border-slate-200 whitespace-nowrap transition-colors">Akomodasi</button>
+                <button class="px-4 py-2 bg-white text-slate-600 hover:bg-slate-50 font-bold text-xs rounded-full border border-slate-200 whitespace-nowrap transition-colors">Inspirasi Liburan</button>
+            </div>
+
+            <!-- Grid Artikel -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6" id="blog-grid">
+                
+                <!-- Card 1 -->
+                <a href="#" class="bg-white border border-slate-200 rounded-2xl overflow-hidden blog-card flex flex-col group">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1542898939-5e5f385c5dfa?w=600" alt="Bromo" class="w-full h-full object-cover img-zoom">
+                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur text-brand-600 text-[10px] font-bold px-2 py-1 rounded shadow-sm uppercase tracking-wider">Tips & Info</span>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="font-bold text-slate-900 text-base mb-2 line-clamp-2 leading-snug group-hover:text-brand-600 transition-colors">Cara Mencegah Kedinginan Ekstrem Saat Menunggu Sunrise di Bromo</h3>
+                        <p class="text-xs text-slate-500 mb-4 line-clamp-2">Suhu Bromo bisa mencapai 5 derajat Celcius. Jangan biarkan liburan rusak karena salah kostum, ikuti panduan layer pakaian ini.</p>
+                        <div class="mt-auto flex justify-between items-center text-[10px] text-slate-400 font-medium pt-3 border-t border-slate-100">
+                            <span>05 Nov 2026</span>
+                            <span class="flex items-center gap-1"><i class="fa-regular fa-clock"></i> 4 Min Baca</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Card 2 -->
+                <a href="#" class="bg-white border border-slate-200 rounded-2xl overflow-hidden blog-card flex flex-col group">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600" alt="Japan" class="w-full h-full object-cover img-zoom">
+                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur text-accent-600 text-[10px] font-bold px-2 py-1 rounded shadow-sm uppercase tracking-wider">Inspirasi</span>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="font-bold text-slate-900 text-base mb-2 line-clamp-2 leading-snug group-hover:text-brand-600 transition-colors">Waktu Terbaik Mengunjungi Jepang: Bunga Sakura vs Daun Musim Gugur</h3>
+                        <p class="text-xs text-slate-500 mb-4 line-clamp-2">Bingung memilih antara Spring atau Autumn? Berikut perbandingan biaya, suasana, dan ketersediaan tiket untuk liburan ke Jepang.</p>
+                        <div class="mt-auto flex justify-between items-center text-[10px] text-slate-400 font-medium pt-3 border-t border-slate-100">
+                            <span>28 Okt 2026</span>
+                            <span class="flex items-center gap-1"><i class="fa-regular fa-clock"></i> 6 Min Baca</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Card 3 -->
+                <a href="#" class="bg-white border border-slate-200 rounded-2xl overflow-hidden blog-card flex flex-col group">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=600" alt="Malang" class="w-full h-full object-cover img-zoom">
+                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur text-emerald-600 text-[10px] font-bold px-2 py-1 rounded shadow-sm uppercase tracking-wider">Kuliner</span>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="font-bold text-slate-900 text-base mb-2 line-clamp-2 leading-snug group-hover:text-brand-600 transition-colors">7 Rekomendasi Kuliner Malam Kota Malang yang Wajib Anda Coba</h3>
+                        <p class="text-xs text-slate-500 mb-4 line-clamp-2">Mulai dari Bakso President hingga ketan legendaris di Alun-Alun Batu. Hangatkan malam Anda dengan pilihan kuliner lokal ini.</p>
+                        <div class="mt-auto flex justify-between items-center text-[10px] text-slate-400 font-medium pt-3 border-t border-slate-100">
+                            <span>20 Okt 2026</span>
+                            <span class="flex items-center gap-1"><i class="fa-regular fa-clock"></i> 5 Min Baca</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Card 4 -->
+                <a href="#" class="bg-white border border-slate-200 rounded-2xl overflow-hidden blog-card flex flex-col group">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600" alt="Rent Car" class="w-full h-full object-cover img-zoom">
+                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur text-brand-600 text-[10px] font-bold px-2 py-1 rounded shadow-sm uppercase tracking-wider">Tips & Info</span>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="font-bold text-slate-900 text-base mb-2 line-clamp-2 leading-snug group-hover:text-brand-600 transition-colors">Sewa Mobil Lepas Kunci vs Pakai Supir: Mana yang Lebih Menguntungkan?</h3>
+                        <p class="text-xs text-slate-500 mb-4 line-clamp-2">Menganalisis plus minus menggunakan supir lokal untuk liburan keluarga. Pertimbangkan faktor kelelahan, rute, dan fleksibilitas.</p>
+                        <div class="mt-auto flex justify-between items-center text-[10px] text-slate-400 font-medium pt-3 border-t border-slate-100">
+                            <span>15 Okt 2026</span>
+                            <span class="flex items-center gap-1"><i class="fa-regular fa-clock"></i> 7 Min Baca</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Card 5 -->
+                <a href="#" class="bg-white border border-slate-200 rounded-2xl overflow-hidden blog-card flex flex-col group">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?w=600" alt="Turkey" class="w-full h-full object-cover img-zoom">
+                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur text-accent-600 text-[10px] font-bold px-2 py-1 rounded shadow-sm uppercase tracking-wider">Inspirasi</span>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="font-bold text-slate-900 text-base mb-2 line-clamp-2 leading-snug group-hover:text-brand-600 transition-colors">Panduan Naik Balon Udara di Cappadocia: Harga dan Waktu Terbaik</h3>
+                        <p class="text-xs text-slate-500 mb-4 line-clamp-2">Semua yang perlu Anda ketahui sebelum merencanakan liburan impian ke Turki dan menaiki balon udara yang ikonik.</p>
+                        <div class="mt-auto flex justify-between items-center text-[10px] text-slate-400 font-medium pt-3 border-t border-slate-100">
+                            <span>10 Okt 2026</span>
+                            <span class="flex items-center gap-1"><i class="fa-regular fa-clock"></i> 5 Min Baca</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Card 6 -->
+                <a href="#" class="bg-white border border-slate-200 rounded-2xl overflow-hidden blog-card flex flex-col group">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1512100356356-de1b84283e18?w=600" alt="Nusa Penida" class="w-full h-full object-cover img-zoom">
+                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur text-pink-600 text-[10px] font-bold px-2 py-1 rounded shadow-sm uppercase tracking-wider">Akomodasi</span>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="font-bold text-slate-900 text-base mb-2 line-clamp-2 leading-snug group-hover:text-brand-600 transition-colors">5 Resort dengan Pemandangan Laut Terbaik di Nusa Penida untuk Honeymoon</h3>
+                        <p class="text-xs text-slate-500 mb-4 line-clamp-2">Rekomendasi penginapan mewah untuk pengalaman bulan madu tak terlupakan dengan view langsung ke Samudra Hindia.</p>
+                        <div class="mt-auto flex justify-between items-center text-[10px] text-slate-400 font-medium pt-3 border-t border-slate-100">
+                            <span>05 Okt 2026</span>
+                            <span class="flex items-center gap-1"><i class="fa-regular fa-clock"></i> 6 Min Baca</span>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-10 flex justify-center">
+                <nav class="inline-flex shadow-sm rounded-lg" aria-label="Pagination">
+                    <button class="relative inline-flex items-center px-3 py-2 rounded-l-lg border border-slate-200 bg-white text-sm font-medium text-slate-400 cursor-not-allowed">
+                        <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                    </button>
+                    <button class="relative inline-flex items-center px-4 py-2 border border-slate-200 bg-brand-600 text-sm font-extrabold text-white">1</button>
+                    <button class="relative inline-flex items-center px-4 py-2 border border-slate-200 bg-white text-sm font-bold text-slate-600 hover:bg-slate-50">2</button>
+                    <button class="hidden sm:inline-flex relative items-center px-4 py-2 border border-slate-200 bg-white text-sm font-bold text-slate-600 hover:bg-slate-50">3</button>
+                    <span class="relative inline-flex items-center px-3 py-2 border border-slate-200 bg-white text-sm font-medium text-slate-400">...</span>
+                    <button class="relative inline-flex items-center px-3 py-2 rounded-r-lg border border-slate-200 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-brand-600">
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
+                </nav>
+            </div>
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- KANAN: SIDEBAR WIDGETS (30%)               -->
+        <!-- ========================================== -->
+        <aside class="w-full lg:w-[340px] xl:w-[360px] flex-shrink-0 space-y-8">
+            
+            <!-- Widget: Search -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <h3 class="font-bold text-slate-900 mb-3 text-sm">Cari Artikel</h3>
+                <div class="relative input-saas bg-slate-50 border border-slate-200 rounded-xl flex items-center p-1">
+                    <input type="text" placeholder="Ketik kata kunci..." class="w-full bg-transparent text-sm text-slate-800 py-2 px-3 focus:outline-none">
+                    <button class="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center hover:bg-brand-700 transition-colors">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Widget: Popular Posts -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <h3 class="font-bold text-slate-900 mb-4 text-sm border-b border-slate-100 pb-2">Terpopuler Minggu Ini</h3>
+                <div class="space-y-4">
+                    <!-- Mini Post 1 -->
+                    <a href="#" class="flex gap-3 group">
+                        <img src="https://images.unsplash.com/photo-1518090597335-e6f7783ee855?w=200" alt="Bromo" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 border border-slate-100">
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-xs line-clamp-2 mb-1 group-hover:text-brand-600 transition-colors">5 Spot Foto Rahasia di Bromo Selain Penanjakan</h4>
+                            <p class="text-[9px] text-slate-400 font-medium">1.2k Views</p>
+                        </div>
+                    </a>
+                    <!-- Mini Post 2 -->
+                    <a href="#" class="flex gap-3 group">
+                        <img src="https://images.unsplash.com/photo-1520109971360-63ce771415eb?w=200" alt="Singapore" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 border border-slate-100">
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-xs line-clamp-2 mb-1 group-hover:text-brand-600 transition-colors">Itinerary 3 Hari 2 Malam Singapore Khusus Pemula</h4>
+                            <p class="text-[9px] text-slate-400 font-medium">850 Views</p>
+                        </div>
+                    </a>
+                    <!-- Mini Post 3 -->
+                    <a href="#" class="flex gap-3 group">
+                        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200" alt="Team Building" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 border border-slate-100">
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-xs line-clamp-2 mb-1 group-hover:text-brand-600 transition-colors">Ide Games Team Building Seru untuk Corporate Outing</h4>
+                            <p class="text-[9px] text-slate-400 font-medium">720 Views</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Widget: Newsletter (Lead Capture) -->
+            <div class="bg-brand-900 rounded-2xl p-6 shadow-md relative overflow-hidden text-center text-white">
+                <div class="absolute -top-10 -right-10 w-24 h-24 bg-brand-500 rounded-full mix-blend-multiply filter blur-xl opacity-50"></div>
+                <i class="fa-regular fa-envelope-open text-3xl text-brand-300 mb-3"></i>
+                <h3 class="font-extrabold text-lg mb-2">Travel Newsletter</h3>
+                <p class="text-xs text-brand-200 mb-4 line-relaxed">Dapatkan info destinasi terbaru dan kode promo eksklusif langsung ke inbox Anda.</p>
+                <form class="flex flex-col gap-2">
+                    <input type="email" placeholder="Alamat Email" class="w-full bg-white/10 border border-white/20 text-sm rounded-lg px-4 py-2.5 text-white placeholder-white/50 focus:outline-none focus:bg-white/20 transition-colors" required>
+                    <button type="submit" class="w-full bg-accent-500 hover:bg-accent-600 font-bold text-sm px-4 py-2.5 rounded-lg shadow-md transition-colors">Berlangganan</button>
+                </form>
+            </div>
+
+            <!-- Widget: Cross-Selling Banner (Promo) -->
+            <a href="#" class="block bg-white border border-slate-200 rounded-2xl p-4 shadow-sm group hover:border-brand-300 transition-colors">
+                <div class="bg-slate-100 rounded-xl h-32 mb-3 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1517441865-c32f8313bd8a?w=400" alt="Ijen" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <span class="absolute top-2 right-2 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow">PROMO 20%</span>
+                </div>
+                <h3 class="font-bold text-slate-800 text-sm mb-1">Open Trip Kawah Ijen</h3>
+                <p class="text-xs text-slate-500 mb-3">Mulai dari <span class="font-extrabold text-brand-600 text-sm">Rp 350.000</span></p>
+                <button class="w-full py-2 bg-brand-50 text-brand-600 font-bold text-xs rounded-lg group-hover:bg-brand-600 group-hover:text-white transition-colors">Pesan Sekarang</button>
+            </a>
+
+        </aside>
+
+    </main>
+
+    <!-- FOOTER SIMPLE -->
+    <footer class="bg-white border-t border-slate-200">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2 font-extrabold text-lg text-brand-900">
+                <div class="w-6 h-6 rounded bg-brand-600 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-paper-plane"></i></div>
+                NusaTrip Blog
+            </div>
+            <p class="text-xs text-slate-500 font-medium">© 2026 PT Nusantara Trip System.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

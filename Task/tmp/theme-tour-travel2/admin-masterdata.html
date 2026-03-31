@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Data | Admin NusantaraTrip</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        .admin-nav-item { transition: all 0.2s ease; border-left: 3px solid transparent; }
+        .admin-nav-item:hover, .admin-nav-item.active { background-color: rgba(255, 255, 255, 0.1); border-left-color: #f97316; color: white; }
+        .table-row-hover:hover { background-color: #f8fafc; }
+        .input-saas { transition: all 0.3s ease; border: 1px solid #cbd5e1; }
+        .input-saas:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); outline: none; }
+        
+        .check-saas {
+            appearance: none; width: 18px; height: 18px;
+            border: 2px solid #cbd5e1; border-radius: 4px;
+            cursor: pointer; position: relative; transition: all 0.2s;
+        }
+        .check-saas:checked { background-color: #4f46e5; border-color: #4f46e5; }
+        .check-saas:checked::after {
+            content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            color: white; font-size: 10px; position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+        }
+
+        /* Tabs Settings Style */
+        .settings-tab { transition: all 0.2s; border-bottom: 2px solid transparent; }
+        .settings-tab.active { border-bottom-color: #4f46e5; color: #4f46e5; font-weight: 700; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased h-screen flex overflow-hidden bg-slate-50">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="w-64 bg-brand-900 text-brand-200 flex-shrink-0 hidden md:flex flex-col h-full shadow-xl z-20">
+        <div class="h-16 flex items-center px-6 border-b border-white/10 bg-brand-950">
+            <a href="/" class="font-extrabold text-xl tracking-tighter text-white flex items-center gap-2">
+                <div class="w-7 h-7 rounded bg-accent-500 text-white flex items-center justify-center shadow"><span class="text-xs"><i class="fa-solid fa-paper-plane"></i></span></div>
+                NusaTrip <span class="text-xs font-normal text-brand-300 ml-1">Admin</span>
+            </a>
+        </div>
+        <div class="flex-1 overflow-y-auto py-4">
+            <p class="px-6 text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2">Main Menu</p>
+            <nav class="flex flex-col gap-1 mb-6">
+                <a href="admin-dashboard.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-chart-pie w-5 text-center"></i> Dashboard
+                </a>
+                <a href="admin-orders.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-cart-shopping w-5 text-center"></i> Semua Pesanan
+                </a>
+            </nav>
+
+            <p class="px-6 text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2">Manajemen Produk</p>
+            <nav class="flex flex-col gap-1 mb-6">
+                <a href="admin-tour-crud.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-map-location-dot w-5 text-center"></i> Kelola Tour
+                </a>
+                <a href="admin-tour-builder.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-wand-magic-sparkles w-5 text-center"></i> Smart Builder
+                </a>
+            </nav>
+
+            <p class="px-6 text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2">Sistem</p>
+            <nav class="flex flex-col gap-1 mb-6">
+                <a href="admin-users.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-users w-5 text-center"></i> Pelanggan & Mitra
+                </a>
+                <!-- MENU AKTIF -->
+                <a href="#" class="admin-nav-item active px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-database w-5 text-center"></i> Master Data
+                </a>
+                <a href="admin-settings.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-gear w-5 text-center"></i> Pengaturan
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- RIGHT MAIN CONTENT -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <!-- HEADER -->
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 z-10 shadow-sm flex-shrink-0">
+            <div class="flex items-center gap-4">
+                <button class="md:hidden text-slate-500 hover:text-brand-600 text-xl focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h2 class="font-bold text-slate-800 hidden sm:block">Master Data Management</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-brand-50 hover:text-brand-600 transition-colors relative">
+                    <i class="fa-regular fa-bell"></i>
+                </button>
+                <div class="flex items-center gap-2 cursor-pointer border-l border-slate-200 pl-4">
+                    <img src="https://ui-avatars.com/api/?name=Super+Admin&background=f97316&color=fff" alt="Admin" class="w-8 h-8 rounded-full">
+                    <span class="text-xs font-bold text-slate-700 hidden sm:block">Super Admin <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1"></i></span>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-50">
+            
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                <div>
+                    <h1 class="text-2xl font-extrabold text-slate-900 mb-1">Tabel Referensi</h1>
+                    <p class="text-sm text-slate-500 font-medium">Kelola data lookup statis (Lokasi, Kategori, Add-ons) untuk seluruh platform.</p>
+                </div>
+                <button onclick="openModal()" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Tambah Data
+                </button>
+            </div>
+
+            <!-- TABS PENGATURAN (Diadaptasi dari admin-settings.html) -->
+            <div class="flex overflow-x-auto hide-scrollbar border-b border-slate-200 mb-6">
+                <button class="settings-tab active px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap flex items-center gap-2" onclick="switchMasterTab('Locations', this)">
+                    Locations <span class="bg-slate-100 text-slate-500 text-[10px] px-1.5 py-0.5 rounded">4</span>
+                </button>
+                <button class="settings-tab px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap flex items-center gap-2" onclick="switchMasterTab('Add-ons', this)">
+                    Add-ons <span class="bg-slate-100 text-slate-500 text-[10px] px-1.5 py-0.5 rounded">10</span>
+                </button>
+                <button class="settings-tab px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap flex items-center gap-2" onclick="switchMasterTab('Trip Types', this)">
+                    Trip Types <span class="bg-slate-100 text-slate-500 text-[10px] px-1.5 py-0.5 rounded">2</span>
+                </button>
+                <button class="settings-tab px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap flex items-center gap-2" onclick="switchMasterTab('Include/Exclude', this)">
+                    Include/Exclude <span class="bg-slate-100 text-slate-500 text-[10px] px-1.5 py-0.5 rounded">24</span>
+                </button>
+                <button class="settings-tab px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap flex items-center gap-2" onclick="switchMasterTab('Destinations', this)">
+                    Destinations <span class="bg-slate-100 text-slate-500 text-[10px] px-1.5 py-0.5 rounded">18</span>
+                </button>
+            </div>
+
+            <!-- FILTER & SEARCH BAR (Diadaptasi dari admin-users.html) -->
+            <div class="bg-white border border-slate-200 rounded-t-2xl p-4 sm:p-5 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" placeholder="Cari nama data master..." class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg pl-9 pr-3 py-2.5 focus:outline-none focus:border-brand-500 transition-all font-medium text-slate-700">
+                </div>
+            </div>
+
+            <!-- TABLE CONTAINER (Diadaptasi dari admin-users.html) -->
+            <div class="bg-white border-x border-b border-slate-200 rounded-b-2xl shadow-sm overflow-hidden relative">
+                
+                <div id="table-overlay" class="absolute inset-0 bg-white/70 backdrop-blur-[1px] z-10 flex items-center justify-center hidden">
+                    <i class="fa-solid fa-circle-notch fa-spin text-brand-600 text-3xl"></i>
+                </div>
+
+                <div id="bulk-action-bar" class="hidden bg-brand-50 border-b border-brand-200 p-3 justify-between items-center transition-all">
+                    <span class="text-sm font-bold text-brand-700 ml-2"><span id="selected-count">0</span> Item Terpilih</span>
+                    <button onclick="bulkDelete()" class="px-4 py-1.5 bg-red-500 hover:bg-red-600 text-white font-bold text-xs rounded-lg shadow-sm">
+                        <i class="fa-solid fa-trash mr-1"></i> Hapus Massal
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[700px]">
+                        <thead>
+                            <tr class="bg-slate-50 text-[10px] uppercase tracking-widest text-slate-500 border-b border-slate-200">
+                                <th class="p-4 w-12 text-center">
+                                    <input type="checkbox" id="check-all" class="check-saas" onchange="toggleAll(this)">
+                                </th>
+                                <th class="p-4 font-bold w-16 text-center">ID</th>
+                                <th class="p-4 font-bold">Label / Name</th>
+                                <th class="p-4 font-bold">Metadata / Values</th>
+                                <th class="p-4 font-bold text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm" id="master-tbody">
+                            <!-- Row 1 -->
+                            <tr class="border-b border-slate-100 table-row-hover" id="row-1">
+                                <td class="p-4 text-center">
+                                    <input type="checkbox" class="check-saas row-checkbox" value="1" onchange="updateBulkUI()">
+                                </td>
+                                <td class="p-4 text-center font-mono text-xs text-slate-400">#01</td>
+                                <td class="p-4">
+                                    <p class="font-bold text-slate-900 text-sm">Malang (MLG)</p>
+                                    <p class="text-[10px] text-slate-500 mt-0.5">Jawa Timur</p>
+                                </td>
+                                <td class="p-4">
+                                    <span class="text-xs text-slate-600 font-mono bg-slate-100 px-2 py-1 rounded">Airport: MLG, UTM: +7</span>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <div class="flex justify-center gap-2">
+                                        <button onclick="openModal(1)" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors" title="Edit"><i class="fa-solid fa-pen-to-square text-xs"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Row 2 -->
+                            <tr class="border-b border-slate-100 table-row-hover" id="row-2">
+                                <td class="p-4 text-center">
+                                    <input type="checkbox" class="check-saas row-checkbox" value="2" onchange="updateBulkUI()">
+                                </td>
+                                <td class="p-4 text-center font-mono text-xs text-slate-400">#02</td>
+                                <td class="p-4">
+                                    <p class="font-bold text-slate-900 text-sm">Bali (DPS)</p>
+                                    <p class="text-[10px] text-slate-500 mt-0.5">Bali, Indonesia</p>
+                                </td>
+                                <td class="p-4">
+                                    <span class="text-xs text-slate-600 font-mono bg-slate-100 px-2 py-1 rounded">Airport: DPS, UTM: +8</span>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <div class="flex justify-center gap-2">
+                                        <button onclick="openModal(2)" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors" title="Edit"><i class="fa-solid fa-pen-to-square text-xs"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL FORM (CREATE / UPDATE) -->
+    <div id="crud-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl scale-95 transition-transform duration-300" id="modal-content">
+            <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-2xl">
+                <h2 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-database text-brand-600"></i> <span id="modal-title">Data Master Baru</span>
+                </h2>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-red-500 focus:outline-none"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-6">
+                <form id="crud-form" class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Label / Item <span class="text-red-500">*</span></label>
+                        <input type="text" id="input-name" class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="E.g. Malang (MLG)" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Kategori / Grup (Opsional)</label>
+                        <input type="text" id="input-group" class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="E.g. Jawa Timur">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Metadata Khusus (JSON/Teks)</label>
+                        <input type="text" id="input-meta" class="w-full bg-slate-50 border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-600 font-mono" placeholder='{"airport": "MLG"}'>
+                    </div>
+                </form>
+            </div>
+            <div class="p-5 border-t border-slate-200 bg-slate-50 rounded-b-2xl flex justify-end gap-3">
+                <button type="button" onclick="closeModal()" class="px-5 py-2.5 bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 font-bold text-sm rounded-lg transition-colors">Batal</button>
+                <button type="button" onclick="saveData()" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-lg shadow-md transition-colors flex items-center gap-2">
+                    <i id="save-spinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
+                    <span id="save-text">Simpan Data</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        function switchMasterTab(title, btnElement) {
+            document.querySelectorAll('.settings-tab').forEach(el => el.classList.remove('active'));
+            btnElement.classList.add('active');
+            
+            // Simulasi load tabel untuk tab baru
+            const overlay = document.getElementById('table-overlay');
+            overlay.classList.remove('hidden');
+            setTimeout(() => overlay.classList.add('hidden'), 500); 
+        }
+
+        const modal = document.getElementById('crud-modal');
+        const modalContent = document.getElementById('modal-content');
+        const form = document.getElementById('crud-form');
+
+        function openModal(id = null) {
+            if (id) {
+                document.getElementById('modal-title').innerText = "Edit Data Master";
+                document.getElementById('input-name').value = "Malang (MLG)";
+                document.getElementById('input-group').value = "Jawa Timur";
+                document.getElementById('input-meta').value = "Airport: MLG, UTM: +7";
+            } else {
+                document.getElementById('modal-title').innerText = "Data Master Baru";
+                form.reset();
+            }
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function saveData() {
+            const btnText = document.getElementById('save-text');
+            const spinner = document.getElementById('save-spinner');
+            btnText.innerText = "Menyimpan...";
+            spinner.classList.remove('hidden');
+            setTimeout(() => {
+                btnText.innerText = "Simpan Data";
+                spinner.classList.add('hidden');
+                closeModal();
+            }, 800);
+        }
+
+        function toggleAll(source) {
+            document.querySelectorAll('.row-checkbox').forEach(cb => {
+                if (cb.closest('tr').style.display !== 'none') cb.checked = source.checked;
+            });
+            updateBulkUI();
+        }
+
+        function updateBulkUI() {
+            const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+            const bulkBar = document.getElementById('bulk-action-bar');
+            document.getElementById('selected-count').innerText = checkboxes.length;
+            if (checkboxes.length > 0) {
+                bulkBar.classList.remove('hidden'); bulkBar.classList.add('flex');
+            } else {
+                bulkBar.classList.add('hidden'); bulkBar.classList.remove('flex');
+                document.getElementById('check-all').checked = false;
+            }
+        }
+
+        function bulkDelete() {
+            const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+            if (checkboxes.length === 0) return;
+            if (confirm(`Hapus permanen ${checkboxes.length} data master terpilih?`)) {
+                checkboxes.forEach(cb => {
+                    const row = document.getElementById('row-' + cb.value);
+                    if (row) row.style.display = 'none';
+                });
+                document.getElementById('check-all').checked = false;
+                updateBulkUI();
+            }
+        }
+    </script>
+</body>
+</html>

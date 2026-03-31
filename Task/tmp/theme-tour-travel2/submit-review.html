@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beri Ulasan | NusantaraTrip</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', // Primary Indigo
+                            700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', // Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+        
+        /* Input SaaS */
+        .input-saas:focus-within { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); outline: none; }
+
+        /* Star Rating Hover Effects */
+        .star-btn { transition: transform 0.2s, color 0.2s; }
+        .star-btn:hover { transform: scale(1.2); }
+        
+        /* Drag & Drop Zone */
+        .drop-zone { transition: all 0.3s ease; border: 2px dashed #cbd5e1; }
+        .drop-zone.dragover { border-color: #4f46e5; background-color: #eef2ff; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- HEADER MINIMALIS -->
+    <header class="bg-white border-b border-slate-200 py-4 shadow-sm sticky top-0 z-50">
+        <div class="max-w-[800px] mx-auto px-4 flex justify-between items-center">
+            <a href="user-dashboard.html" class="text-slate-500 hover:text-brand-600 font-bold text-sm flex items-center gap-2 transition-colors">
+                <i class="fa-solid fa-arrow-left"></i> Batal
+            </a>
+            <div class="font-extrabold text-xl tracking-tighter text-brand-900 flex items-center gap-2">
+                <div class="w-8 h-8 rounded bg-brand-600 text-white flex items-center justify-center shadow"><span class="text-sm"><i class="fa-solid fa-paper-plane"></i></span></div>
+                NusaTrip
+            </div>
+            <div class="w-16"></div> <!-- Spacer for centering logo -->
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow flex items-start justify-center p-4 sm:p-8">
+        
+        <div class="w-full max-w-[650px] bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden relative">
+            
+            <!-- Dekorasi Background -->
+            <div class="absolute top-0 right-0 w-40 h-40 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 pointer-events-none"></div>
+
+            <div class="p-6 sm:p-10 relative z-10">
+                
+                <div class="text-center mb-8">
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">Bagaimana Perjalanan Anda?</h1>
+                    <p class="text-sm text-slate-500 font-medium">Bantu pelancong lain dengan membagikan pengalaman liburan Anda.</p>
+                </div>
+
+                <!-- Info Trip yang Diulas -->
+                <div class="bg-slate-50 border border-slate-100 rounded-2xl p-4 flex gap-4 items-center mb-8">
+                    <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=200" alt="Bali" class="w-16 h-16 rounded-xl object-cover shadow-sm">
+                    <div>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 block">Paket Tour Selesai</span>
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base leading-snug">Bali Explorer Family Fun Trip</h3>
+                        <p class="text-[10px] text-slate-500 mt-1">Berangkat: 17 Agu 2025</p>
+                    </div>
+                </div>
+
+                <!-- FORM ULASAN -->
+                <form onsubmit="submitReview(event)" class="space-y-8">
+                    
+                    <!-- 1. Rating Bintang -->
+                    <div class="text-center">
+                        <label class="block text-sm font-bold text-slate-700 mb-3">Berikan Penilaian Keseluruhan <span class="text-red-500">*</span></label>
+                        <div class="flex items-center justify-center gap-2 sm:gap-4 flex-row-reverse" id="star-rating-container">
+                            <!-- Note: flex-row-reverse digunakan untuk trik CSS hover sibling jika pakai CSS murni, tapi disini kita pakai JS agar lebih robust -->
+                            <button type="button" class="star-btn text-4xl text-slate-300 focus:outline-none" data-val="1" onmouseover="hoverStar(1)" onmouseout="resetStar()" onclick="setRating(1)"><i class="fa-solid fa-star"></i></button>
+                            <button type="button" class="star-btn text-4xl text-slate-300 focus:outline-none" data-val="2" onmouseover="hoverStar(2)" onmouseout="resetStar()" onclick="setRating(2)"><i class="fa-solid fa-star"></i></button>
+                            <button type="button" class="star-btn text-4xl text-slate-300 focus:outline-none" data-val="3" onmouseover="hoverStar(3)" onmouseout="resetStar()" onclick="setRating(3)"><i class="fa-solid fa-star"></i></button>
+                            <button type="button" class="star-btn text-4xl text-slate-300 focus:outline-none" data-val="4" onmouseover="hoverStar(4)" onmouseout="resetStar()" onclick="setRating(4)"><i class="fa-solid fa-star"></i></button>
+                            <button type="button" class="star-btn text-4xl text-slate-300 focus:outline-none" data-val="5" onmouseover="hoverStar(5)" onmouseout="resetStar()" onclick="setRating(5)"><i class="fa-solid fa-star"></i></button>
+                        </div>
+                        <p class="text-xs font-bold text-yellow-500 mt-3 h-4" id="rating-text"></p>
+                        <!-- Hidden input untuk menyimpan value form -->
+                        <input type="hidden" id="rating-value" required>
+                    </div>
+
+                    <!-- 2. Teks Ulasan -->
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Tulis Pengalaman Anda <span class="text-red-500">*</span></label>
+                        <div class="input-saas bg-slate-50 border border-slate-200 rounded-xl overflow-hidden">
+                            <textarea id="review-text" class="w-full bg-transparent text-sm text-slate-800 p-4 min-h-[120px] resize-none focus:outline-none" placeholder="Ceritakan apa yang paling Anda sukai dari trip ini? Bagaimana pelayanan guide atau kualitas hotelnya?" required></textarea>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-1 text-right">Minimal 50 karakter</p>
+                    </div>
+
+                    <!-- 3. Upload Foto (Opsional) -->
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Unggah Foto Momen Liburan (Opsional)</label>
+                        
+                        <div id="drop-zone" class="drop-zone bg-slate-50 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-slate-100" onclick="document.getElementById('file-upload').click()">
+                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-brand-500 shadow-sm mb-3">
+                                <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+                            </div>
+                            <p class="text-sm font-bold text-slate-700">Klik atau seret foto ke sini</p>
+                            <p class="text-[10px] text-slate-400 mt-1">Maksimal 5 foto (Format JPG, PNG). Maks 5MB/foto.</p>
+                            <input type="file" id="file-upload" class="hidden" accept="image/*" multiple onchange="handleFiles(this.files)">
+                        </div>
+
+                        <!-- Preview Image Container -->
+                        <div id="preview-container" class="flex flex-wrap gap-3 mt-4 hidden">
+                            <!-- Gambar akan ditambahkan lewat JS -->
+                        </div>
+                    </div>
+
+                    <!-- Alert Validasi (Hidden default) -->
+                    <div id="validation-alert" class="hidden bg-red-50 border border-red-200 text-red-600 text-xs font-bold p-3 rounded-lg flex items-center gap-2">
+                        <i class="fa-solid fa-circle-exclamation"></i> <span id="validation-msg">Mohon lengkapi semua bidang wajib.</span>
+                    </div>
+
+                    <!-- Tombol Submit -->
+                    <div class="pt-4">
+                        <button type="submit" id="btn-submit" class="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2">
+                            <i id="btn-spinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
+                            <span id="btn-text">Kirim Ulasan</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- SUCCESS MODAL (Overlay) -->
+    <div id="success-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-[2rem] p-8 sm:p-10 max-w-sm w-full text-center shadow-2xl scale-95 transition-transform duration-300 relative overflow-hidden" id="modal-content">
+            
+            <!-- Confetti Dekorasi BG -->
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-yellow-400 rounded-full mix-blend-multiply filter blur-2xl opacity-30"></div>
+            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-emerald-400 rounded-full mix-blend-multiply filter blur-2xl opacity-30"></div>
+
+            <div class="relative z-10">
+                <div class="w-20 h-20 bg-yellow-100 text-yellow-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-lg shadow-yellow-100">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 mb-3">Terima Kasih!</h2>
+                <p class="text-sm text-slate-500 leading-relaxed mb-6">Ulasan Anda sangat berarti bagi kami dan pelancong lainnya. Sebagai apresiasi, kami menambahkan <strong class="text-brand-600">50 NusaPoin</strong> ke akun Anda.</p>
+                <a href="user-dashboard.html" class="block w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-brand-500/30 transition-all">Kembali ke Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- STAR RATING LOGIC ---
+        let currentRating = 0;
+        const stars = document.querySelectorAll('.star-btn');
+        const ratingText = document.getElementById('rating-text');
+        const ratingInput = document.getElementById('rating-value');
+        
+        const ratingLabels = {
+            1: "Sangat Buruk 😞",
+            2: "Buruk 😕",
+            3: "Cukup Baik 😐",
+            4: "Sangat Baik! 🙂",
+            5: "Luar Biasa Sempurna! 😍"
+        };
+
+        function colorStars(upTo) {
+            stars.forEach(star => {
+                const val = parseInt(star.getAttribute('data-val'));
+                if (val <= upTo) {
+                    star.classList.remove('text-slate-300');
+                    star.classList.add('text-yellow-400');
+                } else {
+                    star.classList.add('text-slate-300');
+                    star.classList.remove('text-yellow-400');
+                }
+            });
+        }
+
+        function hoverStar(val) {
+            colorStars(val);
+            ratingText.innerText = ratingLabels[val];
+        }
+
+        function resetStar() {
+            colorStars(currentRating);
+            if (currentRating === 0) {
+                ratingText.innerText = "";
+            } else {
+                ratingText.innerText = ratingLabels[currentRating];
+            }
+        }
+
+        function setRating(val) {
+            currentRating = val;
+            ratingInput.value = val;
+            colorStars(currentRating);
+            
+            // Animasi pop saat di klik
+            const clickedStar = Array.from(stars).find(s => parseInt(s.getAttribute('data-val')) === val);
+            clickedStar.style.transform = 'scale(1.3)';
+            setTimeout(() => { clickedStar.style.transform = 'scale(1)'; }, 200);
+        }
+
+
+        // --- DRAG & DROP IMAGE PREVIEW ---
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-upload');
+        const previewContainer = document.getElementById('preview-container');
+
+        // Mencegah default drag behavior
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Highlight drop zone
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+        });
+
+        // Handle file drop
+        dropZone.addEventListener('drop', (e) => {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+            handleFiles(files);
+        });
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                previewContainer.classList.remove('hidden');
+                
+                // Tampilkan maksimal 5 file (untuk simulasi)
+                const maxFiles = Math.min(files.length, 5);
+                
+                for(let i=0; i<maxFiles; i++) {
+                    let file = files[i];
+                    if (!file.type.match('image.*')) continue;
+                    
+                    let reader = new FileReader();
+                    reader.onload = function(e) {
+                        // Buat elemen preview
+                        const div = document.createElement('div');
+                        div.className = 'relative w-20 h-20 rounded-lg overflow-hidden border border-slate-200 shadow-sm';
+                        div.innerHTML = `
+                            <img src="${e.target.result}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-slate-900/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer" onclick="this.parentElement.remove(); checkEmptyPreview();">
+                                <i class="fa-solid fa-trash text-white"></i>
+                            </div>
+                        `;
+                        previewContainer.appendChild(div);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        function checkEmptyPreview() {
+            if (previewContainer.children.length === 0) {
+                previewContainer.classList.add('hidden');
+            }
+        }
+
+
+        // --- FORM SUBMIT SIMULATION ---
+        function submitReview(e) {
+            e.preventDefault();
+            const alertBox = document.getElementById('validation-alert');
+            const alertMsg = document.getElementById('validation-msg');
+            const btn = document.getElementById('btn-text');
+            const spinner = document.getElementById('btn-spinner');
+            const submitBtn = document.getElementById('btn-submit');
+
+            // Validasi Rating
+            if (currentRating === 0) {
+                alertMsg.innerText = "Mohon berikan rating bintang terlebih dahulu.";
+                alertBox.classList.remove('hidden');
+                return;
+            }
+
+            // Validasi Panjang Karakter (Opsional: misal harus > 10)
+            const textReview = document.getElementById('review-text').value;
+            if (textReview.length < 10) {
+                alertMsg.innerText = "Ulasan terlalu pendek. Mohon ceritakan lebih detail.";
+                alertBox.classList.remove('hidden');
+                return;
+            }
+
+            // Jika valid, sembunyikan alert dan mulai loading
+            alertBox.classList.add('hidden');
+            btn.innerText = "Mengirim...";
+            spinner.classList.remove('hidden');
+            submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+
+            // Simulasi proses (1.5 detik)
+            setTimeout(() => {
+                // Tampilkan Modal Sukses
+                const modal = document.getElementById('success-modal');
+                const content = document.getElementById('modal-content');
+                
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    content.classList.remove('scale-95');
+                }, 10);
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

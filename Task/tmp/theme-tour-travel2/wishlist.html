@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist Tersimpan | NusantaraTrip</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', // Primary Indigo
+                            700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', // Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+        
+        /* Hide scrollbar */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Sidebar Nav Active State */
+        .nav-item { transition: all 0.2s; border-left: 3px solid transparent; }
+        .nav-item.active { border-left-color: #4f46e5; background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
+        .nav-item:hover:not(.active) { background-color: #f1f5f9; }
+
+        /* Tabs */
+        .wishlist-tab { transition: all 0.2s; border-bottom: 2px solid transparent; }
+        .wishlist-tab.active { border-bottom-color: #4f46e5; color: #4f46e5; font-weight: 700; }
+        
+        /* Card Hover Animations */
+        .wishlist-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .wishlist-card:hover { transform: translateY(-5px); box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(79, 70, 229, 0.15); border-color: #c7d2fe; }
+        
+        /* Remove Animation */
+        .removing { animation: fadeOutShrink 0.4s ease forwards; }
+        @keyframes fadeOutShrink {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.9); }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased overflow-x-hidden">
+
+    <!-- HEADER (Dashboard Header) -->
+    <header class="bg-white border-b border-slate-200 py-3 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            
+            <!-- Logo -->
+            <a href="/" class="font-extrabold text-xl tracking-tighter text-brand-900 flex items-center gap-2">
+                <div class="w-8 h-8 rounded bg-gradient-to-br from-brand-600 to-accent-500 text-white flex items-center justify-center shadow"><span class="text-sm"><i class="fa-solid fa-paper-plane"></i></span></div>
+                <span class="hidden sm:block">NusaTrip</span>
+            </a>
+
+            <!-- User Profile Info -->
+            <div class="flex items-center gap-4 sm:gap-6">
+                <button class="text-slate-400 hover:text-brand-600 transition-colors relative">
+                    <i class="fa-regular fa-bell text-xl"></i>
+                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+                </button>
+                
+                <div class="flex items-center gap-3 border-l border-slate-200 pl-4 sm:pl-6 cursor-pointer group">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-bold text-slate-800 group-hover:text-brand-600 transition-colors">Budi Santoso</p>
+                        <p class="text-[10px] text-slate-500 font-medium">Member Silver <i class="fa-solid fa-medal text-slate-400 ml-0.5"></i></p>
+                    </div>
+                    <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=e0e7ff&color=4f46e5&rounded=true&bold=true" alt="Profile" class="w-9 h-9 rounded-full shadow-sm border border-slate-200 group-hover:border-brand-400 transition-colors">
+                    <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 hidden sm:block"></i>
+                </div>
+            </div>
+            
+        </div>
+    </header>
+
+    <!-- MAIN DASHBOARD CONTAINER -->
+    <main class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col md:flex-row gap-6 lg:gap-8 min-h-[80vh]">
+        
+        <!-- ========================================== -->
+        <!-- LEFT SIDEBAR (Navigasi Menu)               -->
+        <!-- ========================================== -->
+        <aside class="w-full md:w-[240px] flex-shrink-0">
+            <!-- Mobile Horizontal Nav -->
+            <div class="md:hidden flex overflow-x-auto hide-scrollbar gap-2 mb-4 pb-2 border-b border-slate-200">
+                <a href="user-dashboard.html" class="whitespace-nowrap px-4 py-2 bg-white text-slate-600 hover:bg-slate-50 font-medium text-xs rounded-full border border-slate-200"><i class="fa-solid fa-clipboard-list mr-1.5"></i> Pesanan Saya</a>
+                <a href="#" class="whitespace-nowrap px-4 py-2 bg-white text-slate-600 hover:bg-slate-50 font-medium text-xs rounded-full border border-slate-200"><i class="fa-solid fa-ticket mr-1.5"></i> Promo Saya</a>
+                <a href="#" class="whitespace-nowrap px-4 py-2 bg-brand-50 text-brand-600 font-bold text-xs rounded-full border border-brand-200"><i class="fa-solid fa-heart mr-1.5"></i> Wishlist</a>
+                <a href="profile-settings.html" class="whitespace-nowrap px-4 py-2 bg-white text-slate-600 hover:bg-slate-50 font-medium text-xs rounded-full border border-slate-200"><i class="fa-regular fa-user mr-1.5"></i> Pengaturan Profil</a>
+            </div>
+
+            <!-- Desktop Vertical Nav -->
+            <div class="hidden md:block bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden sticky top-24">
+                <div class="p-5 border-b border-slate-100 bg-brand-50/50 flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-amber-100 border-2 border-amber-300 flex items-center justify-center text-amber-600 text-xl shadow-sm">
+                        <i class="fa-solid fa-coins"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">NusaPoin</p>
+                        <p class="font-extrabold text-brand-900 text-lg leading-none mt-0.5">12.500</p>
+                    </div>
+                </div>
+                <nav class="flex flex-col py-3">
+                    <a href="user-dashboard.html" class="nav-item px-5 py-3 text-sm text-slate-600 font-medium flex items-center gap-3">
+                        <i class="fa-solid fa-clipboard-list w-5 text-center text-slate-400"></i> Pesanan Saya
+                    </a>
+                    <a href="#" class="nav-item px-5 py-3 text-sm text-slate-600 font-medium flex items-center gap-3">
+                        <i class="fa-solid fa-ticket w-5 text-center text-slate-400"></i> Promo & Kupon <span class="bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded-full ml-auto font-bold">2</span>
+                    </a>
+                    <a href="#" class="nav-item active px-5 py-3 text-sm text-slate-600 flex items-center gap-3">
+                        <i class="fa-solid fa-heart w-5 text-center text-brand-500"></i> Wishlist Tersimpan
+                    </a>
+                    <div class="border-t border-slate-100 my-2 mx-5"></div>
+                    <a href="profile-settings.html" class="nav-item px-5 py-3 text-sm text-slate-600 font-medium flex items-center gap-3">
+                        <i class="fa-regular fa-user w-5 text-center text-slate-400"></i> Pengaturan Profil
+                    </a>
+                    <a href="#" class="nav-item px-5 py-3 text-sm text-slate-600 font-medium flex items-center gap-3 text-red-500 hover:bg-red-50">
+                        <i class="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i> Keluar
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- ========================================== -->
+        <!-- RIGHT CONTENT (Daftar Wishlist)            -->
+        <!-- ========================================== -->
+        <div class="flex-1 w-full min-w-0">
+            
+            <div class="flex justify-between items-end mb-2">
+                <div>
+                    <h1 class="text-2xl font-extrabold text-slate-900">Wishlist Tersimpan</h1>
+                    <p class="text-sm text-slate-500 mt-1">Lanjutkan rencana liburan Anda dengan item yang sudah disimpan.</p>
+                </div>
+                <span class="bg-brand-100 text-brand-600 font-bold text-xs px-3 py-1.5 rounded-lg hidden sm:inline-block" id="total-wishlist">3 Item Tersimpan</span>
+            </div>
+
+            <!-- TABS KATEGORI WISHLIST -->
+            <div class="flex overflow-x-auto hide-scrollbar border-b border-slate-200 mt-6 mb-6">
+                <button class="wishlist-tab active px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap" onclick="filterWishlist('all', this)">Semua Item</button>
+                <button class="wishlist-tab px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap" onclick="filterWishlist('tour', this)">Paket Tour</button>
+                <button class="wishlist-tab px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap" onclick="filterWishlist('car', this)">Rental Mobil</button>
+            </div>
+
+            <!-- GRID WISHLIST -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="wishlist-grid">
+                
+                <!-- Item 1 (Tour) -->
+                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden wishlist-card flex flex-col relative" data-category="tour" id="item-1">
+                    
+                    <!-- Remove Button (Heart Solid) -->
+                    <button onclick="removeFromWishlist('item-1')" class="absolute top-3 right-3 z-10 w-8 h-8 bg-white/90 backdrop-blur rounded-full text-red-500 flex items-center justify-center shadow-md hover:bg-red-50 transition-colors" title="Hapus dari Wishlist">
+                        <i class="fa-solid fa-heart"></i>
+                    </button>
+                    
+                    <div class="relative h-36 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1542898939-5e5f385c5dfa?w=600" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <span class="absolute top-3 left-3 bg-white/90 text-accent-600 text-[10px] font-bold px-2 py-1 rounded backdrop-blur shadow-sm uppercase">Private Tour</span>
+                    </div>
+                    
+                    <div class="p-4 flex flex-col flex-grow">
+                        <h3 class="font-bold text-slate-900 text-sm mb-1 line-clamp-2 leading-snug">Private Tour Bromo Midnight & Madakaripura</h3>
+                        <p class="text-xs text-slate-500 mb-3 flex items-center gap-1"><i class="fa-solid fa-location-dot text-brand-500"></i> Start Malang / Surabaya</p>
+                        
+                        <!-- Harga & Action -->
+                        <div class="mt-auto pt-3 border-t border-slate-100 flex justify-between items-end">
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase">Mulai Dari</p>
+                                <p class="text-brand-600 font-extrabold text-base leading-none">Rp 1.250k<span class="text-[9px] font-medium text-slate-500">/pax</span></p>
+                            </div>
+                            <a href="tour-detail.html" class="px-4 py-2 bg-brand-50 text-brand-600 font-bold text-xs rounded-lg hover:bg-brand-600 hover:text-white transition-colors shadow-sm">
+                                Cek Detail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2 (Car) -->
+                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden wishlist-card flex flex-col relative" data-category="car" id="item-2">
+                    
+                    <button onclick="removeFromWishlist('item-2')" class="absolute top-3 right-3 z-10 w-8 h-8 bg-white/90 backdrop-blur rounded-full text-red-500 flex items-center justify-center shadow-md hover:bg-red-50 transition-colors" title="Hapus dari Wishlist">
+                        <i class="fa-solid fa-heart"></i>
+                    </button>
+                    
+                    <div class="relative h-36 overflow-hidden bg-slate-100 flex items-center justify-center">
+                        <img src="https://images.unsplash.com/photo-1620067677840-7ac53577d2ec?w=600" class="w-full h-full object-contain mix-blend-multiply p-2">
+                        <span class="absolute top-3 left-3 bg-white/90 text-brand-600 text-[10px] font-bold px-2 py-1 rounded backdrop-blur shadow-sm uppercase">Rental Mobil</span>
+                    </div>
+                    
+                    <div class="p-4 flex flex-col flex-grow">
+                        <div class="text-[10px] text-slate-500 font-medium uppercase tracking-wide mb-1">Toyota</div>
+                        <h3 class="font-bold text-slate-900 text-sm mb-1 line-clamp-1">Innova Zenix Hybrid (2024)</h3>
+                        <p class="text-xs text-slate-500 mb-3 flex items-center gap-2">
+                            <span><i class="fa-solid fa-users text-slate-400"></i> 7 Kursi</span>
+                            <span><i class="fa-solid fa-gears text-slate-400"></i> AT</span>
+                        </p>
+                        
+                        <!-- Harga & Action -->
+                        <div class="mt-auto pt-3 border-t border-slate-100 flex justify-between items-end">
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase">Per Hari</p>
+                                <p class="text-brand-600 font-extrabold text-base leading-none">Rp 850k<span class="text-[9px] font-medium text-slate-500">/hari</span></p>
+                            </div>
+                            <a href="rentalcar-detail.html" class="px-4 py-2 bg-brand-50 text-brand-600 font-bold text-xs rounded-lg hover:bg-brand-600 hover:text-white transition-colors shadow-sm">
+                                Pesan
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3 (Tour Intl) -->
+                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden wishlist-card flex flex-col relative" data-category="tour" id="item-3">
+                    
+                    <button onclick="removeFromWishlist('item-3')" class="absolute top-3 right-3 z-10 w-8 h-8 bg-white/90 backdrop-blur rounded-full text-red-500 flex items-center justify-center shadow-md hover:bg-red-50 transition-colors" title="Hapus dari Wishlist">
+                        <i class="fa-solid fa-heart"></i>
+                    </button>
+                    
+                    <div class="relative h-36 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <span class="absolute top-3 left-3 bg-white/90 text-blue-600 text-[10px] font-bold px-2 py-1 rounded backdrop-blur shadow-sm uppercase">Open Trip Intl</span>
+                    </div>
+                    
+                    <div class="p-4 flex flex-col flex-grow">
+                        <h3 class="font-bold text-slate-900 text-sm mb-1 line-clamp-2 leading-snug">Explore Japan Golden Route Autumn Season</h3>
+                        <p class="text-xs text-slate-500 mb-3 flex items-center gap-1"><i class="fa-solid fa-globe text-brand-500"></i> Tokyo - Kyoto - Osaka</p>
+                        
+                        <!-- Harga & Action -->
+                        <div class="mt-auto pt-3 border-t border-slate-100 flex justify-between items-end">
+                            <div>
+                                <p class="text-[9px] text-slate-400 line-through mb-0.5">Rp 21.500.000</p>
+                                <p class="text-accent-600 font-extrabold text-base leading-none">Rp 18.500k<span class="text-[9px] font-medium text-slate-500">/pax</span></p>
+                            </div>
+                            <a href="#" class="px-4 py-2 bg-brand-50 text-brand-600 font-bold text-xs rounded-lg hover:bg-brand-600 hover:text-white transition-colors shadow-sm">
+                                Cek Detail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- EMPTY STATE (Tersembunyi secara default, muncul jika item habis) -->
+            <div id="empty-state" class="hidden flex-col items-center justify-center py-16 text-center">
+                <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 text-4xl mb-4">
+                    <i class="fa-regular fa-heart"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Wishlist Anda Kosong</h3>
+                <p class="text-sm text-slate-500 mb-6 max-w-md">Kumpulkan destinasi dan paket tour impian Anda dengan menekan ikon hati. Yuk mulai eksplorasi!</p>
+                <a href="/" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all">
+                    Cari Paket Liburan
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER SIMPLE -->
+    <footer class="border-t border-slate-200 bg-white mt-10">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2 font-extrabold text-lg text-brand-900">
+                <div class="w-6 h-6 rounded bg-brand-600 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-n"></i></div>
+                NusaTrip
+            </div>
+            <p class="text-xs text-slate-500 font-medium">© 2026 PT Nusantara Trip System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Notifikasi Toast Hapus -->
+    <div id="toast-remove" class="fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl z-[100] font-bold text-sm flex items-center gap-3 transition-all duration-300 opacity-0 translate-y-10 pointer-events-none">
+        <i class="fa-solid fa-heart-crack text-red-400 text-lg"></i> 
+        <span>Item dihapus dari Wishlist</span>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        let totalItems = 3;
+
+        // --- Fungsi Filter Tab Wishlist ---
+        function filterWishlist(category, btnElement) {
+            // Update Active Tab
+            document.querySelectorAll('.wishlist-tab').forEach(el => el.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            // Filter Cards
+            const cards = document.querySelectorAll('.wishlist-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Tampilkan Empty State jika tidak ada yang cocok di filter
+            const emptyState = document.getElementById('empty-state');
+            const gridContainer = document.getElementById('wishlist-grid');
+
+            if (visibleCount === 0 && totalItems > 0) {
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+                gridContainer.classList.add('hidden');
+            } else if (totalItems === 0) {
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+                gridContainer.classList.add('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('flex');
+                gridContainer.classList.remove('hidden');
+            }
+        }
+
+        // --- Fungsi Hapus Item dari Wishlist ---
+        function removeFromWishlist(itemId) {
+            const item = document.getElementById(itemId);
+            
+            // Tambahkan animasi menghilang
+            item.classList.add('removing');
+            
+            // Tunggu animasi selesai baru dihilangkan dari DOM
+            setTimeout(() => {
+                item.remove();
+                totalItems--;
+                
+                // Update total text
+                document.getElementById('total-wishlist').innerText = `${totalItems} Item Tersimpan`;
+
+                // Jika habis semua, tampilkan empty state
+                if (totalItems === 0) {
+                    document.getElementById('wishlist-grid').classList.add('hidden');
+                    const emptyState = document.getElementById('empty-state');
+                    emptyState.classList.remove('hidden');
+                    emptyState.classList.add('flex');
+                }
+
+                // Tampilkan Notifikasi Toast
+                const toast = document.getElementById('toast-remove');
+                toast.classList.remove('opacity-0', 'translate-y-10');
+                toast.classList.add('opacity-100', 'translate-y-0');
+
+                // Sembunyikan Toast setelah 3 detik
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    toast.classList.add('opacity-0', 'translate-y-10');
+                }, 3000);
+
+            }, 400); // 400ms sesuai dengan durasi animasi CSS
+        }
+    </script>
+</body>
+</html>

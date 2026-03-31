@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Outing & MICE | NusantaraTrip Enterprise</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', // Primary Indigo
+                            700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', // Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+        
+        /* Input SaaS Style untuk Form RFQ */
+        .input-saas { transition: all 0.2s; border: 1px solid #cbd5e1; }
+        .input-saas:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); outline: none; }
+
+        /* Marquee Animation untuk Logo Klien */
+        .marquee-container { overflow: hidden; white-space: nowrap; width: 100%; position: relative; }
+        .marquee-content { display: inline-block; animation: marquee 25s linear infinite; }
+        .marquee-content:hover { animation-play-state: paused; }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        /* Gradient Fade untuk Marquee */
+        .marquee-fade::before, .marquee-fade::after {
+            content: ""; position: absolute; top: 0; width: 100px; height: 100%; z-index: 10;
+        }
+        .marquee-fade::before { left: 0; background: linear-gradient(to right, #f8fafc, transparent); }
+        .marquee-fade::after { right: 0; background: linear-gradient(to left, #f8fafc, transparent); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased overflow-x-hidden">
+
+    <!-- HEADER -->
+    <header class="fixed w-full z-50 bg-white/95 backdrop-blur shadow-sm border-b border-slate-200 py-3">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            
+            <a href="/" class="font-extrabold text-xl tracking-tighter text-brand-900 flex items-center gap-2">
+                <div class="w-8 h-8 rounded bg-gradient-to-br from-slate-800 to-brand-900 text-white flex items-center justify-center shadow"><span class="text-sm"><i class="fa-solid fa-building"></i></span></div>
+                NusaTrip <span class="text-brand-600 font-light hidden sm:inline">| Enterprise</span>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="#layanan" class="text-sm font-medium text-slate-600 hover:text-brand-600">Layanan Kami</a>
+                <a href="#keunggulan" class="text-sm font-medium text-slate-600 hover:text-brand-600">Mengapa Kami?</a>
+                <a href="#klien" class="text-sm font-medium text-slate-600 hover:text-brand-600">Klien</a>
+            </nav>
+
+            <a href="#rfq-form" class="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-lg shadow-md shadow-brand-500/30 transition-all flex items-center gap-2">
+                Minta Penawaran <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION (B2B Vibe) -->
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-slate-900 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1515169067868-5387ec356754?w=1600" class="w-full h-full object-cover opacity-30 mix-blend-luminosity" alt="Corporate Gathering">
+            <div class="absolute inset-0 bg-gradient-to-r from-brand-950 via-brand-900/80 to-transparent"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-left">
+            <div class="max-w-2xl">
+                <span class="inline-block py-1 px-3 rounded bg-white/10 border border-white/20 text-brand-200 text-[10px] font-bold uppercase tracking-widest mb-4">
+                    Solusi Perjalanan Bisnis
+                </span>
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-4 leading-tight">
+                    Corporate Gathering & <span class="text-accent-400">Team Building</span> Impian.
+                </h1>
+                <p class="text-sm sm:text-base text-slate-300 font-medium mb-8 leading-relaxed max-w-xl">
+                    Tingkatkan produktivitas dan keakraban tim Anda melalui pengalaman perjalanan perusahaan yang dirancang khusus, aman, dan tanpa repot. Dari konsep hingga eksekusi, kami urus semuanya.
+                </p>
+                <div class="flex flex-wrap items-center gap-4">
+                    <a href="#rfq-form" class="px-6 py-3 bg-accent-500 hover:bg-accent-600 text-white font-bold text-sm rounded-lg shadow-lg shadow-accent-500/30 transition-all transform hover:-translate-y-0.5">
+                        Dapatkan Proposal Gratis
+                    </a>
+                    <a href="#" class="px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm rounded-lg backdrop-blur transition-all">
+                        <i class="fa-solid fa-play text-xs mr-2"></i> Lihat Portofolio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRUST BADGES / CLIENT LOGOS (Marquee) -->
+    <section class="py-8 border-b border-slate-200 bg-slate-50" id="klien">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center mb-4">
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Dipercaya oleh 500+ Perusahaan, BUMN, & Instansi</p>
+        </div>
+        <div class="marquee-container marquee-fade">
+            <div class="marquee-content flex gap-12 items-center px-6">
+                <!-- Duplicate logos to make seamless loop -->
+                <div class="text-2xl font-black text-slate-300 flex items-center gap-2 grayscale"><i class="fa-brands fa-aws"></i> AWS</div>
+                <div class="text-2xl font-black text-slate-300 flex items-center gap-2 grayscale"><i class="fa-brands fa-google"></i> Google</div>
+                <div class="text-2xl font-black text-slate-300 flex items-center gap-2 grayscale"><i class="fa-brands fa-microsoft"></i> Microsoft</div>
+                <div class="text-2xl font-black text-slate-300 flex items-center gap-2 grayscale"><i class="fa-brands fa-stripe"></i> Stripe</div>
+                <div class="text-2xl font-black text-slate-300 flex items-center gap-2 grayscale"><i class="fa-brands fa-spotify"></i> Stripe</div>
+                <div class="text-2xl font-black text-slate-300 flex items-center gap-2 grayscale"><i class="fa-brands fa-slack"></i> Slack</div>
+                
+                <!-- Repeated for loop -->
+                <div class="text-2xl font-black text-slate-300 flex items-center gap-2 grayscale"><i class="fa-brands fa-aws"></i> AWS</div>
+                <div class="text-2xl font-black text-slate-300 flex items-center gap-2 grayscale"><i class="fa-brands fa-google"></i> Google</div>
+                <div class="text-2xl font-black text-slate-300 flex items-center gap-2 grayscale"><i class="fa-brands fa-microsoft"></i> Microsoft</div>
+                <div class="text-2xl font-black text-slate-300 flex items-center gap-2 grayscale"><i class="fa-brands fa-stripe"></i> Stripe</div>
+                <div class="text-2xl font-black text-slate-300 flex items-center gap-2 grayscale"><i class="fa-brands fa-spotify"></i> Stripe</div>
+                <div class="text-2xl font-black text-slate-300 flex items-center gap-2 grayscale"><i class="fa-brands fa-slack"></i> Slack</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KEUNGGULAN (Why Choose Us for B2B) -->
+    <section class="py-16 lg:py-24 bg-white" id="keunggulan">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-4">Standar Enterprise untuk Kepuasan Maksimal</h2>
+                <p class="text-sm text-slate-500">Kami memahami bahwa mengurus perjalanan perusahaan memiliki tantangan tersendiri. Kami hadir untuk membuat semuanya efisien dan terukur.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-slate-50 border border-slate-100 rounded-2xl p-6 hover:shadow-lg hover:border-brand-200 transition-all group">
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-brand-600 text-xl shadow-sm mb-5 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg mb-2">Dedicated Account Manager</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">Satu kontak khusus untuk perusahaan Anda. Dari perencanaan, negosiasi harga, hingga eksekusi di lapangan 24/7.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="bg-slate-50 border border-slate-100 rounded-2xl p-6 hover:shadow-lg hover:border-brand-200 transition-all group">
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-accent-500 text-xl shadow-sm mb-5 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg mb-2">Invoicing & Faktur Pajak</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">Sistem pembayaran fleksibel (Term of Payment) dan administrasi legal lengkap. PKP siap menerbitkan Faktur Pajak.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="bg-slate-50 border border-slate-100 rounded-2xl p-6 hover:shadow-lg hover:border-brand-200 transition-all group">
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-emerald-500 text-xl shadow-sm mb-5 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg mb-2">100% Custom Itinerary</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">Bebas tentukan durasi, kelas hotel, menu makanan, hingga sisipan agenda rapat atau gala dinner ke dalam jadwal.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LAYANAN KAMI (Services Grid) -->
+    <section class="py-16 lg:py-20 bg-slate-50 border-y border-slate-200" id="layanan">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-8 text-center">Solusi Untuk Setiap Kebutuhan Bisnis</h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Layanan 1 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow group border border-slate-200">
+                    <div class="h-40 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=600" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Gathering">
+                        <div class="absolute inset-0 bg-slate-900/20"></div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-bold text-brand-900 mb-1">Company Gathering</h3>
+                        <p class="text-xs text-slate-500 mb-3">Liburan santai skala besar untuk merekatkan hubungan antar karyawan dari berbagai divisi.</p>
+                    </div>
+                </div>
+                <!-- Layanan 2 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow group border border-slate-200">
+                    <div class="h-40 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Team Building">
+                        <div class="absolute inset-0 bg-slate-900/20"></div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-bold text-brand-900 mb-1">Team Building & Outbound</h3>
+                        <p class="text-xs text-slate-500 mb-3">Program terstruktur dengan fasilitator profesional untuk melatih leadership dan kerjasama tim.</p>
+                    </div>
+                </div>
+                <!-- Layanan 3 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow group border border-slate-200">
+                    <div class="h-40 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1556761175-4b46a572b786?w=600" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="MICE">
+                        <div class="absolute inset-0 bg-slate-900/20"></div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-bold text-brand-900 mb-1">M.I.C.E & Meeting</h3>
+                        <p class="text-xs text-slate-500 mb-3">Penyelenggaraan Meeting, Incentive, Convention, & Exhibition lengkap dengan sewa venue.</p>
+                    </div>
+                </div>
+                <!-- Layanan 4 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow group border border-slate-200">
+                    <div class="h-40 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Executive">
+                        <div class="absolute inset-0 bg-slate-900/20"></div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-bold text-brand-900 mb-1">Executive Retreat</h3>
+                        <p class="text-xs text-slate-500 mb-3">Perjalanan eksklusif VVIP (golf, private yacht) untuk jajaran direksi, dewan komisaris, atau VIP.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORMULIR RFQ (Request for Quotation) -->
+    <section class="py-16 lg:py-24 bg-white" id="rfq-form">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-slate-900 rounded-3xl overflow-hidden shadow-2xl flex flex-col lg:flex-row">
+                
+                <!-- Info Kiri (Gelap) -->
+                <div class="w-full lg:w-5/12 p-8 lg:p-12 bg-brand-900 text-white relative overflow-hidden">
+                    <!-- Pattern Background -->
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-brand-500 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
+                    <div class="absolute bottom-0 left-0 w-64 h-64 bg-accent-500 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
+
+                    <div class="relative z-10">
+                        <h2 class="text-3xl font-extrabold mb-4">Mari Diskusikan Agenda Anda!</h2>
+                        <p class="text-sm text-brand-100 mb-8 leading-relaxed">
+                            Isi formulir di samping dengan detail kebutuhan perusahaan Anda. Konsultan perjalanan kami (Travel Architect) akan merancang proposal khusus dan menghubungi Anda dalam kurun waktu 1x24 jam.
+                        </p>
+
+                        <div class="space-y-6">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-brand-200 uppercase tracking-widest font-bold">Telepon / WhatsApp B2B</p>
+                                    <p class="font-bold text-lg">+62 811-999-888</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-brand-200 uppercase tracking-widest font-bold">Email Corporate</p>
+                                    <p class="font-bold text-lg">corporate@nusatrip.com</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-brand-200 uppercase tracking-widest font-bold">Kantor Pusat</p>
+                                    <p class="font-medium text-sm text-brand-50">Menara BCA Lt. 32, Jl. M.H. Thamrin No. 1, Jakarta Pusat, Indonesia</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Kanan (Terang) -->
+                <div class="w-full lg:w-7/12 p-8 lg:p-12 bg-white">
+                    <h3 class="text-xl font-bold text-slate-900 mb-6">Formulir Permintaan Proposal (RFQ)</h3>
+                    
+                    <form onsubmit="submitRFQ(event)" class="space-y-5">
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Perusahaan / Instansi <span class="text-red-500">*</span></label>
+                                <input type="text" class="w-full bg-slate-50 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="PT Maju Bersama" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama PIC (Penanggung Jawab) <span class="text-red-500">*</span></label>
+                                <input type="text" class="w-full bg-slate-50 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="Nama Anda" required>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Email Bisnis <span class="text-red-500">*</span></label>
+                                <input type="email" class="w-full bg-slate-50 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="email@perusahaan.com" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">No. WhatsApp Aktif <span class="text-red-500">*</span></label>
+                                <input type="tel" class="w-full bg-slate-50 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="0812xxxx" required>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 border-t border-slate-100 pt-5 mt-2">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Destinasi Tujuan</label>
+                                <input type="text" class="w-full bg-slate-50 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="Cth: Bali / Belum Pasti">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Rencana Tanggal</label>
+                                <input type="text" class="w-full bg-slate-50 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="Cth: Pertengahan Des">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Estimasi Peserta</label>
+                                <input type="number" class="w-full bg-slate-50 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="Cth: 50 Pax">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Detail Kebutuhan / Agenda Acara <span class="text-red-500">*</span></label>
+                            <textarea class="w-full bg-slate-50 text-sm rounded-lg px-4 py-3 input-saas text-slate-800 h-28 resize-none" placeholder="Ceritakan konsep yang Anda inginkan. Contoh: Kami butuh hotel bintang 4, ada sesi meeting 1/2 hari, lalu diselingi team building di pantai." required></textarea>
+                        </div>
+
+                        <button type="submit" id="btn-submit" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2 mt-4">
+                            <i id="btn-spinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
+                            <span id="btn-text">Kirim Permintaan Proposal</span>
+                        </button>
+                        <p class="text-center text-[10px] text-slate-400 mt-2 font-medium"><i class="fa-solid fa-lock text-slate-300 mr-1"></i> Data Anda dijamin kerahasiaannya (NDA Ready).</p>
+                    </form>
+
+                    <!-- Notifikasi Sukses -->
+                    <div id="success-msg" class="hidden mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-700 text-sm font-bold text-center">
+                        <i class="fa-solid fa-circle-check mr-1"></i> Terima kasih! Permintaan Anda telah diterima. Tim kami akan segera menghubungi.
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER SIMPLE -->
+    <footer class="border-t border-slate-200 bg-white">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2 font-extrabold text-lg text-brand-900">
+                <div class="w-6 h-6 rounded bg-brand-600 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-building"></i></div>
+                NusaTrip Corporate
+            </div>
+            <p class="text-xs text-slate-500 font-medium">© 2026 PT Nusantara Trip System. B2B Division.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        function submitRFQ(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-text');
+            const spinner = document.getElementById('btn-spinner');
+            const submitBtn = document.getElementById('btn-submit');
+            const successMsg = document.getElementById('success-msg');
+
+            // Animasi Loading
+            btn.innerText = "Mengirim...";
+            spinner.classList.remove('hidden');
+            submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            // Simulasi Delay Pengiriman API
+            setTimeout(() => {
+                btn.innerText = "Kirim Permintaan Proposal";
+                spinner.classList.add('hidden');
+                submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+                
+                // Tampilkan sukses, reset form
+                e.target.reset();
+                successMsg.classList.remove('hidden');
+
+                // Hilangkan notif setelah 5 detik
+                setTimeout(() => {
+                    successMsg.classList.add('hidden');
+                }, 5000);
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

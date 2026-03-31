@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promo & Penawaran Spesial | NusantaraTrip</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', // Primary Indigo
+                            700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', // Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
+        
+        /* Custom Scrollbar untuk Filter Sidebar */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Custom Checkbox SaaS Style */
+        .check-saas {
+            appearance: none;
+            width: 18px; height: 18px;
+            border: 2px solid #cbd5e1;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .check-saas:checked {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+        }
+        .check-saas:checked::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: white;
+            font-size: 10px;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Hover Card Animations */
+        .promo-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .promo-card:hover { 
+            transform: translateY(-6px); 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(79, 70, 229, 0.15); 
+            border-color: #c7d2fe;
+        }
+
+        /* Dashed Promo Code Box */
+        .promo-code-box {
+            background-image: repeating-linear-gradient(0deg, #cbd5e1, #cbd5e1 6px, transparent 6px, transparent 12px, #cbd5e1 12px), repeating-linear-gradient(90deg, #cbd5e1, #cbd5e1 6px, transparent 6px, transparent 12px, #cbd5e1 12px), repeating-linear-gradient(180deg, #cbd5e1, #cbd5e1 6px, transparent 6px, transparent 12px, #cbd5e1 12px), repeating-linear-gradient(270deg, #cbd5e1, #cbd5e1 6px, transparent 6px, transparent 12px, #cbd5e1 12px);
+            background-size: 2px 100%, 100% 2px, 2px 100% , 100% 2px;
+            background-position: 0 0, 0 0, 100% 0, 0 100%;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased overflow-x-hidden pt-6 pb-12">
+
+    <!-- Notifikasi Toast Copy -->
+    <div id="copy-toast" class="fixed top-5 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-4 py-2 rounded-lg shadow-2xl z-[100] font-bold text-sm flex items-center gap-2 transition-all duration-300 opacity-0 translate-y-[-20px] pointer-events-none">
+        <i class="fa-solid fa-circle-check text-green-400"></i> Kode Promo Berhasil Disalin!
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-6 lg:gap-8">
+        
+        <!-- ========================================== -->
+        <!-- SIDEBAR FILTER (KIRI)                      -->
+        <!-- ========================================== -->
+        <aside class="w-full lg:w-[280px] xl:w-[320px] flex-shrink-0">
+            <!-- Mobile Filter Toggle -->
+            <button class="lg:hidden w-full bg-white border border-slate-200 text-brand-900 font-bold py-3 rounded-xl shadow-sm mb-4 flex justify-between items-center px-4" onclick="document.getElementById('filter-content').classList.toggle('hidden')">
+                <span><i class="fa-solid fa-tags text-brand-600 mr-2"></i> Filter Promo</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+
+            <!-- Filter Content (Sticky on Desktop) -->
+            <div id="filter-content" class="hidden lg:block sticky top-6 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden h-max max-h-[90vh] flex flex-col">
+                
+                <!-- Filter Header -->
+                <div class="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-brand-50/50">
+                    <h2 class="font-extrabold text-brand-900 text-base"><i class="fa-solid fa-filter text-brand-600 mr-1.5"></i> Filter Penawaran</h2>
+                    <button onclick="resetFilters()" class="text-[11px] font-bold text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-rotate-right mr-1"></i>Reset</button>
+                </div>
+
+                <!-- Filter Body (Scrollable) -->
+                <div class="p-4 sm:p-5 overflow-y-auto custom-scrollbar flex flex-col gap-6">
+                    
+                    <!-- 1. Search Promo / Kode -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Cari Promo / Kode</label>
+                        <div class="relative group">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-brand-600 transition-colors text-sm"></i>
+                            <input type="text" id="filter-search" placeholder="Cari BCA, Diskon 50%..." class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg pl-9 pr-3 py-2.5 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-medium">
+                        </div>
+                    </div>
+
+                    <!-- 2. Kategori Layanan -->
+                    <div class="border-t border-slate-100 pt-5">
+                        <label class="block text-xs font-bold text-slate-700 mb-3">Kategori Layanan</label>
+                        <div class="space-y-2.5">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox" checked>
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600 transition-colors">Semua Promo</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600 transition-colors">Paket Tour & Trip <span class="text-[10px] text-slate-400 ml-1">(12)</span></span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600 transition-colors">Rental Mobil <span class="text-[10px] text-slate-400 ml-1">(8)</span></span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600 transition-colors">Corporate / Grup <span class="text-[10px] text-slate-400 ml-1">(3)</span></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 3. Metode Pembayaran -->
+                    <div class="border-t border-slate-100 pt-5">
+                        <label class="block text-xs font-bold text-slate-700 mb-3">Promo Pembayaran</label>
+                        <div class="space-y-2.5">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600">Kartu Kredit BCA <span class="text-[10px] text-slate-400 ml-1">(5)</span></span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600">Kartu Kredit Mandiri <span class="text-[10px] text-slate-400 ml-1">(4)</span></span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600">E-Wallet (OVO/Gopay) <span class="text-[10px] text-slate-400 ml-1">(6)</span></span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox" checked>
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600">Semua Metode Pembayaran</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 4. Periode Kedaluwarsa -->
+                    <div class="border-t border-slate-100 pt-5 mb-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-3">Masa Berlaku</label>
+                        <div class="flex flex-wrap gap-2">
+                            <label class="cursor-pointer">
+                                <input type="checkbox" class="peer sr-only filter-checkbox">
+                                <div class="px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-500 hover:bg-slate-50 transition-colors"><i class="fa-solid fa-fire text-red-500 text-[10px] mr-1"></i> Berakhir < 7 Hari</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="checkbox" class="peer sr-only filter-checkbox">
+                                <div class="px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-500 hover:bg-slate-50 transition-colors"><i class="fa-regular fa-calendar-check text-[10px] mr-1"></i> Berlaku Bulan Ini</div>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <!-- Filter Action Button -->
+                <div class="p-4 border-t border-slate-100 bg-white">
+                    <button onclick="simulateFilter()" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-lg shadow-md shadow-brand-500/30 transition-colors flex items-center justify-center gap-2">
+                        <i id="btn-spinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
+                        <span id="btn-text">Terapkan Filter Promo</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ========================================== -->
+        <!-- MAIN CONTENT (KANAN) GRID PROMO            -->
+        <!-- ========================================== -->
+        <div class="flex-1 w-full">
+            
+            <!-- Breadcrumbs & Quick Tags -->
+            <div class="mb-5 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
+                <div>
+                    <nav class="flex text-[10px] sm:text-xs text-slate-400 font-medium mb-2" aria-label="Breadcrumb">
+                        <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                            <li class="inline-flex items-center"><a href="#" class="hover:text-brand-600 transition-colors">Beranda</a></li>
+                            <li><div class="flex items-center"><i class="fa-solid fa-chevron-right text-[8px] mx-1"></i><span class="text-slate-600 font-bold">Promo Spesial</span></div></li>
+                        </ol>
+                    </nav>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-brand-900 tracking-tight">Klaim Promo & Hemat Liburanmu!</h1>
+                    <p class="text-slate-500 text-xs sm:text-sm mt-1 font-medium">Tersedia <span class="text-brand-600 font-bold" id="total-result">24</span> promo aktif yang bisa kamu gunakan hari ini.</p>
+                </div>
+
+                <!-- Sort Dropdown (SaaS Style) -->
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-500">Urutkan:</span>
+                    <div class="relative group">
+                        <select class="appearance-none bg-white border border-slate-200 text-brand-900 text-xs sm:text-sm font-bold rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:border-brand-500 shadow-sm cursor-pointer hover:bg-slate-50 transition-colors">
+                            <option>Promo Terbaru</option>
+                            <option>Segera Berakhir</option>
+                            <option>Diskon Terbesar</option>
+                            <option>Paling Banyak Diklaim</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tags Kategori Cepat (Marketplace Style) -->
+            <div class="flex flex-wrap gap-2 mb-6">
+                <button class="px-3 py-1.5 bg-brand-600 text-white text-[11px] font-bold rounded-full shadow-sm shadow-brand-500/30 transition-all"><i class="fa-solid fa-check mr-1"></i> Semua Promo</button>
+                <button class="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 hover:border-brand-600 hover:text-brand-600 text-[11px] font-bold rounded-full shadow-sm transition-all"><i class="fa-solid fa-plane-departure mr-1"></i> Promo Tour</button>
+                <button class="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 hover:border-brand-600 hover:text-brand-600 text-[11px] font-bold rounded-full shadow-sm transition-all"><i class="fa-solid fa-car mr-1"></i> Promo Rental</button>
+                <button class="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 hover:border-brand-600 hover:text-brand-600 text-[11px] font-bold rounded-full shadow-sm transition-all"><i class="fa-regular fa-credit-card mr-1"></i> Promo Bank</button>
+            </div>
+
+            <!-- GRID PROMO (Karena promo butuh ruang teks kode, kita pakai 3 Kolom maksimal di Desktop) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6" id="promo-grid">
+                <!-- Data ini akan dirender via JavaScript di bagian bawah -->
+            </div>
+
+            <!-- PAGING (PAGINATION) -->
+            <div class="mt-10 pt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <p class="text-xs font-medium text-slate-500">Menampilkan 1-9 dari 24 promo</p>
+                
+                <nav class="inline-flex shadow-sm rounded-lg" aria-label="Pagination">
+                    <!-- Prev Button -->
+                    <button class="relative inline-flex items-center px-3 py-2 rounded-l-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-400 cursor-not-allowed transition-colors">
+                        <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                    </button>
+                    <!-- Numbers -->
+                    <button class="relative inline-flex items-center px-3.5 py-2 border border-slate-200 bg-brand-600 text-sm font-extrabold text-white">
+                        1
+                    </button>
+                    <button class="relative inline-flex items-center px-3.5 py-2 border border-slate-200 bg-white text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                        2
+                    </button>
+                    <button class="hidden sm:inline-flex relative items-center px-3.5 py-2 border border-slate-200 bg-white text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                        3
+                    </button>
+                    <!-- Next Button -->
+                    <button class="relative inline-flex items-center px-3 py-2 rounded-r-lg border border-slate-200 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-brand-600 transition-colors group">
+                        <span class="mr-1 text-xs group-hover:text-brand-600">Next</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
+                </nav>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Elemen tersembunyi untuk bantuan copy ke clipboard -->
+    <textarea id="hidden-clipboard-area" style="position: absolute; left: -9999px;"></textarea>
+
+    <!-- JAVASCRIPT & DATA DUMMY -->
+    <script>
+        // Data Dummy untuk Promo
+        const promoData = [
+            {
+                img: "https://images.unsplash.com/photo-1542898939-5e5f385c5dfa?w=600",
+                badge: "DISKON 20%",
+                badgeColor: "bg-red-500",
+                category: "Paket Tour Bromo",
+                title: "Promo Bromo Sunrise Diskon 20% Tanpa Minimal Transaksi",
+                desc: "Nikmati keindahan Bromo lebih hemat. Berlaku untuk pemesanan Private Tour dan Open Trip.",
+                code: "BROMOHEMAT",
+                expDate: "Berakhir 30 Nov 2026",
+                expWarning: true // Menandakan segera berakhir, tulisan merah
+            },
+            {
+                img: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600",
+                badge: "CASHBACK 150K",
+                badgeColor: "bg-accent-500",
+                category: "Rental Mobil",
+                title: "Cashback Hingga 150Ribu Sewa Mobil Lepas Kunci",
+                desc: "Sewa mobil 2 hari atau lebih dan dapatkan langsung cashback ke e-wallet kamu.",
+                code: "SEWASERU",
+                expDate: "Berakhir 15 Des 2026",
+                expWarning: false
+            },
+            {
+                img: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=600",
+                badge: "DISKON RP 500K",
+                badgeColor: "bg-brand-600",
+                category: "Promo Bank BCA",
+                title: "Liburan Hemat Malang City Tour Khusus Kartu Kredit BCA",
+                desc: "Gunakan Kartu Kredit BCA untuk transaksi minimal Rp 3.000.000 dan dapatkan potongan langsung.",
+                code: "BCAMALANG",
+                expDate: "Berakhir 31 Des 2026",
+                expWarning: false
+            },
+            {
+                img: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600",
+                badge: "BELI 10 GRATIS 1",
+                badgeColor: "bg-emerald-500",
+                category: "Corporate / Family",
+                title: "Promo Rombongan Bali Explorer Tour",
+                desc: "Cocok untuk gathering! Pesan untuk 10 pax dan dapatkan 1 pax gratis tanpa syarat tambahan.",
+                code: "BALIGROUP",
+                expDate: "Berakhir 20 Des 2026",
+                expWarning: true
+            },
+            {
+                img: "https://images.unsplash.com/photo-1517441865-c32f8313bd8a?w=600",
+                badge: "DISKON 15%",
+                badgeColor: "bg-purple-600",
+                category: "Paket Tour Ijen",
+                title: "Eksplorasi Blue Fire Kawah Ijen Potongan 15%",
+                desc: "Penawaran spesial untuk pemesanan Open Trip Kawah Ijen keberangkatan weekend.",
+                code: "IJENBLUE",
+                expDate: "Berakhir 05 Des 2026",
+                expWarning: true
+            },
+            {
+                img: "https://images.unsplash.com/photo-1620067677840-7ac53577d2ec?w=600",
+                badge: "DISKON RP 200K",
+                badgeColor: "bg-blue-500",
+                category: "Promo Bank Mandiri",
+                title: "Potongan Harga Sewa Mobil Premium & Innova Zenix",
+                desc: "Khusus nasabah Livin' Mandiri. Nikmati perjalanan VIP dengan harga yang lebih terjangkau.",
+                code: "LIVINVIP",
+                expDate: "Berakhir 31 Des 2026",
+                expWarning: false
+            },
+            {
+                img: "https://images.unsplash.com/photo-1505993597083-3bd19fa85e74?w=600",
+                badge: "CASHBACK 5%",
+                badgeColor: "bg-yellow-500",
+                category: "Sailing Komodo",
+                title: "Cashback Spesial Sailing Trip Liveaboard Komodo",
+                desc: "Pesan Phinisi impianmu sekarang, dapatkan cashback maksimal Rp 1.000.000.",
+                code: "SAILKOMODO",
+                expDate: "Berakhir 10 Jan 2027",
+                expWarning: false
+            },
+            {
+                img: "https://images.unsplash.com/photo-1512100356356-de1b84283e18?w=600",
+                badge: "DISKON 10%",
+                badgeColor: "bg-red-500",
+                category: "Nusa Penida",
+                title: "Flash Sale 12.12! Diskon Nusa Penida One Day Tour",
+                desc: "Waktu terbatas! Klaim kode ini saat checkout untuk mendapatkan harga flash sale.",
+                code: "FLASH1212",
+                expDate: "Berakhir 12 Des 2026",
+                expWarning: true
+            },
+            {
+                img: "https://images.unsplash.com/photo-1563720223185-11003d516935?w=600",
+                badge: "GRATIS BBM",
+                badgeColor: "bg-emerald-600",
+                category: "Rental Mobil",
+                title: "Sewa Hiace / Elf Bebas Biaya Bahan Bakar (BBM)",
+                desc: "Sewa minimal 3 hari untuk Hiace atau Elf, kami tanggung seluruh biaya BBM-nya!",
+                code: "FREEBBM",
+                expDate: "Berakhir 31 Des 2026",
+                expWarning: false
+            }
+        ];
+
+        const gridContainer = document.getElementById('promo-grid');
+
+        // Fungsi Render Card Promo
+        function renderPromos() {
+            gridContainer.innerHTML = '';
+            promoData.forEach((promo, index) => {
+                
+                // Warna teks masa berlaku
+                const expColorClass = promo.expWarning ? "text-red-500 font-bold" : "text-slate-500 font-medium";
+                const expIconColorClass = promo.expWarning ? "text-red-500" : "text-slate-400";
+
+                const cardHTML = `
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:border-brand-300 group promo-card flex flex-col relative">
+                    
+                    <!-- Gambar & Badge Promo -->
+                    <div class="relative h-36 sm:h-40 overflow-hidden bg-slate-100 flex items-center justify-center">
+                        <img src="${promo.img}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <!-- Gradient overlay agar gambar tidak terlalu terang -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
+                        <span class="absolute top-3 left-3 text-white ${promo.badgeColor} text-[10px] font-bold px-2.5 py-1 rounded shadow-md uppercase tracking-wider">${promo.badge}</span>
+                    </div>
+                    
+                    <!-- Detail Promo -->
+                    <div class="p-4 sm:p-5 flex flex-col flex-grow relative">
+                        <!-- Floating Category Label di atas teks -->
+                        <div class="text-[10px] font-bold text-brand-600 mb-1.5 uppercase tracking-wide">
+                            ${promo.category}
+                        </div>
+                        
+                        <h3 class="font-extrabold text-slate-900 text-sm sm:text-base mb-2 line-clamp-2 leading-snug group-hover:text-brand-600 transition-colors">${promo.title}</h3>
+                        <p class="text-xs text-slate-500 mb-4 line-clamp-2 flex-grow">${promo.desc}</p>
+
+                        <!-- Box Kode Promo (Dashed Border) -->
+                        <div class="mt-auto mb-4 p-3 bg-slate-50 rounded-lg promo-code-box flex items-center justify-between">
+                            <div>
+                                <p class="text-[9px] text-slate-400 font-bold uppercase mb-0.5">Kode Promo</p>
+                                <p class="font-bold text-slate-800 tracking-wider font-mono text-sm" id="code-${index}">${promo.code}</p>
+                            </div>
+                            
+                            <!-- Tombol Copy -->
+                            <button onclick="copyPromoCode('${promo.code}', this)" class="w-8 h-8 rounded-md bg-white border border-slate-200 text-brand-600 flex items-center justify-center hover:bg-brand-600 hover:text-white hover:border-transparent shadow-sm transition-all focus:outline-none" title="Salin Kode">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+
+                        <!-- Masa Berlaku -->
+                        <div class="border-t border-slate-100 pt-3 flex items-center justify-between">
+                            <span class="text-[10px] sm:text-xs ${expColorClass} flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock ${expIconColorClass}"></i> ${promo.expDate}
+                            </span>
+                            <a href="#" class="text-[10px] sm:text-xs font-bold text-brand-600 hover:underline">Syarat & Ketentuan</a>
+                        </div>
+                    </div>
+                </div>
+                `;
+                gridContainer.innerHTML += cardHTML;
+            });
+        }
+
+        // Render card saat load
+        renderPromos();
+
+        // --- FUNGSI COPY TO CLIPBOARD ---
+        function copyPromoCode(code, btnElement) {
+            // Menggunakan textarea (Fallback aman untuk iFrame) seperti instruksi
+            const textArea = document.getElementById('hidden-clipboard-area');
+            textArea.value = code;
+            textArea.select();
+            document.execCommand('copy');
+
+            // --- Efek Visual Salin Sukses ---
+            const icon = btnElement.querySelector('i');
+            const originalIconClass = "fa-regular fa-copy";
+            const successIconClass = "fa-solid fa-check";
+            
+            // Ubah ikon tombol ke checklist
+            icon.className = successIconClass;
+            btnElement.classList.add('bg-green-500', 'text-white', 'border-transparent');
+            btnElement.classList.remove('bg-white', 'text-brand-600', 'hover:bg-brand-600');
+
+            // Tampilkan Notifikasi Toast
+            const toast = document.getElementById('copy-toast');
+            toast.classList.remove('opacity-0', 'translate-y-[-20px]');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            // Kembalikan ke tampilan semula setelah 2 detik
+            setTimeout(() => {
+                icon.className = originalIconClass;
+                btnElement.classList.remove('bg-green-500', 'text-white', 'border-transparent');
+                btnElement.classList.add('bg-white', 'text-brand-600', 'hover:bg-brand-600');
+                
+                // Sembunyikan Toast
+                toast.classList.add('opacity-0', 'translate-y-[-20px]');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 2500);
+        }
+
+        // --- SIMULASI FILTER ---
+        function simulateFilter() {
+            const btn = document.getElementById('btn-text');
+            const spinner = document.getElementById('btn-spinner');
+            
+            // Animasi tombol
+            btn.innerText = "Memproses...";
+            spinner.classList.remove('hidden');
+            gridContainer.style.opacity = '0.5';
+
+            // Simulasi proses delay
+            setTimeout(() => {
+                btn.innerText = "Terapkan Filter Promo";
+                spinner.classList.add('hidden');
+                gridContainer.style.opacity = '1';
+                
+                // Ubah angka total secara acak untuk simulasi filter berjalan
+                document.getElementById('total-result').innerText = Math.floor(Math.random() * 15) + 5;
+            }, 800);
+        }
+
+        // --- RESET FILTER ---
+        function resetFilters() {
+            document.getElementById('filter-search').value = '';
+            
+            const checkboxes = document.querySelectorAll('.filter-checkbox');
+            checkboxes.forEach(cb => cb.checked = false);
+            
+            // Set beberapa checked by default jika diperlukan, disini semua di uncheck kecuali 'semua'
+            simulateFilter();
+        }
+    </script>
+</body>
+</html>

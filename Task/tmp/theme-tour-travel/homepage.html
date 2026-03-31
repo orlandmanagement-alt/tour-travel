@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NusantaraTrip | Enterprise Travel Platform</title>
+    
+    <!-- Google Fonts: Poppins for modern SaaS look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5', // Vibrant Indigo
+                            700: '#4338ca',
+                            900: '#312e81', // Dark blue
+                            950: '#1e1b4b',
+                        },
+                        accent: {
+                            400: '#fb923c',
+                            500: '#f97316', // Vibrant Orange
+                            600: '#ea580c',
+                        }
+                    },
+                    boxShadow: {
+                        'neon': '0 0 15px rgba(79, 70, 229, 0.4)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+        
+        /* Hide Scrollbar */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Custom Animations */
+        .slide-fade { transition: opacity 0.8s ease-in-out; }
+        
+        /* Glass Dropdown */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Category Icon Hover */
+        .cat-icon-wrap { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .cat-icon-wrap:hover { background-color: #4f46e5; transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4); }
+        .cat-icon-wrap:hover i { color: white; transform: rotate(180deg); transition: transform 0.5s ease; }
+        
+        /* Form Inputs */
+        .input-saas:focus-within { border-color: #4f46e5; box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased overflow-x-hidden relative">
+
+    <!-- OVERLAY UNTUK SIDEBAR & MODAL -->
+    <div id="page-overlay" class="fixed inset-0 bg-slate-900/60 z-[60] hidden transition-opacity opacity-0 backdrop-blur-sm" onclick="closeSidebar()"></div>
+
+    <!-- MOBILE SIDEBAR -->
+    <aside id="mobile-sidebar" class="fixed top-0 left-0 w-[280px] h-full bg-white z-[70] transform -translate-x-full transition-transform duration-300 shadow-2xl overflow-y-auto">
+        <div class="p-4 flex justify-between items-center border-b border-slate-100 bg-brand-50">
+            <div class="flex items-center gap-2 font-extrabold text-xl text-brand-900">
+                <div class="w-8 h-8 rounded bg-brand-600 text-white flex items-center justify-center text-sm"><i class="fa-solid fa-n"></i></div>
+                NusaTrip
+            </div>
+            <button onclick="closeSidebar()" class="text-slate-500 hover:text-red-500 text-xl"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <!-- Language Flags -->
+        <div class="flex justify-center gap-4 py-3 border-b border-slate-100 bg-slate-50">
+            <button class="flex items-center gap-1 text-xs font-bold text-slate-700 bg-white px-2 py-1 rounded shadow-sm border border-slate-200"><img src="https://flagcdn.com/w20/id.png" alt="ID" class="w-4"> IND</button>
+            <button class="flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-slate-700"><img src="https://flagcdn.com/w20/gb.png" alt="EN" class="w-4 opacity-50"> ENG</button>
+        </div>
+
+        <nav class="p-4 flex flex-col gap-1">
+            <a href="#" class="py-2 px-3 text-sm font-bold text-brand-600 bg-brand-50 rounded"><i class="fa-solid fa-house w-6"></i> Beranda</a>
+            
+            <!-- Accordion Menu -->
+            <div class="relative">
+                <button onclick="toggleSubmenu('sub-tours')" class="w-full text-left py-2 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 rounded flex justify-between items-center">
+                    <span><i class="fa-solid fa-map-location-dot w-6 text-slate-400"></i> Paket Tour</span>
+                    <i class="fa-solid fa-chevron-down text-[10px] transition-transform" id="icon-sub-tours"></i>
+                </button>
+                <div id="sub-tours" class="hidden flex-col pl-9 pr-3 py-1 bg-slate-50 rounded-b">
+                    <a href="#" class="py-1.5 text-xs text-slate-600 font-medium hover:text-brand-600 block border-b border-slate-200"><i class="fa-solid fa-users w-4"></i> Open Trip</a>
+                    
+                    <!-- Sub-submenu -->
+                    <button onclick="toggleSubmenu('sub-sub-private')" class="w-full text-left py-1.5 text-xs text-slate-600 font-medium hover:text-brand-600 flex justify-between items-center">
+                        <span><i class="fa-solid fa-user-tie w-4"></i> Private Tour</span>
+                        <i class="fa-solid fa-plus text-[8px]"></i>
+                    </button>
+                    <div id="sub-sub-private" class="hidden flex-col pl-4 border-l-2 border-slate-200 ml-2 mt-1 mb-1">
+                        <a href="#" class="py-1 text-[11px] text-slate-500 hover:text-brand-600">Honeymoon</a>
+                        <a href="#" class="py-1 text-[11px] text-slate-500 hover:text-brand-600">Family Trip</a>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" class="py-2 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 rounded"><i class="fa-solid fa-car w-6 text-slate-400"></i> Rental Mobil</a>
+            <a href="#" class="py-2 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 rounded"><i class="fa-solid fa-tags w-6 text-slate-400"></i> Promo Spesial <span class="bg-red-500 text-white text-[9px] px-1 rounded ml-1 animate-pulse">HOT</span></a>
+        </nav>
+        
+        <div class="p-4 border-t border-slate-100 mt-auto">
+            <button class="w-full py-2 bg-brand-600 text-white text-sm font-bold rounded shadow mb-2"><i class="fa-solid fa-right-to-bracket mr-1"></i> Login / Register</button>
+        </div>
+    </aside>
+
+    <!-- HEADER / NAVBAR -->
+    <header class="fixed w-full z-50 bg-white/95 backdrop-blur shadow-sm border-b border-slate-200 py-2">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-12">
+            
+            <!-- Mobile Toggle & Logo -->
+            <div class="flex items-center gap-3">
+                <button onclick="openSidebar()" class="md:hidden text-slate-600 text-xl"><i class="fa-solid fa-bars-staggered"></i></button>
+                <a href="/" class="font-extrabold text-2xl tracking-tighter text-brand-900 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded bg-gradient-to-br from-brand-600 to-accent-500 text-white flex items-center justify-center shadow"><span class="text-sm"><i class="fa-solid fa-paper-plane"></i></span></div>
+                    NusaTrip
+                </a>
+            </div>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="#" class="text-sm font-bold text-brand-600 border-b-2 border-brand-600 pb-1"><i class="fa-solid fa-house mr-1"></i> Home</a>
+                <a href="#" class="text-sm font-medium text-slate-600 hover:text-brand-600"><i class="fa-solid fa-map-location-dot mr-1"></i> Paket Tour</a>
+                <a href="#" class="text-sm font-medium text-slate-600 hover:text-brand-600"><i class="fa-solid fa-car mr-1"></i> Rent Car</a>
+                <a href="#" class="text-sm font-medium text-slate-600 hover:text-brand-600"><i class="fa-solid fa-tags mr-1"></i> Promo <span class="bg-red-500 text-white text-[9px] px-1 py-0.5 rounded-full relative bottom-1">HOT</span></a>
+            </nav>
+
+            <!-- Lang & Auth -->
+            <div class="hidden md:flex items-center gap-4">
+                <div class="flex items-center gap-1 border-r border-slate-200 pr-4">
+                    <img src="https://flagcdn.com/w20/id.png" alt="ID" class="w-4 cursor-pointer hover:scale-110">
+                    <img src="https://flagcdn.com/w20/gb.png" alt="EN" class="w-4 opacity-40 cursor-pointer hover:opacity-100">
+                </div>
+
+                <!-- Login Dropdown Wrapper -->
+                <div class="relative group">
+                    <button class="flex items-center gap-2 px-4 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold transition-colors">
+                        <i class="fa-regular fa-user"></i> Login
+                    </button>
+                    
+                    <!-- Form Dropdown -->
+                    <div class="absolute right-0 mt-2 w-72 glass-panel rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right group-hover:translate-y-0 translate-y-2 p-5 z-50">
+                        <h3 class="text-brand-900 font-bold text-lg mb-4 text-center">Masuk ke Akun</h3>
+                        <form onsubmit="event.preventDefault();">
+                            <div class="mb-3 input-saas bg-slate-50 border border-slate-200 rounded px-3 py-2 flex items-center gap-2">
+                                <i class="fa-solid fa-envelope text-slate-400 text-sm"></i>
+                                <input type="email" placeholder="Email / Username" class="bg-transparent w-full text-sm outline-none font-medium">
+                            </div>
+                            <div class="mb-2 input-saas bg-slate-50 border border-slate-200 rounded px-3 py-2 flex items-center gap-2 relative">
+                                <i class="fa-solid fa-lock text-slate-400 text-sm"></i>
+                                <input type="password" id="login-pass" placeholder="Password" class="bg-transparent w-full text-sm outline-none font-medium pr-6">
+                                <button type="button" onclick="togglePassword()" class="absolute right-3 text-slate-400 hover:text-brand-600"><i id="eye-icon" class="fa-solid fa-eye-slash text-xs"></i></button>
+                            </div>
+                            <div class="flex justify-end mb-4">
+                                <a href="#" class="text-[11px] font-medium text-brand-600 hover:underline">Lupa Password?</a>
+                            </div>
+                            <button class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2 rounded shadow-md shadow-brand-500/30 transition-colors text-sm mb-3">
+                                Login <i class="fa-solid fa-arrow-right ml-1"></i>
+                            </button>
+                            <p class="text-center text-xs text-slate-500">Belum punya akun? <a href="#" class="text-brand-600 font-bold hover:underline">Daftar</a></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SLIDER SECTION (Tinggi Dikurangi) -->
+    <section class="relative w-full h-[55vh] min-h-[400px] max-h-[500px] pt-14 flex flex-col justify-center overflow-hidden">
+        <!-- Slider Images -->
+        <div id="hero-slider">
+            <div class="slide-fade absolute inset-0 z-0 opacity-100 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1518090597335-e6f7783ee855?w=1600');"></div>
+            <div class="slide-fade absolute inset-0 z-0 opacity-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1600');"></div>
+            <div class="slide-fade absolute inset-0 z-0 opacity-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1542898939-5e5f385c5dfa?w=1600');"></div>
+        </div>
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-brand-950/80 via-brand-900/50 to-transparent z-10"></div>
+        
+        <div class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-[-30px]">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-3 drop-shadow-lg">
+                Jelajahi Dunia, <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent-400 to-yellow-300">Tanpa Batas.</span>
+            </h1>
+            <p class="text-sm md:text-base text-slate-200 max-w-2xl mx-auto font-medium drop-shadow-md">
+                Pesan tiket tour, open trip, dan rental mobil dengan platform enterprise terpercaya.
+            </p>
+        </div>
+    </section>
+
+    <!-- SEARCH FILTER BLOCK (Simulasi) -->
+    <section class="relative z-30 -mt-16 sm:-mt-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        <div class="bg-white rounded-xl shadow-xl border border-slate-100 p-2 sm:p-3">
+            
+            <!-- Tabs -->
+            <div class="flex gap-4 px-2 pt-1 pb-3 mb-2 border-b border-slate-100">
+                <button onclick="switchTab('tour')" id="tab-tour" class="flex items-center gap-1.5 text-brand-600 font-bold text-sm border-b-2 border-brand-600 pb-1"><i class="fa-solid fa-map-location-dot"></i> Paket Tour</button>
+                <button onclick="switchTab('car')" id="tab-car" class="flex items-center gap-1.5 text-slate-500 font-medium text-sm hover:text-brand-600 pb-1"><i class="fa-solid fa-car"></i> Rental Mobil</button>
+            </div>
+            
+            <!-- Tab Content: TOUR -->
+            <form id="form-tour" class="grid grid-cols-1 md:grid-cols-4 gap-2">
+                <!-- Lokasi (Simulasi Dropdown) -->
+                <div class="relative p-2.5 bg-slate-50 rounded border border-slate-200 input-saas group">
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-0.5 group-hover:text-brand-600">Keberangkatan</label>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-location-dot text-slate-400 group-hover:text-brand-600 text-sm"></i>
+                        <input type="text" id="input-lokasi" placeholder="Pilih Kota" class="w-full bg-transparent text-slate-900 font-bold text-sm focus:outline-none" onfocus="showDropdown('drop-lokasi')" onblur="hideDropdown('drop-lokasi')" autocomplete="off">
+                    </div>
+                    <!-- Dropdown Simulasi -->
+                    <ul id="drop-lokasi" class="absolute left-0 top-full mt-1 w-full bg-white border border-slate-200 rounded shadow-lg z-50 hidden max-h-40 overflow-y-auto text-sm">
+                        <li class="px-3 py-2 hover:bg-brand-50 cursor-pointer text-brand-900 font-medium" onmousedown="fillInput('input-lokasi', 'Jakarta')"><i class="fa-solid fa-city mr-2 text-slate-400"></i> Jakarta</li>
+                        <li class="px-3 py-2 hover:bg-brand-50 cursor-pointer text-brand-900 font-medium" onmousedown="fillInput('input-lokasi', 'Malang')"><i class="fa-solid fa-tree mr-2 text-slate-400"></i> Malang</li>
+                        <li class="px-3 py-2 hover:bg-brand-50 cursor-pointer text-brand-900 font-medium" onmousedown="fillInput('input-lokasi', 'Banyuwangi')"><i class="fa-solid fa-mountain mr-2 text-slate-400"></i> Banyuwangi</li>
+                        <li class="px-3 py-2 hover:bg-brand-50 cursor-pointer text-brand-900 font-medium" onmousedown="fillInput('input-lokasi', 'Bali')"><i class="fa-solid fa-umbrella-beach mr-2 text-slate-400"></i> Bali</li>
+                    </ul>
+                </div>
+
+                <!-- Destination (Simulasi Auto Filter) -->
+                <div class="relative p-2.5 bg-slate-50 rounded border border-slate-200 input-saas group">
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-0.5 group-hover:text-brand-600">Destinasi / Nama Paket</label>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400 group-hover:text-brand-600 text-sm"></i>
+                        <input type="text" id="input-destinasi" placeholder="Ketik Bromo, Ijen..." class="w-full bg-transparent text-slate-900 font-bold text-sm focus:outline-none" oninput="filterDestinasi(this.value)" onfocus="showDropdown('drop-destinasi')" onblur="hideDropdown('drop-destinasi')" autocomplete="off">
+                    </div>
+                    <!-- Dropdown Simulasi -->
+                    <ul id="drop-destinasi" class="absolute left-0 top-full mt-1 w-[150%] sm:w-full bg-white border border-slate-200 rounded shadow-lg z-50 hidden max-h-48 overflow-y-auto text-xs">
+                        <li class="px-3 py-2 hover:bg-brand-50 cursor-pointer border-b border-slate-100" onmousedown="fillInput('input-destinasi', 'Open Trip Bromo Midnight')">
+                            <div class="font-bold text-brand-900">Open Trip Bromo Midnight</div>
+                            <div class="text-slate-500 text-[10px]">Start Malang/Batu</div>
+                        </li>
+                        <li class="px-3 py-2 hover:bg-brand-50 cursor-pointer border-b border-slate-100" onmousedown="fillInput('input-destinasi', 'Private Kawah Ijen Blue Fire')">
+                            <div class="font-bold text-brand-900">Private Kawah Ijen Blue Fire</div>
+                            <div class="text-slate-500 text-[10px]">Start Banyuwangi</div>
+                        </li>
+                        <li class="px-3 py-2 hover:bg-brand-50 cursor-pointer" onmousedown="fillInput('input-destinasi', 'Nusa Penida 1 Day Tour')">
+                            <div class="font-bold text-brand-900">Nusa Penida 1 Day Tour</div>
+                            <div class="text-slate-500 text-[10px]">Internasional / Domestik</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Date -->
+                <div class="p-2.5 bg-slate-50 rounded border border-slate-200 input-saas group">
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-0.5 group-hover:text-brand-600">Tanggal Trip</label>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-regular fa-calendar text-slate-400 group-hover:text-brand-600 text-sm"></i>
+                        <input type="date" class="w-full bg-transparent text-slate-900 font-bold text-sm focus:outline-none cursor-pointer">
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="p-1">
+                    <button type="button" class="w-full h-full min-h-[46px] bg-accent-500 hover:bg-accent-600 text-white font-bold text-sm rounded shadow-md flex items-center justify-center gap-2 transition-colors">
+                        <i class="fa-solid fa-search"></i> Cari Tour
+                    </button>
+                </div>
+            </form>
+
+            <!-- Tab Content: RENTAL CAR (Hidden by default) -->
+            <form id="form-car" class="hidden grid-cols-1 md:grid-cols-4 gap-2">
+                <div class="p-2.5 bg-slate-50 rounded border border-slate-200 input-saas group">
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-0.5">Kota Ambil</label>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-building text-slate-400 text-sm"></i>
+                        <select class="w-full bg-transparent text-slate-900 font-bold text-sm focus:outline-none cursor-pointer">
+                            <option>Malang / Batu</option>
+                            <option>Surabaya</option>
+                            <option>Jakarta</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="p-2.5 bg-slate-50 rounded border border-slate-200 input-saas group">
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-0.5">Tanggal Rental</label>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-regular fa-calendar-check text-slate-400 text-sm"></i>
+                        <input type="date" class="w-full bg-transparent text-slate-900 font-bold text-sm focus:outline-none cursor-pointer">
+                    </div>
+                </div>
+                <div class="p-2.5 bg-slate-50 rounded border border-slate-200 input-saas group">
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-0.5">Tipe Mobil</label>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-car-side text-slate-400 text-sm"></i>
+                        <select class="w-full bg-transparent text-slate-900 font-bold text-sm focus:outline-none cursor-pointer">
+                            <option>Semua Tipe</option>
+                            <option>MPV (Avanza, Innova)</option>
+                            <option>Minibus (Hiace, Elf)</option>
+                            <option>Premium (Alphard)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="p-1">
+                    <button type="button" class="w-full h-full min-h-[46px] bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded shadow-md flex items-center justify-center gap-2 transition-colors">
+                        <i class="fa-solid fa-car"></i> Cari Mobil
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </section>
+
+    <!-- CATEGORY ICONS (Interactive & Scrollable on Mobile) -->
+    <section class="py-6 sm:py-8 border-b border-slate-100 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center md:justify-center gap-3 sm:gap-6 overflow-x-auto hide-scrollbar pb-2 snap-x">
+                
+                <a href="#" class="flex flex-col items-center gap-2 min-w-[72px] snap-center group">
+                    <div class="cat-icon-wrap w-14 h-14 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-brand-600 text-xl">
+                        <i class="fa-solid fa-mountain"></i>
+                    </div>
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-600 group-hover:text-brand-600 text-center leading-tight">Pegunungan</span>
+                </a>
+                
+                <a href="#" class="flex flex-col items-center gap-2 min-w-[72px] snap-center group">
+                    <div class="cat-icon-wrap w-14 h-14 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-brand-600 text-xl">
+                        <i class="fa-solid fa-umbrella-beach"></i>
+                    </div>
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-600 group-hover:text-brand-600 text-center leading-tight">Pantai &<br>Pulau</span>
+                </a>
+
+                <a href="#" class="flex flex-col items-center gap-2 min-w-[72px] snap-center group">
+                    <div class="cat-icon-wrap w-14 h-14 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-brand-600 text-xl">
+                        <i class="fa-solid fa-city"></i>
+                    </div>
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-600 group-hover:text-brand-600 text-center leading-tight">City Tour</span>
+                </a>
+
+                <a href="#" class="flex flex-col items-center gap-2 min-w-[72px] snap-center group">
+                    <div class="cat-icon-wrap w-14 h-14 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-brand-600 text-xl">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-600 group-hover:text-brand-600 text-center leading-tight">Honeymoon</span>
+                </a>
+
+                <a href="#" class="flex flex-col items-center gap-2 min-w-[72px] snap-center group">
+                    <div class="cat-icon-wrap w-14 h-14 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-brand-600 text-xl">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-600 group-hover:text-brand-600 text-center leading-tight">Open Trip</span>
+                </a>
+
+                <a href="#" class="flex flex-col items-center gap-2 min-w-[72px] snap-center group">
+                    <div class="cat-icon-wrap w-14 h-14 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-brand-600 text-xl">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-600 group-hover:text-brand-600 text-center leading-tight">Fotografi</span>
+                </a>
+
+                <a href="#" class="flex flex-col items-center gap-2 min-w-[72px] snap-center group">
+                    <div class="cat-icon-wrap w-14 h-14 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-brand-600 text-xl">
+                        <i class="fa-solid fa-campground"></i>
+                    </div>
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-600 group-hover:text-brand-600 text-center leading-tight">Camping</span>
+                </a>
+
+                <a href="#" class="flex flex-col items-center gap-2 min-w-[72px] snap-center group">
+                    <div class="cat-icon-wrap w-14 h-14 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-brand-600 text-xl">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-600 group-hover:text-brand-600 text-center leading-tight">Luar Negeri</span>
+                </a>
+                
+                <!-- Scroll Hint Icon (Mobile Only) -->
+                <div class="md:hidden flex flex-col items-center justify-center px-4 text-slate-300 animate-pulse">
+                    <i class="fa-solid fa-angles-right text-xl"></i>
+                    <span class="text-[8px] mt-1">Geser</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SPECIAL OFFERS (Mobile: 1 Col, Desktop: Horizontal Scroll) -->
+    <section class="py-6 sm:py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl sm:text-2xl font-extrabold text-brand-900 tracking-tight flex items-center gap-2">
+                <i class="fa-solid fa-fire text-red-500"></i> Spesial Promo
+            </h2>
+            <a href="#" class="text-xs font-bold text-brand-600 hover:text-accent-500">Lihat Semua <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:flex md:overflow-x-auto md:hide-scrollbar gap-4 md:pb-4">
+            <!-- Promo 1 -->
+            <a href="#" class="group relative rounded-xl overflow-hidden h-36 md:h-44 md:min-w-[340px] shadow border border-slate-100 flex-shrink-0">
+                <img src="https://images.unsplash.com/photo-1542898939-5e5f385c5dfa?w=800" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-r from-brand-950/90 via-brand-900/70 to-transparent"></div>
+                <!-- Hover Action Icon -->
+                <div class="absolute inset-0 bg-brand-600/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20 backdrop-blur-[1px]">
+                    <div class="w-10 h-10 rounded-full bg-white text-brand-600 flex items-center justify-center shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300"><i class="fa-solid fa-eye"></i></div>
+                </div>
+                <div class="relative z-10 p-5 flex flex-col justify-center h-full text-white w-2/3">
+                    <span class="bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow mb-2 w-max"><i class="fa-solid fa-tag"></i> DISC 20%</span>
+                    <h3 class="font-bold text-base sm:text-lg leading-tight mb-1">Promo Bromo Sunrise</h3>
+                    <p class="text-[10px] text-slate-300">Berlaku s/d 30 Nov</p>
+                </div>
+            </a>
+            
+            <!-- Promo 2 -->
+            <a href="#" class="group relative rounded-xl overflow-hidden h-36 md:h-44 md:min-w-[340px] shadow border border-slate-100 flex-shrink-0">
+                <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=800" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-r from-accent-600/90 via-accent-500/70 to-transparent"></div>
+                 <div class="absolute inset-0 bg-accent-600/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20 backdrop-blur-[1px]">
+                    <div class="w-10 h-10 rounded-full bg-white text-accent-600 flex items-center justify-center shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300"><i class="fa-solid fa-eye"></i></div>
+                </div>
+                <div class="relative z-10 p-5 flex flex-col justify-center h-full text-white w-2/3">
+                    <span class="bg-yellow-400 text-brand-900 text-[9px] font-bold px-2 py-0.5 rounded shadow mb-2 w-max"><i class="fa-solid fa-bolt"></i> CASHBACK 500K</span>
+                    <h3 class="font-bold text-base sm:text-lg leading-tight mb-1">Malang City Explorer</h3>
+                    <p class="text-[10px] text-white/80 font-mono bg-black/20 px-1 inline-block mt-1">KODE: MLGCERIA</p>
+                </div>
+            </a>
+
+            <!-- Promo 3 -->
+            <a href="#" class="group relative rounded-xl overflow-hidden h-36 md:h-44 md:min-w-[340px] shadow border border-slate-100 flex-shrink-0">
+                <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-900/90 via-emerald-800/70 to-transparent"></div>
+                 <div class="absolute inset-0 bg-emerald-600/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20 backdrop-blur-[1px]">
+                    <div class="w-10 h-10 rounded-full bg-white text-emerald-600 flex items-center justify-center shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300"><i class="fa-solid fa-eye"></i></div>
+                </div>
+                <div class="relative z-10 p-5 flex flex-col justify-center h-full text-white w-2/3">
+                    <span class="bg-brand-600 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow mb-2 w-max"><i class="fa-solid fa-user-group"></i> CORPORATE</span>
+                    <h3 class="font-bold text-base sm:text-lg leading-tight mb-1">Bali Team Building</h3>
+                    <p class="text-[10px] text-slate-300">Pesan 10 Gratis 1 Pax</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- BEST SELLER PACKAGES (Dense, Mobile 2-Col) -->
+    <section class="py-8 bg-white border-t border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-4 sm:mb-6">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-brand-900 mb-1 tracking-tight">Best Seller Packages</h2>
+                    <p class="text-slate-500 text-[11px] sm:text-sm">Paket liburan paling diminati oleh pelanggan kami.</p>
+                </div>
+            </div>
+            
+            <!-- Grid: 2 Col on Mobile, 4 Col on Desktop -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5">
+                
+                <!-- Package 1 -->
+                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-xl hover:border-brand-300 group transition-all duration-300 flex flex-col relative">
+                    <!-- Badge 3D2N Top Right -->
+                    <div class="absolute top-2 right-2 z-10 bg-brand-600 text-white text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded shadow"><i class="fa-regular fa-clock"></i> 3D2N</div>
+                    <div class="relative h-28 sm:h-36 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1542898939-5e5f385c5dfa?w=400" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <span class="absolute top-2 left-2 bg-white/90 text-accent-600 text-[9px] font-bold px-1.5 py-0.5 rounded backdrop-blur">PRIVATE</span>
+                    </div>
+                    <div class="p-2.5 sm:p-4 flex flex-col flex-grow group-hover:bg-brand-50/30 transition-colors">
+                        <div class="flex items-center gap-1 text-[9px] sm:text-[10px] text-slate-500 mb-1">
+                            <i class="fa-solid fa-map-pin text-brand-600"></i> Start Malang/SBY
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-xs sm:text-sm mb-1 line-clamp-2 leading-snug group-hover:text-brand-600">Private Tour Bromo & Madakaripura</h3>
+                        
+                        <div class="flex items-center gap-1 mb-2 sm:mb-4">
+                            <i class="fa-solid fa-star text-[8px] sm:text-[10px] text-yellow-400"></i>
+                            <span class="text-[9px] sm:text-xs font-bold text-slate-700">4.9</span>
+                            <span class="text-[8px] sm:text-[10px] text-slate-400">(128)</span>
+                        </div>
+
+                        <div class="mt-auto pt-2 border-t border-slate-100 flex justify-between items-end">
+                            <div>
+                                <p class="text-[8px] sm:text-[10px] text-slate-400 line-through">Rp 1.500k</p>
+                                <p class="text-accent-600 font-extrabold text-xs sm:text-base leading-none">Rp 1.250k<span class="text-[8px] font-medium text-slate-500">/pax</span></p>
+                            </div>
+                            <!-- Small Detail Button -->
+                            <button class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center hover:bg-brand-600 hover:text-white transition-colors">
+                                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 2 -->
+                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-xl hover:border-brand-300 group transition-all duration-300 flex flex-col relative">
+                    <div class="absolute top-2 right-2 z-10 bg-brand-600 text-white text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded shadow"><i class="fa-regular fa-clock"></i> 1 Hari</div>
+                    <div class="relative h-28 sm:h-36 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1517441865-c32f8313bd8a?w=400" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <span class="absolute top-2 left-2 bg-white/90 text-brand-600 text-[9px] font-bold px-1.5 py-0.5 rounded backdrop-blur">OPEN TRIP</span>
+                    </div>
+                    <div class="p-2.5 sm:p-4 flex flex-col flex-grow group-hover:bg-brand-50/30 transition-colors">
+                        <div class="flex items-center gap-1 text-[9px] sm:text-[10px] text-slate-500 mb-1">
+                            <i class="fa-solid fa-map-pin text-brand-600"></i> Start Banyuwangi
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-xs sm:text-sm mb-1 line-clamp-2 leading-snug group-hover:text-brand-600">Open Trip Kawah Ijen Blue Fire</h3>
+                        
+                        <div class="flex items-center gap-1 mb-2 sm:mb-4">
+                            <i class="fa-solid fa-star text-[8px] sm:text-[10px] text-yellow-400"></i>
+                            <span class="text-[9px] sm:text-xs font-bold text-slate-700">4.8</span>
+                            <span class="text-[8px] sm:text-[10px] text-slate-400">(85)</span>
+                        </div>
+
+                        <div class="mt-auto pt-2 border-t border-slate-100 flex justify-between items-end">
+                            <div>
+                                <p class="text-[8px] sm:text-[10px] text-transparent select-none">-</p>
+                                <p class="text-accent-600 font-extrabold text-xs sm:text-base leading-none">Rp 350k<span class="text-[8px] font-medium text-slate-500">/pax</span></p>
+                            </div>
+                            <button class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center hover:bg-brand-600 hover:text-white transition-colors">
+                                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 3 -->
+                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-xl hover:border-brand-300 group transition-all duration-300 flex flex-col relative">
+                    <div class="absolute top-2 right-2 z-10 bg-brand-600 text-white text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded shadow"><i class="fa-regular fa-clock"></i> 3D2N</div>
+                    <div class="relative h-28 sm:h-36 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <span class="absolute top-2 left-2 bg-white/90 text-pink-500 text-[9px] font-bold px-1.5 py-0.5 rounded backdrop-blur">HONEYMOON</span>
+                    </div>
+                    <div class="p-2.5 sm:p-4 flex flex-col flex-grow group-hover:bg-brand-50/30 transition-colors">
+                        <div class="flex items-center gap-1 text-[9px] sm:text-[10px] text-slate-500 mb-1">
+                            <i class="fa-solid fa-map-pin text-brand-600"></i> Start Malang
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-xs sm:text-sm mb-1 line-clamp-2 leading-snug group-hover:text-brand-600">Romantic Escape Malang & Batu Tour</h3>
+                        
+                        <div class="flex items-center gap-1 mb-2 sm:mb-4">
+                            <i class="fa-solid fa-star text-[8px] sm:text-[10px] text-yellow-400"></i>
+                            <span class="text-[9px] sm:text-xs font-bold text-slate-700">5.0</span>
+                            <span class="text-[8px] sm:text-[10px] text-slate-400">(42)</span>
+                        </div>
+
+                        <div class="mt-auto pt-2 border-t border-slate-100 flex justify-between items-end">
+                            <div>
+                                <p class="text-[8px] sm:text-[10px] text-slate-400 line-through">Rp 5.000k</p>
+                                <p class="text-accent-600 font-extrabold text-xs sm:text-base leading-none">Rp 4.500k<span class="text-[8px] font-medium text-slate-500">/cpl</span></p>
+                            </div>
+                            <button class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center hover:bg-brand-600 hover:text-white transition-colors">
+                                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 4 -->
+                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-xl hover:border-brand-300 group transition-all duration-300 flex flex-col relative">
+                    <div class="absolute top-2 right-2 z-10 bg-brand-600 text-white text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded shadow"><i class="fa-regular fa-clock"></i> Custom</div>
+                    <div class="relative h-28 sm:h-36 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <span class="absolute top-2 left-2 bg-white/90 text-emerald-600 text-[9px] font-bold px-1.5 py-0.5 rounded backdrop-blur">FAMILY</span>
+                    </div>
+                    <div class="p-2.5 sm:p-4 flex flex-col flex-grow group-hover:bg-brand-50/30 transition-colors">
+                        <div class="flex items-center gap-1 text-[9px] sm:text-[10px] text-slate-500 mb-1">
+                            <i class="fa-solid fa-map-pin text-brand-600"></i> Start Bali
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-xs sm:text-sm mb-1 line-clamp-2 leading-snug group-hover:text-brand-600">Bali Explorer Family Fun Trip</h3>
+                        
+                        <div class="flex items-center gap-1 mb-2 sm:mb-4">
+                            <i class="fa-solid fa-star text-[8px] sm:text-[10px] text-yellow-400"></i>
+                            <span class="text-[9px] sm:text-xs font-bold text-slate-700">4.9</span>
+                            <span class="text-[8px] sm:text-[10px] text-slate-400">(210)</span>
+                        </div>
+
+                        <div class="mt-auto pt-2 border-t border-slate-100 flex justify-between items-end">
+                            <div>
+                                <p class="text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase">Mulai Dari</p>
+                                <p class="text-accent-600 font-extrabold text-xs sm:text-base leading-none">Rp 1.100k<span class="text-[8px] font-medium text-slate-500">/pax</span></p>
+                            </div>
+                            <button class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center hover:bg-brand-600 hover:text-white transition-colors">
+                                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View All Button -->
+            <div class="mt-6 sm:mt-8 text-center">
+                <button class="px-6 py-2.5 bg-brand-50 hover:bg-brand-600 text-brand-700 hover:text-white border border-brand-200 hover:border-transparent font-bold text-sm rounded-full transition-all duration-300 shadow-sm">
+                    Lihat Semua Paket Tour <i class="fa-solid fa-arrow-right-long ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER (Enterprise Level) -->
+    <footer class="bg-brand-950 text-white pt-12 pb-6 border-t-[4px] border-accent-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8 mb-8 border-b border-white/10 pb-8">
+                
+                <!-- Brand Col -->
+                <div class="lg:col-span-2 space-y-3">
+                    <a href="/" class="font-extrabold text-2xl tracking-tighter flex items-center gap-2 mb-1">
+                        <div class="w-8 h-8 rounded bg-gradient-to-br from-brand-500 to-accent-500 text-white flex items-center justify-center"><i class="fa-solid fa-paper-plane text-sm"></i></div>
+                        NusaTrip
+                    </a>
+                    <p class="text-slate-400 text-xs leading-relaxed max-w-sm">
+                        Platform travel terpercaya tingkat enterprise. Kami memberikan pengalaman liburan tanpa kompromi untuk private trip, corporate, dan rental kendaraan.
+                    </p>
+                    <div class="flex space-x-2 pt-1">
+                        <a href="#" class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-slate-300 hover:bg-brand-500 hover:text-white transition-colors"><i class="fa-brands fa-facebook-f text-xs"></i></a>
+                        <a href="#" class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-slate-300 hover:bg-brand-500 hover:text-white transition-colors"><i class="fa-brands fa-instagram text-xs"></i></a>
+                        <a href="#" class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-slate-300 hover:bg-brand-500 hover:text-white transition-colors"><i class="fa-brands fa-tiktok text-xs"></i></a>
+                        <a href="#" class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-slate-300 hover:bg-brand-500 hover:text-white transition-colors"><i class="fa-brands fa-youtube text-xs"></i></a>
+                    </div>
+                </div>
+
+                <!-- Links Col 1 -->
+                <div>
+                    <h3 class="text-white font-bold mb-3 text-sm border-l-2 border-accent-500 pl-2">Perusahaan</h3>
+                    <ul class="space-y-1.5 text-slate-400 text-xs">
+                        <li><a href="#" class="hover:text-accent-400 transition-colors"><i class="fa-solid fa-angle-right text-[8px] mr-1"></i> Tentang Kami</a></li>
+                        <li><a href="#" class="hover:text-accent-400 transition-colors"><i class="fa-solid fa-angle-right text-[8px] mr-1"></i> Karir</a></li>
+                        <li><a href="#" class="hover:text-accent-400 transition-colors"><i class="fa-solid fa-angle-right text-[8px] mr-1"></i> Blog Travel</a></li>
+                        <li><a href="#" class="hover:text-accent-400 transition-colors"><i class="fa-solid fa-angle-right text-[8px] mr-1"></i> Hubungi Kami</a></li>
+                    </ul>
+                </div>
+
+                <!-- Links Col 2 -->
+                <div>
+                    <h3 class="text-white font-bold mb-3 text-sm border-l-2 border-accent-500 pl-2">Layanan</h3>
+                    <ul class="space-y-1.5 text-slate-400 text-xs">
+                        <li><a href="#" class="hover:text-accent-400 transition-colors"><i class="fa-solid fa-angle-right text-[8px] mr-1"></i> Open Trip</a></li>
+                        <li><a href="#" class="hover:text-accent-400 transition-colors"><i class="fa-solid fa-angle-right text-[8px] mr-1"></i> Private Tour</a></li>
+                        <li><a href="#" class="hover:text-accent-400 transition-colors"><i class="fa-solid fa-angle-right text-[8px] mr-1"></i> Rental Mobil</a></li>
+                        <li><a href="#" class="hover:text-accent-400 transition-colors"><i class="fa-solid fa-angle-right text-[8px] mr-1"></i> Voucher Hotel</a></li>
+                    </ul>
+                </div>
+
+                <!-- Payment & Secure Col -->
+                <div>
+                    <h3 class="text-white font-bold mb-3 text-sm border-l-2 border-accent-500 pl-2">Pembayaran Aman</h3>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <div class="bg-white px-2 py-1 rounded text-brand-900 text-[10px] font-bold shadow-sm"><i class="fa-brands fa-cc-visa text-blue-800 text-lg"></i></div>
+                        <div class="bg-white px-2 py-1 rounded text-brand-900 text-[10px] font-bold shadow-sm"><i class="fa-brands fa-cc-mastercard text-red-600 text-lg"></i></div>
+                        <div class="bg-white px-2 py-1 rounded text-brand-900 text-[10px] font-bold shadow-sm"><i class="fa-brands fa-cc-jcb text-green-700 text-lg"></i></div>
+                        <div class="bg-white px-2 py-1 rounded text-brand-900 text-[10px] font-bold shadow-sm flex items-center">BCA</div>
+                        <div class="bg-white px-2 py-1 rounded text-brand-900 text-[10px] font-bold shadow-sm flex items-center">Mandiri</div>
+                    </div>
+                    
+                    <h3 class="text-white font-bold mb-2 text-sm border-l-2 border-accent-500 pl-2">Keamanan</h3>
+                    <div class="flex gap-2">
+                        <div class="flex items-center gap-1 text-[10px] text-emerald-400 border border-emerald-400/30 bg-emerald-400/10 px-2 py-1 rounded"><i class="fa-solid fa-lock"></i> SSL Secure</div>
+                        <div class="flex items-center gap-1 text-[10px] text-blue-400 border border-blue-400/30 bg-blue-400/10 px-2 py-1 rounded"><i class="fa-solid fa-shield-halved"></i> Verified</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Footer -->
+            <div class="flex flex-col md:flex-row justify-between items-center text-slate-500 text-[10px] sm:text-xs">
+                <p>© 2026 PT Nusantara Trip System. Hak Cipta Dilindungi.</p>
+                <div class="flex space-x-4 mt-2 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors">Kebijakan Privasi</a>
+                    <a href="#" class="hover:text-white transition-colors">Syarat & Ketentuan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- HERO SLIDER ---
+        const slides = document.querySelectorAll('.slide-fade');
+        let currentSlide = 0;
+        
+        setInterval(() => {
+            slides[currentSlide].classList.remove('opacity-100', 'z-0');
+            slides[currentSlide].classList.add('opacity-0', '-z-10');
+            
+            currentSlide = (currentSlide + 1) % slides.length;
+            
+            slides[currentSlide].classList.remove('opacity-0', '-z-10');
+            slides[currentSlide].classList.add('opacity-100', 'z-0');
+        }, 5000); // Ganti gambar setiap 5 detik
+
+        // --- MOBILE SIDEBAR ---
+        const sidebar = document.getElementById('mobile-sidebar');
+        const overlay = document.getElementById('page-overlay');
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+            document.body.style.overflow = 'hidden'; // prevent bg scroll
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('opacity-0');
+            setTimeout(() => overlay.classList.add('hidden'), 300);
+            document.body.style.overflow = '';
+        }
+
+        function toggleSubmenu(id) {
+            const el = document.getElementById(id);
+            const iconId = id === 'sub-tours' ? 'icon-sub-tours' : null;
+            
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+                if(iconId) document.getElementById(iconId).style.transform = 'rotate(180deg)';
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+                if(iconId) document.getElementById(iconId).style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // --- PASSWORD EYE TOGGLE ---
+        function togglePassword() {
+            const input = document.getElementById('login-pass');
+            const icon = document.getElementById('eye-icon');
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                input.type = "password";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        }
+
+        // --- SEARCH TABS (TOUR vs CAR) ---
+        function switchTab(tab) {
+            const btnTour = document.getElementById('tab-tour');
+            const btnCar = document.getElementById('tab-car');
+            const formTour = document.getElementById('form-tour');
+            const formCar = document.getElementById('form-car');
+
+            if(tab === 'tour') {
+                btnTour.className = "flex items-center gap-1.5 text-brand-600 font-bold text-sm border-b-2 border-brand-600 pb-1";
+                btnCar.className = "flex items-center gap-1.5 text-slate-500 font-medium text-sm hover:text-brand-600 pb-1";
+                formTour.classList.remove('hidden');
+                formCar.classList.add('hidden');
+            } else {
+                btnCar.className = "flex items-center gap-1.5 text-brand-600 font-bold text-sm border-b-2 border-brand-600 pb-1";
+                btnTour.className = "flex items-center gap-1.5 text-slate-500 font-medium text-sm hover:text-brand-600 pb-1";
+                formCar.classList.remove('hidden');
+                formTour.classList.add('hidden');
+            }
+        }
+
+        // --- SIMULASI SEARCH DROPDOWN ---
+        function showDropdown(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function hideDropdown(id) {
+            // timeout to allow click event to fire on list items before hiding
+            setTimeout(() => {
+                document.getElementById(id).classList.add('hidden');
+            }, 200);
+        }
+
+        function fillInput(inputId, val) {
+            document.getElementById(inputId).value = val;
+        }
+
+        function filterDestinasi(val) {
+            const filter = val.toUpperCase();
+            const ul = document.getElementById("drop-destinasi");
+            const li = ul.getElementsByTagName("li");
+            let hasVisible = false;
+
+            for (let i = 0; i < li.length; i++) {
+                let txtValue = li[i].textContent || li[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                    hasVisible = true;
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+            if(!hasVisible) ul.classList.add('hidden');
+            else ul.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

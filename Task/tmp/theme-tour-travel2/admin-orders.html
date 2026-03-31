@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semua Pesanan | Admin NusantaraTrip</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', 700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        .admin-nav-item { transition: all 0.2s ease; border-left: 3px solid transparent; }
+        .admin-nav-item:hover, .admin-nav-item.active { background-color: rgba(255, 255, 255, 0.1); border-left-color: #f97316; color: white; }
+        .table-row-hover:hover { background-color: #f8fafc; }
+        
+        /* Checkbox Style */
+        .check-saas {
+            appearance: none; width: 18px; height: 18px;
+            border: 2px solid #cbd5e1; border-radius: 4px;
+            cursor: pointer; position: relative; transition: all 0.2s;
+        }
+        .check-saas:checked { background-color: #4f46e5; border-color: #4f46e5; }
+        .check-saas:checked::after {
+            content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            color: white; font-size: 10px; position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+        }
+
+        /* Tooltip Lock */
+        .locked-action { cursor: not-allowed; opacity: 0.3; filter: grayscale(1); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased h-screen flex overflow-hidden bg-slate-50">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="w-64 bg-brand-900 text-brand-200 flex-shrink-0 hidden md:flex flex-col h-full shadow-xl z-20">
+        <div class="h-16 flex items-center px-6 border-b border-white/10 bg-brand-950">
+            <a href="/" class="font-extrabold text-xl tracking-tighter text-white flex items-center gap-2">
+                <div class="w-7 h-7 rounded bg-accent-500 text-white flex items-center justify-center shadow"><span class="text-xs"><i class="fa-solid fa-paper-plane"></i></span></div>
+                NusaTrip <span class="text-xs font-normal text-brand-300 ml-1">Admin</span>
+            </a>
+        </div>
+        <div class="flex-1 overflow-y-auto py-4">
+            <p class="px-6 text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2">Main Menu</p>
+            <nav class="flex flex-col gap-1 mb-6">
+                <a href="admin-dashboard.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-chart-pie w-5 text-center"></i> Dashboard
+                </a>
+                <a href="#" class="admin-nav-item active px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-cart-shopping w-5 text-center"></i> Semua Pesanan
+                </a>
+            </nav>
+
+            <p class="px-6 text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2">Manajemen Produk</p>
+            <nav class="flex flex-col gap-1 mb-6">
+                <a href="admin-tour-crud.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-map-location-dot w-5 text-center"></i> Kelola Tour
+                </a>
+                <a href="admin-car-crud.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-car w-5 text-center"></i> Kelola Kendaraan
+                </a>
+                <a href="admin-promo-crud.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-tags w-5 text-center"></i> Promo & Kupon
+                </a>
+            </nav>
+
+            <p class="px-6 text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2">Sistem</p>
+            <nav class="flex flex-col gap-1 mb-6">
+                <a href="admin-users.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-users w-5 text-center"></i> Pelanggan & Mitra
+                </a>
+                <a href="admin-settings.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-gear w-5 text-center"></i> Pengaturan
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- RIGHT MAIN CONTENT -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 z-10 shadow-sm flex-shrink-0">
+            <div class="flex items-center gap-4">
+                <button class="md:hidden text-slate-500 hover:text-brand-600 text-xl focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h2 class="font-bold text-slate-800 hidden sm:block">Monitor Transaksi Real-time</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 cursor-pointer">
+                    <img src="https://ui-avatars.com/api/?name=Admin+Orders&background=4f46e5&color=fff" alt="Admin" class="w-8 h-8 rounded-full">
+                    <span class="text-xs font-bold text-slate-700 hidden sm:block">Order Manager</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-50">
+            
+            <!-- KPI STATS SECTION -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <!-- Sukses -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sukses / Lunas</span>
+                        <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm"><i class="fa-solid fa-check-double"></i></div>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-900">1,240</h3>
+                    <p class="text-[10px] text-emerald-500 font-bold mt-1"><i class="fa-solid fa-caret-up"></i> +12% dari kemarin</p>
+                </div>
+                <!-- Menunggu Pembayaran -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Menunggu Bayar</span>
+                        <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-sm"><i class="fa-solid fa-clock"></i></div>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-900">45</h3>
+                    <p class="text-[10px] text-slate-400 font-medium mt-1">Total tagihan aktif</p>
+                </div>
+                <!-- Dibatalkan -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Dibatalkan / Exp</span>
+                        <div class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center text-sm"><i class="fa-solid fa-ban"></i></div>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-900">18</h3>
+                    <p class="text-[10px] text-red-400 font-bold mt-1"><i class="fa-solid fa-triangle-exclamation"></i> Perlu pembersihan data</p>
+                </div>
+                <!-- Refund -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Refund Terproses</span>
+                        <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm"><i class="fa-solid fa-money-bill-transfer"></i></div>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-900">7</h3>
+                    <p class="text-[10px] text-blue-500 font-bold mt-1">Saldo kembali ke user</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                <div>
+                    <h1 class="text-2xl font-extrabold text-slate-900 mb-1">Daftar Transaksi</h1>
+                    <p class="text-sm text-slate-500 font-medium">Hanya data dengan status 'Dibatalkan' yang dapat dihapus secara manual.</p>
+                </div>
+                <!-- AUTO CLEAN BUTTON -->
+                <button onclick="autoCleanCancelled()" class="px-5 py-2.5 bg-slate-900 hover:bg-black text-white font-bold text-sm rounded-xl shadow-lg transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-broom"></i> Bersihkan Data (>3 Hari)
+                </button>
+            </div>
+
+            <!-- FILTER & SEARCH BAR -->
+            <div class="bg-white border border-slate-200 rounded-t-2xl p-4 sm:p-5 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" placeholder="Cari No. Invoice atau Pelanggan..." class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg pl-9 pr-3 py-2.5 focus:outline-none focus:border-brand-500 transition-all font-medium text-slate-700">
+                </div>
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <select class="bg-white border border-slate-300 text-slate-600 text-xs font-bold rounded-lg px-4 py-2.5 focus:outline-none focus:border-brand-500 shadow-sm cursor-pointer" onchange="simulateLoading()">
+                        <option>Semua Status</option>
+                        <option>Sukses</option>
+                        <option>Menunggu Pembayaran</option>
+                        <option>Dibatalkan</option>
+                        <option>Refund</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- TABLE CONTAINER -->
+            <div class="bg-white border-x border-b border-slate-200 rounded-b-2xl shadow-sm overflow-hidden relative">
+                
+                <div id="table-overlay" class="absolute inset-0 bg-white/70 backdrop-blur-[1px] z-10 flex items-center justify-center hidden">
+                    <i class="fa-solid fa-circle-notch fa-spin text-brand-600 text-3xl"></i>
+                </div>
+
+                <!-- Bulk Action Bar -->
+                <div id="bulk-action-bar" class="hidden bg-brand-50 border-b border-brand-200 p-3 justify-between items-center transition-all">
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm font-bold text-brand-700 ml-2"><span id="selected-count">0</span> Transaksi Terpilih</span>
+                        <p class="text-[10px] text-amber-600 bg-amber-50 px-2 py-1 rounded border border-amber-100 font-bold"><i class="fa-solid fa-circle-info"></i> Hanya status 'Dibatalkan' yang akan diproses hapus.</p>
+                    </div>
+                    <button onclick="bulkDeleteOrders()" class="px-4 py-1.5 bg-red-500 hover:bg-red-600 text-white font-bold text-xs rounded-lg shadow-sm transition-colors">
+                        <i class="fa-solid fa-trash-can mr-1"></i> Hapus Massal
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[1000px]">
+                        <thead>
+                            <tr class="bg-slate-50 text-[10px] uppercase tracking-widest text-slate-500 border-b border-slate-200">
+                                <th class="p-4 w-12 text-center">
+                                    <input type="checkbox" id="check-all" class="check-saas" onchange="toggleAllOrders(this)">
+                                </th>
+                                <th class="p-4 font-bold">No. Invoice / Tgl</th>
+                                <th class="p-4 font-bold">Pelanggan</th>
+                                <th class="p-4 font-bold">Layanan</th>
+                                <th class="p-4 font-bold text-right">Total Tagihan</th>
+                                <th class="p-4 font-bold text-center">Status</th>
+                                <th class="p-4 font-bold text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm" id="order-tbody">
+                            
+                            <!-- Row 1: SUKSES (Locked) -->
+                            <tr class="border-b border-slate-100 table-row-hover" id="order-1" data-status="Sukses">
+                                <td class="p-4 text-center">
+                                    <input type="checkbox" class="check-saas row-checkbox" value="1" onchange="updateBulkUI()">
+                                </td>
+                                <td class="p-4">
+                                    <p class="font-mono font-bold text-slate-900 text-xs">INV-20261024-001</p>
+                                    <p class="text-[10px] text-slate-400 mt-0.5">24 Okt 2026, 14:20</p>
+                                </td>
+                                <td class="p-4">
+                                    <p class="font-bold text-slate-800">Budi Santoso</p>
+                                    <p class="text-[10px] text-slate-500">budi@email.com</p>
+                                </td>
+                                <td class="p-4">
+                                    <span class="bg-brand-50 text-brand-600 text-[9px] font-bold px-1.5 py-0.5 rounded inline-block mb-0.5 uppercase tracking-tighter">Tour</span>
+                                    <p class="text-xs text-slate-600 line-clamp-1">Private Tour Bromo</p>
+                                </td>
+                                <td class="p-4 text-right">
+                                    <p class="font-extrabold text-slate-900">Rp 2.500.000</p>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap"><i class="fa-solid fa-check"></i> Sukses</span>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <div class="flex justify-center gap-2">
+                                        <button class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 hover:bg-brand-50 hover:text-brand-600 transition-colors" title="Lihat"><i class="fa-solid fa-eye text-xs"></i></button>
+                                        <button class="w-8 h-8 rounded-lg locked-action" title="Data Sukses Dikunci"><i class="fa-solid fa-lock text-xs"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 2: PENDING (Locked) -->
+                            <tr class="border-b border-slate-100 table-row-hover" id="order-2" data-status="Pending">
+                                <td class="p-4 text-center">
+                                    <input type="checkbox" class="check-saas row-checkbox" value="2" onchange="updateBulkUI()">
+                                </td>
+                                <td class="p-4">
+                                    <p class="font-mono font-bold text-slate-900 text-xs">INV-20261105-089</p>
+                                    <p class="text-[10px] text-slate-400 mt-0.5">Hari Ini, 09:12</p>
+                                </td>
+                                <td class="p-4">
+                                    <p class="font-bold text-slate-800">Siska Putri</p>
+                                    <p class="text-[10px] text-slate-500">siska@email.com</p>
+                                </td>
+                                <td class="p-4">
+                                    <span class="bg-accent-50 text-accent-600 text-[9px] font-bold px-1.5 py-0.5 rounded inline-block mb-0.5 uppercase tracking-tighter">Mobil</span>
+                                    <p class="text-xs text-slate-600 line-clamp-1">Innova Zenix Hybrid</p>
+                                </td>
+                                <td class="p-4 text-right">
+                                    <p class="font-extrabold text-slate-900">Rp 1.700.000</p>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <span class="bg-amber-100 text-amber-700 text-[10px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap"><i class="fa-regular fa-clock"></i> Pending</span>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <div class="flex justify-center gap-2">
+                                        <button class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 hover:bg-brand-50 hover:text-brand-600 transition-colors"><i class="fa-solid fa-eye text-xs"></i></button>
+                                        <button class="w-8 h-8 rounded-lg locked-action" title="Menunggu Pembayaran"><i class="fa-solid fa-lock text-xs"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 3: DIBATALKAN (Dapat Dihapus) -->
+                            <tr class="border-b border-slate-100 table-row-hover" id="order-3" data-status="Dibatalkan">
+                                <td class="p-4 text-center">
+                                    <input type="checkbox" class="check-saas row-checkbox" value="3" onchange="updateBulkUI()">
+                                </td>
+                                <td class="p-4">
+                                    <p class="font-mono font-bold text-slate-900 text-xs">INV-20250601-022</p>
+                                    <p class="text-[10px] text-slate-400 mt-0.5">01 Jun 2025 (Kuno)</p>
+                                </td>
+                                <td class="p-4">
+                                    <p class="font-bold text-slate-800">Dimas Anggara</p>
+                                    <p class="text-[10px] text-slate-500">dimas@email.com</p>
+                                </td>
+                                <td class="p-4">
+                                    <span class="bg-slate-100 text-slate-500 text-[9px] font-bold px-1.5 py-0.5 rounded inline-block mb-0.5 uppercase tracking-tighter">Hotel</span>
+                                    <p class="text-xs text-slate-600 line-clamp-1">Hotel Tugu Malang</p>
+                                </td>
+                                <td class="p-4 text-right">
+                                    <p class="font-extrabold text-slate-400">Rp 1.200.000</p>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <span class="bg-slate-100 text-slate-500 text-[10px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap"><i class="fa-solid fa-ban"></i> Dibatalkan</span>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <div class="flex justify-center gap-2">
+                                        <button class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 hover:bg-brand-50 hover:text-brand-600 transition-colors"><i class="fa-solid fa-eye text-xs"></i></button>
+                                        <button onclick="deleteSingleOrder(3)" class="w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-600 hover:text-white transition-colors" title="Hapus"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 4: REFUND (Locked) -->
+                            <tr class="table-row-hover" id="order-4" data-status="Refund">
+                                <td class="p-4 text-center">
+                                    <input type="checkbox" class="check-saas row-checkbox" value="4" onchange="updateBulkUI()">
+                                </td>
+                                <td class="p-4">
+                                    <p class="font-mono font-bold text-slate-900 text-xs">INV-20251212-999</p>
+                                    <p class="text-[10px] text-slate-400 mt-0.5">12 Des 2025</p>
+                                </td>
+                                <td class="p-4">
+                                    <p class="font-bold text-slate-800">Ani Wijaya</p>
+                                    <p class="text-[10px] text-slate-500">ani.w@email.com</p>
+                                </td>
+                                <td class="p-4">
+                                    <span class="bg-brand-50 text-brand-600 text-[9px] font-bold px-1.5 py-0.5 rounded inline-block mb-0.5 uppercase tracking-tighter">Tour</span>
+                                    <p class="text-xs text-slate-600 line-clamp-1">Explore Japan Winter</p>
+                                </td>
+                                <td class="p-4 text-right">
+                                    <p class="font-extrabold text-slate-900">Rp 15.000.000</p>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap"><i class="fa-solid fa-money-bill-transfer"></i> Refunded</span>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <div class="flex justify-center gap-2">
+                                        <button class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 hover:bg-brand-50 hover:text-brand-600 transition-colors"><i class="fa-solid fa-eye text-xs"></i></button>
+                                        <button class="w-8 h-8 rounded-lg locked-action" title="Data Keuangan Refund Dikunci"><i class="fa-solid fa-lock text-xs"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-4 border-t border-slate-100 flex justify-between items-center bg-white">
+                    <p class="text-xs font-medium text-slate-500">Menampilkan 1-4 dari 1,310 transaksi</p>
+                    <nav class="inline-flex shadow-sm rounded-lg">
+                        <button class="px-3 py-2 rounded-l-lg border border-slate-200 bg-slate-50 text-slate-400 cursor-not-allowed transition-colors"><i class="fa-solid fa-chevron-left text-[10px]"></i></button>
+                        <button class="px-3.5 py-2 border border-slate-200 bg-brand-600 text-xs font-bold text-white">1</button>
+                        <button class="px-3.5 py-2 border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:bg-slate-50">2</button>
+                        <button class="px-3 py-2 rounded-r-lg border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 transition-colors"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
+                    </nav>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- NOTIFIKASI TOAST -->
+    <div id="admin-toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl z-[100] font-bold text-sm flex items-center gap-3 transition-all duration-300 opacity-0 translate-y-10 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i> 
+        <span id="toast-msg">Operasi Berhasil!</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. SIMULASI LOADING ---
+        function simulateLoading() {
+            const overlay = document.getElementById('table-overlay');
+            overlay.classList.remove('hidden');
+            setTimeout(() => overlay.classList.add('hidden'), 600); 
+        }
+
+        // --- 2. LOGIKA CHECKBOX ---
+        function toggleAllOrders(source) {
+            document.querySelectorAll('.row-checkbox').forEach(cb => {
+                cb.checked = source.checked;
+            });
+            updateBulkUI();
+        }
+
+        function updateBulkUI() {
+            const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+            const bulkBar = document.getElementById('bulk-action-bar');
+            document.getElementById('selected-count').innerText = checkboxes.length;
+
+            if (checkboxes.length > 0) {
+                bulkBar.classList.remove('hidden');
+                bulkBar.classList.add('flex');
+            } else {
+                bulkBar.classList.add('hidden');
+                bulkBar.classList.remove('flex');
+                document.getElementById('check-all').checked = false;
+            }
+        }
+
+        // --- 3. LOGIKA HAPUS (DELETE RESTRICTIONS) ---
+        function deleteSingleOrder(id) {
+            const row = document.getElementById('order-' + id);
+            const status = row.getAttribute('data-status');
+
+            // Proteksi Status Sukses & Refund
+            if (status === 'Sukses' || status === 'Refund') {
+                showToast("Data ini tidak dapat dihapus demi integritas keuangan.", "fa-triangle-exclamation", "text-red-400");
+                return;
+            }
+
+            if (confirm(`Yakin ingin menghapus pesanan INV #${id}?`)) {
+                row.style.opacity = '0.5';
+                setTimeout(() => {
+                    row.remove();
+                    showToast("Pesanan berhasil dihapus.", "fa-trash-can");
+                    updateBulkUI();
+                }, 300);
+            }
+        }
+
+        function bulkDeleteOrders() {
+            const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+            let processed = 0;
+            let locked = 0;
+
+            if (checkboxes.length === 0) return;
+
+            checkboxes.forEach(cb => {
+                const row = document.getElementById('order-' + cb.value);
+                const status = row.getAttribute('data-status');
+
+                // Hanya proses yang berstatus 'Dibatalkan'
+                if (status === 'Dibatalkan') {
+                    row.style.opacity = '0.5';
+                    setTimeout(() => row.remove(), 300);
+                    processed++;
+                } else {
+                    locked++;
+                }
+            });
+
+            setTimeout(() => {
+                if (locked > 0) {
+                    showToast(`${processed} pesanan dihapus. ${locked} pesanan dikunci (Status Sukses/Pending/Refund).`, "fa-circle-info", "text-amber-400");
+                } else {
+                    showToast(`${processed} pesanan berhasil dibersihkan.`, "fa-check-double");
+                }
+                updateBulkUI();
+            }, 350);
+        }
+
+        // --- 4. AUTO CLEAN SIMULATOR ---
+        function autoCleanCancelled() {
+            if(confirm("Apakah Anda ingin menghapus SEMUA pesanan berstatus 'Dibatalkan' yang berusia lebih dari 3 hari secara otomatis?")) {
+                simulateLoading();
+                setTimeout(() => {
+                    const allRows = document.querySelectorAll('#order-tbody tr');
+                    let count = 0;
+                    allRows.forEach(row => {
+                        const status = row.getAttribute('data-status');
+                        // Simulasi logic: Disini kita anggap INV-20250601-022 adalah data lama (>3 hari)
+                        if(status === 'Dibatalkan') {
+                            row.remove();
+                            count++;
+                        }
+                    });
+                    showToast(`Sistem berhasil membersihkan ${count} pesanan lama.`, "fa-broom");
+                    updateBulkUI();
+                }, 700);
+            }
+        }
+
+        // --- 5. TOAST NOTIF ---
+        function showToast(msg, icon = "fa-circle-check", color = "text-emerald-400") {
+            const toast = document.getElementById('admin-toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = toast.querySelector('i');
+
+            toastMsg.innerText = msg;
+            toastIcon.className = `fa-solid ${icon} ${color} text-lg`;
+            
+            toast.classList.remove('opacity-0', 'translate-y-10');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-10');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>

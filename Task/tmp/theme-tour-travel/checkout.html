@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selesaikan Pesanan | NusantaraTrip</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', // Primary Indigo
+                            700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', // Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
+        
+        /* Form Inputs */
+        .input-saas {
+            transition: all 0.2s;
+        }
+        .input-saas:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            outline: none;
+        }
+
+        /* Payment Option Selected State */
+        .payment-option { transition: all 0.2s; border: 2px solid transparent; }
+        .payment-option.selected { border-color: #4f46e5; background-color: #eef2ff; }
+        .payment-option.selected .radio-custom { border-color: #4f46e5; }
+        .payment-option.selected .radio-custom::after { transform: scale(1); }
+        
+        /* Custom Radio */
+        .radio-custom {
+            width: 18px; height: 18px; border: 2px solid #cbd5e1; border-radius: 50%;
+            position: relative; display: inline-block; transition: all 0.2s;
+        }
+        .radio-custom::after {
+            content: ''; position: absolute; top: 3px; left: 3px; width: 8px; height: 8px;
+            background: #4f46e5; border-radius: 50%; transform: scale(0); transition: transform 0.2s;
+        }
+
+        /* Custom Checkbox */
+        .check-custom {
+            appearance: none; width: 20px; height: 20px; border: 2px solid #cbd5e1;
+            border-radius: 6px; cursor: pointer; position: relative; transition: all 0.2s;
+        }
+        .check-custom:checked { background-color: #4f46e5; border-color: #4f46e5; }
+        .check-custom:checked::after {
+            content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            color: white; font-size: 12px; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Hide scrollbar */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased overflow-x-hidden pb-32 lg:pb-12">
+
+    <!-- HEADER CHECKOUT (Sederhana agar tidak distraksi) -->
+    <header class="bg-white border-b border-slate-200 py-3 sm:py-4 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <a href="#" class="text-slate-500 hover:text-brand-600 font-medium text-sm sm:text-base flex items-center gap-2 transition-colors">
+                <i class="fa-solid fa-arrow-left"></i> <span class="hidden sm:inline">Kembali</span>
+            </a>
+            
+            <!-- Logo Centered -->
+            <div class="font-extrabold text-xl tracking-tighter text-brand-900 flex items-center gap-2">
+                <div class="w-7 h-7 rounded bg-brand-600 text-white flex items-center justify-center shadow"><span class="text-xs"><i class="fa-solid fa-paper-plane"></i></span></div>
+                NusaTrip
+            </div>
+
+            <!-- Progress Step -->
+            <div class="text-[10px] sm:text-xs font-bold text-slate-500 flex items-center gap-1.5 sm:gap-3">
+                <span class="text-brand-600 flex items-center gap-1"><span class="w-4 h-4 rounded-full bg-brand-600 text-white flex items-center justify-center text-[9px]">1</span> Pesan</span>
+                <i class="fa-solid fa-chevron-right text-[8px] opacity-50"></i>
+                <span class="opacity-50 flex items-center gap-1"><span class="w-4 h-4 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[9px]">2</span> Bayar</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- URGENCY TIMER BAR -->
+    <div class="bg-amber-50 border-b border-amber-200 py-2">
+        <div class="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 text-center flex items-center justify-center gap-2 text-xs font-medium text-amber-800">
+            <i class="fa-regular fa-clock text-amber-600"></i>
+            Selesaikan pemesanan Anda dalam <strong id="countdown" class="text-red-500 font-mono text-sm ml-1">15:00</strong>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8 flex flex-col lg:flex-row gap-6 lg:gap-8 relative">
+        
+        <!-- ========================================== -->
+        <!-- LEFT COLUMN: FORMS                         -->
+        <!-- ========================================== -->
+        <div class="flex-1 w-full min-w-0">
+            
+            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 mb-6">Selesaikan Pemesanan Anda</h1>
+
+            <!-- 1. Data Pemesan -->
+            <section class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 sm:p-6 mb-6 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-brand-500"></div>
+                <h2 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-address-card text-brand-500"></i> Detail Pemesan
+                </h2>
+                
+                <div class="bg-brand-50 border border-brand-100 rounded-lg p-3 mb-5 flex items-start gap-3 text-sm">
+                    <i class="fa-solid fa-circle-user text-brand-600 mt-0.5"></i>
+                    <div>
+                        <p class="font-semibold text-brand-900">Sudah punya akun?</p>
+                        <p class="text-xs text-brand-700 mt-0.5"><a href="#" class="underline font-bold">Login sekarang</a> untuk pemesanan lebih cepat dan dapatkan poin!</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Lengkap (Sesuai KTP/Paspor) <span class="text-red-500">*</span></label>
+                        <input type="text" class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="Contoh: Budi Santoso" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Alamat Email <span class="text-red-500">*</span></label>
+                        <input type="email" class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="email@contoh.com" required>
+                        <p class="text-[10px] text-slate-400 mt-1">E-voucher akan dikirim ke email ini.</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Nomor Handphone (WhatsApp) <span class="text-red-500">*</span></label>
+                        <div class="flex">
+                            <span class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 text-slate-500 text-sm font-medium">
+                                +62
+                            </span>
+                            <input type="tel" class="flex-1 w-full bg-white border border-slate-300 text-sm rounded-r-lg px-4 py-2.5 input-saas text-slate-800" placeholder="81234567890" required>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Data Penumpang / Peserta -->
+            <section class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 sm:p-6 mb-6 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-accent-500"></div>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-users text-accent-500"></i> Detail Peserta Tour
+                    </h2>
+                    <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-1 rounded">2 Orang</span>
+                </div>
+                
+                <label class="flex items-center gap-2 cursor-pointer mb-5 p-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
+                    <input type="checkbox" class="check-custom" checked>
+                    <span class="text-sm font-medium text-slate-700">Saya adalah salah satu peserta tour</span>
+                </label>
+
+                <!-- Pax 1 -->
+                <div class="mb-5 pb-5 border-b border-slate-100">
+                    <h3 class="text-sm font-bold text-slate-800 mb-3">Peserta 1 (Dewasa)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1">
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Titel</label>
+                            <select class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800">
+                                <option>Tuan (Mr)</option>
+                                <option>Nyonya (Mrs)</option>
+                                <option>Nona (Ms)</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Lengkap Sesuai Identitas</label>
+                            <input type="text" class="w-full bg-slate-100 border border-slate-200 text-sm rounded-lg px-4 py-2.5 text-slate-500" value="Budi Santoso" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pax 2 -->
+                <div>
+                    <h3 class="text-sm font-bold text-slate-800 mb-3">Peserta 2 (Dewasa)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1">
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Titel</label>
+                            <select class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800">
+                                <option>Nyonya (Mrs)</option>
+                                <option>Tuan (Mr)</option>
+                                <option>Nona (Ms)</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Lengkap Sesuai Identitas</label>
+                            <input type="text" class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="Nama Peserta 2">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Add-ons / Fasilitas Ekstra -->
+            <section class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 sm:p-6 mb-6">
+                <h2 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-puzzle-piece text-slate-500"></i> Fasilitas Ekstra (Opsional)
+                </h2>
+                
+                <div class="space-y-3">
+                    <!-- Asuransi -->
+                    <label class="flex items-start gap-3 p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-brand-300 hover:bg-slate-50 transition-colors group">
+                        <div class="mt-0.5">
+                            <input type="checkbox" id="chk-insurance" class="check-custom" onchange="calculateTotal()">
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm group-hover:text-brand-600 transition-colors">Asuransi Perjalanan Nusantara</h4>
+                                    <p class="text-xs text-slate-500 mt-0.5 line-clamp-2">Perlindungan komprehensif untuk keterlambatan, kecelakaan, dan medis selama tour.</p>
+                                </div>
+                                <div class="text-right ml-2">
+                                    <span class="block font-bold text-brand-600 text-sm whitespace-nowrap">+ Rp 45.000</span>
+                                    <span class="text-[9px] text-slate-400">/ pax</span>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+
+                    <!-- Dokumentasi -->
+                    <label class="flex items-start gap-3 p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-brand-300 hover:bg-slate-50 transition-colors group">
+                        <div class="mt-0.5">
+                            <input type="checkbox" id="chk-drone" class="check-custom" onchange="calculateTotal()">
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm group-hover:text-brand-600 transition-colors">Sewa Drone & Fotografer Profesional</h4>
+                                    <p class="text-xs text-slate-500 mt-0.5 line-clamp-2">Jadikan momen lebih berkesan dengan video cinematic dari udara dan foto DSLR.</p>
+                                </div>
+                                <div class="text-right ml-2">
+                                    <span class="block font-bold text-brand-600 text-sm whitespace-nowrap">+ Rp 500.000</span>
+                                    <span class="text-[9px] text-slate-400">/ grup</span>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </section>
+
+            <!-- 4. Permintaan Khusus -->
+            <section class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 sm:p-6 mb-6">
+                <h2 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+                    <i class="fa-regular fa-comment-dots text-slate-500"></i> Permintaan Khusus
+                </h2>
+                <p class="text-xs text-slate-500 mb-3">Punya alergi makanan, butuh kursi roda, atau permintaan titik jemput spesifik? Tuliskan di sini (Opsional).</p>
+                <textarea class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-3 input-saas text-slate-800 h-24 resize-none" placeholder="Contoh: Peserta 1 alergi makanan laut (seafood). Jemput di Hotel Tugu Malang."></textarea>
+            </section>
+
+            <!-- 5. Metode Pembayaran -->
+            <section class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 sm:p-6 mb-6">
+                <h2 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-wallet text-slate-500"></i> Pilih Metode Pembayaran
+                </h2>
+                
+                <div class="space-y-3">
+                    
+                    <!-- VA BCA -->
+                    <label class="payment-option border border-slate-200 rounded-xl p-4 flex items-center justify-between cursor-pointer selected" onclick="selectPayment(this)">
+                        <div class="flex items-center gap-3">
+                            <div class="radio-custom"></div>
+                            <div class="w-12 h-8 bg-white border border-slate-100 rounded flex items-center justify-center p-1 shadow-sm">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" alt="BCA" class="h-4">
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">BCA Virtual Account</h4>
+                                <p class="text-[10px] text-slate-500">Otomatis terkonfirmasi. Bebas biaya admin.</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <!-- VA Mandiri -->
+                    <label class="payment-option border border-slate-200 rounded-xl p-4 flex items-center justify-between cursor-pointer" onclick="selectPayment(this)">
+                        <div class="flex items-center gap-3">
+                            <div class="radio-custom"></div>
+                            <div class="w-12 h-8 bg-white border border-slate-100 rounded flex items-center justify-center p-1 shadow-sm">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg" alt="Mandiri" class="h-4">
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">Mandiri Virtual Account</h4>
+                                <p class="text-[10px] text-slate-500">Otomatis terkonfirmasi. Bebas biaya admin.</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <!-- GoPay / E-Wallet -->
+                    <label class="payment-option border border-slate-200 rounded-xl p-4 flex items-center justify-between cursor-pointer" onclick="selectPayment(this)">
+                        <div class="flex items-center gap-3">
+                            <div class="radio-custom"></div>
+                            <div class="w-12 h-8 bg-white border border-slate-100 rounded flex items-center justify-center p-1 shadow-sm">
+                                <span class="font-extrabold text-[#00aedd] text-xs">QRIS</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">QRIS (GoPay, OVO, Dana)</h4>
+                                <p class="text-[10px] text-slate-500">Scan QR Code via aplikasi E-Wallet Anda.</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <!-- Kartu Kredit -->
+                    <label class="payment-option border border-slate-200 rounded-xl p-4 flex items-center justify-between cursor-pointer" onclick="selectPayment(this)">
+                        <div class="flex items-center gap-3">
+                            <div class="radio-custom"></div>
+                            <div class="w-12 h-8 bg-white border border-slate-100 rounded flex items-center justify-center p-1 shadow-sm flex-col">
+                                <i class="fa-brands fa-cc-visa text-blue-800 text-sm leading-none"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">Kartu Kredit / Debit</h4>
+                                <p class="text-[10px] text-slate-500">Visa, Mastercard, JCB. Biaya layanan 2.5%.</p>
+                            </div>
+                        </div>
+                    </label>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- RIGHT COLUMN: ORDER SUMMARY (STICKY)       -->
+        <!-- ========================================== -->
+        <aside class="w-full lg:w-[340px] xl:w-[380px] flex-shrink-0">
+            <!-- Container Sticky Note: disembunyikan di layar sangat kecil dan dialihkan ke bottom bar, tapi untuk desain responsif kita biarkan ada dan bottom-bar muncul khusus mobile -->
+            <div class="sticky top-20 bg-white border border-slate-200 rounded-2xl shadow-xl p-5 mb-8 hidden lg:block">
+                
+                <h2 class="font-extrabold text-slate-900 mb-4 border-b border-slate-100 pb-3">Ringkasan Pesanan</h2>
+
+                <!-- Card Info Tour -->
+                <div class="flex gap-3 mb-5">
+                    <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-slate-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1542898939-5e5f385c5dfa?w=400" class="w-full h-full object-cover" alt="Bromo">
+                    </div>
+                    <div class="flex flex-col justify-center">
+                        <span class="text-[9px] font-bold text-accent-600 bg-accent-50 px-1.5 py-0.5 rounded w-max mb-1">PRIVATE TOUR</span>
+                        <h3 class="font-bold text-slate-800 text-xs sm:text-sm line-clamp-2 leading-snug">Private Tour Bromo Midnight & Air Terjun Madakaripura</h3>
+                    </div>
+                </div>
+
+                <!-- Info Tanggal & Tamu -->
+                <div class="bg-slate-50 rounded-xl p-3 mb-5 space-y-2 border border-slate-100">
+                    <div class="flex items-center gap-2 text-xs">
+                        <i class="fa-regular fa-calendar w-4 text-center text-slate-400"></i>
+                        <span class="text-slate-600 font-medium">Sabtu, 24 Okt 2026</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs">
+                        <i class="fa-solid fa-users w-4 text-center text-slate-400"></i>
+                        <span class="text-slate-600 font-medium">2 Dewasa</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs">
+                        <i class="fa-solid fa-map-pin w-4 text-center text-slate-400"></i>
+                        <span class="text-slate-600 font-medium truncate">Jemput: Kota Malang</span>
+                    </div>
+                </div>
+
+                <!-- Kode Promo -->
+                <div class="mb-5 border-b border-slate-100 pb-5">
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="Masukkan Kode Promo" class="flex-1 bg-white border border-slate-300 text-xs rounded-lg px-3 py-2 input-saas text-slate-800 uppercase font-mono">
+                        <button class="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs px-4 py-2 rounded-lg transition-colors">Pakai</button>
+                    </div>
+                </div>
+
+                <!-- Detail Harga -->
+                <div class="space-y-3 mb-5 border-b border-slate-100 pb-5">
+                    <h3 class="text-xs font-bold text-slate-900">Rincian Harga</h3>
+                    
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-slate-600">Tiket Tour (2x Rp 1.250.000)</span>
+                        <span class="font-bold text-slate-800">Rp 2.500.000</span>
+                    </div>
+                    
+                    <!-- Dynamic Rows for Add-ons -->
+                    <div id="summary-insurance" class="flex justify-between items-center text-xs hidden text-brand-600">
+                        <span>Asuransi (2x Rp 45.000)</span>
+                        <span class="font-bold">Rp 90.000</span>
+                    </div>
+                    
+                    <div id="summary-drone" class="flex justify-between items-center text-xs hidden text-brand-600">
+                        <span>Sewa Drone (1 Group)</span>
+                        <span class="font-bold">Rp 500.000</span>
+                    </div>
+
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-slate-600">Biaya Layanan & Pajak</span>
+                        <span class="font-bold text-green-600">GRATIS</span>
+                    </div>
+                </div>
+
+                <!-- Total -->
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <span class="block text-xs font-bold text-slate-500">Total Pembayaran</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="block text-2xl font-extrabold text-brand-600 leading-none" id="summary-total">Rp 2.500.000</span>
+                    </div>
+                </div>
+
+                <!-- Terms Checkbox & Pay Button -->
+                <label class="flex items-start gap-2 cursor-pointer mb-4">
+                    <input type="checkbox" class="check-custom mt-0.5" required>
+                    <span class="text-[10px] text-slate-500 leading-tight">Saya menyetujui <a href="#" class="text-brand-600 font-bold hover:underline">Syarat & Ketentuan</a> serta <a href="#" class="text-brand-600 font-bold hover:underline">Kebijakan Privasi</a> NusantaraTrip.</span>
+                </label>
+
+                <button class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-lock text-xs opacity-70"></i> Lanjut Pembayaran
+                </button>
+                <p class="text-center text-[9px] text-slate-400 mt-3 font-medium"><i class="fa-solid fa-shield-halved text-emerald-500 mr-1"></i>Pembayaran Anda dienkripsi dan aman 100%.</p>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- MOBILE STICKY BOTTOM BAR (Order Summary)   -->
+    <!-- ========================================== -->
+    <div class="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] p-4 z-50 lg:hidden flex justify-between items-center">
+        <div>
+            <p class="text-[10px] font-bold text-slate-500 mb-0.5">Total Harga</p>
+            <p class="text-lg font-extrabold text-brand-600 leading-none" id="mobile-total">Rp 2.500.000</p>
+        </div>
+        <button class="py-2.5 px-6 bg-brand-600 active:bg-brand-700 text-white font-extrabold text-sm rounded-xl shadow-md flex justify-center items-center gap-2">
+            Bayar <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </button>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- TIMER COUNTDOWN SIMULATION ---
+        function startTimer(duration, display) {
+            let timer = duration, minutes, seconds;
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    timer = 0;
+                    // Logika ketika timer habis, misalnya redirect atau disable form
+                }
+            }, 1000);
+        }
+
+        window.onload = function () {
+            let fifteenMinutes = 60 * 15,
+                display = document.querySelector('#countdown');
+            startTimer(fifteenMinutes, display);
+        };
+
+        // --- PAYMENT OPTION SELECTION ---
+        function selectPayment(element) {
+            // Hapus kelas 'selected' dari semua opsi
+            const options = document.querySelectorAll('.payment-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // Tambahkan kelas 'selected' ke elemen yang diklik
+            element.classList.add('selected');
+        }
+
+        // --- DYNAMIC PRICE CALCULATION ---
+        const basePrice = 2500000; // Harga dasar 2 pax
+        const pax = 2; // Hardcode untuk simulasi ini
+        const priceInsurance = 45000;
+        const priceDrone = 500000;
+
+        function calculateTotal() {
+            let total = basePrice;
+            
+            // Asuransi Check
+            const chkInsurance = document.getElementById('chk-insurance');
+            const summaryInsurance = document.getElementById('summary-insurance');
+            if(chkInsurance.checked) {
+                total += (priceInsurance * pax);
+                summaryInsurance.classList.remove('hidden');
+            } else {
+                summaryInsurance.classList.add('hidden');
+            }
+
+            // Drone Check
+            const chkDrone = document.getElementById('chk-drone');
+            const summaryDrone = document.getElementById('summary-drone');
+            if(chkDrone.checked) {
+                total += priceDrone;
+                summaryDrone.classList.remove('hidden');
+            } else {
+                summaryDrone.classList.add('hidden');
+            }
+
+            // Format Total
+            const formattedTotal = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(total);
+
+            // Update DOM
+            document.getElementById('summary-total').innerText = formattedTotal;
+            document.getElementById('mobile-total').innerText = formattedTotal;
+        }
+    </script>
+</body>
+</html>

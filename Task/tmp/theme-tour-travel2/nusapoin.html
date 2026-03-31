@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NusaPoin & Rewards | NusantaraTrip</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', // Primary Indigo
+                            700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', // Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+        
+        /* Hide scrollbar */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Sidebar Nav Active State */
+        .nav-item { transition: all 0.2s; border-left: 3px solid transparent; }
+        .nav-item.active { border-left-color: #4f46e5; background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
+        .nav-item:hover:not(.active) { background-color: #f1f5f9; }
+
+        /* Tabs */
+        .poin-tab { transition: all 0.2s; border-bottom: 2px solid transparent; }
+        .poin-tab.active { border-bottom-color: #f59e0b; color: #d97706; font-weight: 700; }
+        
+        /* Reward Card Animations */
+        .reward-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .reward-card:hover { transform: translateY(-5px); box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(245, 158, 11, 0.2); border-color: #fde68a; }
+
+        /* Dashed Divider for Voucher */
+        .voucher-divider {
+            background-image: linear-gradient(to right, #cbd5e1 50%, rgba(255,255,255,0) 0%);
+            background-position: bottom; background-size: 8px 1px; background-repeat: repeat-x;
+        }
+
+        /* Progress Bar Animation */
+        .progress-bar-fill { transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased overflow-x-hidden relative">
+
+    <!-- HEADER (Dashboard Header) -->
+    <header class="bg-white border-b border-slate-200 py-3 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            
+            <a href="/" class="font-extrabold text-xl tracking-tighter text-brand-900 flex items-center gap-2">
+                <div class="w-8 h-8 rounded bg-gradient-to-br from-brand-600 to-accent-500 text-white flex items-center justify-center shadow"><span class="text-sm"><i class="fa-solid fa-paper-plane"></i></span></div>
+                <span class="hidden sm:block">NusaTrip</span>
+            </a>
+
+            <!-- User Profile Info -->
+            <div class="flex items-center gap-4 sm:gap-6">
+                <button class="text-slate-400 hover:text-brand-600 transition-colors relative">
+                    <i class="fa-regular fa-bell text-xl"></i>
+                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+                </button>
+                
+                <div class="flex items-center gap-3 border-l border-slate-200 pl-4 sm:pl-6 cursor-pointer group">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-bold text-slate-800 group-hover:text-brand-600 transition-colors">Budi Santoso</p>
+                        <p class="text-[10px] text-amber-500 font-bold">Member Silver <i class="fa-solid fa-medal ml-0.5"></i></p>
+                    </div>
+                    <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=e0e7ff&color=4f46e5&rounded=true&bold=true" alt="Profile" class="w-9 h-9 rounded-full shadow-sm border border-slate-200 group-hover:border-brand-400 transition-colors">
+                    <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 hidden sm:block"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN DASHBOARD CONTAINER -->
+    <main class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col md:flex-row gap-6 lg:gap-8 min-h-[80vh]">
+        
+        <!-- ========================================== -->
+        <!-- LEFT SIDEBAR (Navigasi Menu)               -->
+        <!-- ========================================== -->
+        <aside class="w-full md:w-[240px] flex-shrink-0">
+            <!-- Mobile Horizontal Nav -->
+            <div class="md:hidden flex overflow-x-auto hide-scrollbar gap-2 mb-4 pb-2 border-b border-slate-200">
+                <a href="user-dashboard.html" class="whitespace-nowrap px-4 py-2 bg-white text-slate-600 hover:bg-slate-50 font-medium text-xs rounded-full border border-slate-200">Pesanan Saya</a>
+                <a href="#" class="whitespace-nowrap px-4 py-2 bg-amber-50 text-amber-600 font-bold text-xs rounded-full border border-amber-200">NusaPoin & Rewards</a>
+                <a href="wishlist.html" class="whitespace-nowrap px-4 py-2 bg-white text-slate-600 hover:bg-slate-50 font-medium text-xs rounded-full border border-slate-200">Wishlist</a>
+                <a href="profile-settings.html" class="whitespace-nowrap px-4 py-2 bg-white text-slate-600 hover:bg-slate-50 font-medium text-xs rounded-full border border-slate-200">Profil</a>
+            </div>
+
+            <!-- Desktop Vertical Nav -->
+            <div class="hidden md:block bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden sticky top-24">
+                <!-- User Quick Info -->
+                <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=e0e7ff&color=4f46e5&rounded=true&bold=true" class="w-10 h-10 rounded-full shadow-sm">
+                    <div>
+                        <p class="font-extrabold text-brand-900 text-sm leading-none mt-0.5">Budi Santoso</p>
+                        <p class="text-[10px] font-bold text-slate-500 mt-1">budi@email.com</p>
+                    </div>
+                </div>
+                <nav class="flex flex-col py-3">
+                    <a href="user-dashboard.html" class="nav-item px-5 py-3 text-sm text-slate-600 font-medium flex items-center gap-3">
+                        <i class="fa-solid fa-clipboard-list w-5 text-center text-slate-400"></i> Pesanan Saya
+                    </a>
+                    <a href="#" class="nav-item active px-5 py-3 text-sm text-slate-600 flex items-center gap-3">
+                        <i class="fa-solid fa-coins w-5 text-center text-amber-500"></i> NusaPoin & Rewards
+                    </a>
+                    <a href="wishlist.html" class="nav-item px-5 py-3 text-sm text-slate-600 font-medium flex items-center gap-3">
+                        <i class="fa-regular fa-heart w-5 text-center text-slate-400"></i> Wishlist Tersimpan
+                    </a>
+                    <div class="border-t border-slate-100 my-2 mx-5"></div>
+                    <a href="profile-settings.html" class="nav-item px-5 py-3 text-sm text-slate-600 font-medium flex items-center gap-3">
+                        <i class="fa-regular fa-user w-5 text-center text-slate-400"></i> Pengaturan Profil
+                    </a>
+                    <a href="#" class="nav-item px-5 py-3 text-sm text-slate-600 font-medium flex items-center gap-3 text-red-500 hover:bg-red-50">
+                        <i class="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i> Keluar
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- ========================================== -->
+        <!-- RIGHT CONTENT (Loyalty Dashboard)          -->
+        <!-- ========================================== -->
+        <div class="flex-1 w-full min-w-0">
+            
+            <!-- HERO MEMBERSHIP CARD (Gamification) -->
+            <div class="bg-slate-900 rounded-3xl overflow-hidden shadow-xl mb-8 relative border border-slate-800">
+                <!-- Background Ornaments -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-amber-500 rounded-full mix-blend-screen filter blur-3xl opacity-20 pointer-events-none"></div>
+                <div class="absolute bottom-0 left-10 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-3xl opacity-20 pointer-events-none"></div>
+                
+                <div class="p-6 sm:p-10 relative z-10 flex flex-col md:flex-row items-center md:items-end justify-between gap-8">
+                    
+                    <!-- Poin Status -->
+                    <div class="w-full md:w-auto text-center md:text-left">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Total NusaPoin Anda</p>
+                        <div class="flex items-center justify-center md:justify-start gap-3 mb-2">
+                            <div class="w-10 h-10 bg-gradient-to-br from-yellow-300 to-amber-500 rounded-full flex items-center justify-center text-white text-xl shadow-[0_0_15px_rgba(245,158,11,0.5)]">
+                                <i class="fa-solid fa-coins"></i>
+                            </div>
+                            <span class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">12.500</span>
+                        </div>
+                        <p class="text-[10px] text-amber-200">Senilai <strong>Rp 125.000</strong> jika diuangkan.</p>
+                    </div>
+
+                    <!-- Progress Bar to Next Tier -->
+                    <div class="w-full md:flex-1 max-w-md bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5">
+                        <div class="flex justify-between items-end mb-2">
+                            <div>
+                                <span class="text-[10px] text-slate-300 uppercase font-bold">Status Member</span>
+                                <h3 class="font-extrabold text-white flex items-center gap-1.5"><i class="fa-solid fa-medal text-slate-300"></i> SILVER</h3>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[10px] text-slate-300 uppercase font-bold">Target Selanjutnya</span>
+                                <h3 class="font-extrabold text-amber-400 flex items-center justify-end gap-1.5"><i class="fa-solid fa-crown"></i> GOLD</h3>
+                            </div>
+                        </div>
+                        
+                        <!-- Bar -->
+                        <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden mb-2 shadow-inner">
+                            <div class="progress-bar-fill h-full bg-gradient-to-r from-amber-300 to-amber-500 w-0" id="tier-progress"></div>
+                        </div>
+                        
+                        <p class="text-[10px] text-slate-300 text-center font-medium">Kumpulkan <strong class="text-white">7.500 Poin</strong> lagi untuk naik ke level Gold & nikmati diskon eksklusif!</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- TABS REWARDS -->
+            <div class="flex overflow-x-auto hide-scrollbar border-b border-slate-200 mb-6">
+                <button class="poin-tab active px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap" onclick="switchTab('tab-katalog', this)">Katalog Penukaran (Redeem)</button>
+                <button class="poin-tab px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap" onclick="switchTab('tab-riwayat', this)">Riwayat Poin</button>
+                <button class="poin-tab px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap" onclick="switchTab('tab-cara', this)">Cara Mendapatkan Poin</button>
+            </div>
+
+            <!-- TAB 1: KATALOG PENUKARAN (REDEEM) -->
+            <div id="tab-katalog" class="block">
+                
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-extrabold text-slate-900 text-lg">Pilihan Voucher & Hadiah</h2>
+                    <select class="bg-white border border-slate-200 text-xs font-bold text-slate-600 rounded-lg px-3 py-1.5 focus:outline-none shadow-sm">
+                        <option>Semua Kategori</option>
+                        <option>Potongan Tour</option>
+                        <option>Voucher Hotel</option>
+                        <option>Merchandise</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    
+                    <!-- Reward Card 1 -->
+                    <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden reward-card flex flex-col relative">
+                        <div class="bg-gradient-to-r from-brand-600 to-brand-500 h-24 p-4 flex items-center gap-3 text-white">
+                            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl backdrop-blur-sm"><i class="fa-solid fa-plane-departure"></i></div>
+                            <div>
+                                <p class="text-[10px] font-bold text-brand-100 uppercase">Potongan Tour</p>
+                                <h3 class="font-extrabold text-base">Diskon Rp 100.000</h3>
+                            </div>
+                        </div>
+                        <div class="voucher-divider h-2"></div>
+                        <div class="p-4 flex flex-col flex-grow bg-slate-50/50">
+                            <p class="text-xs text-slate-500 mb-4 line-clamp-2">Berlaku untuk semua pemesanan Paket Tour Domestik & Internasional tanpa minimum transaksi.</p>
+                            <div class="mt-auto flex justify-between items-center">
+                                <div class="flex items-center gap-1.5 font-extrabold text-amber-500">
+                                    <i class="fa-solid fa-coins"></i> 10.000
+                                </div>
+                                <button onclick="redeemReward('Diskon Rp 100.000', 10000)" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-lg transition-colors shadow-md shadow-amber-500/30">
+                                    Tukar Poin
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reward Card 2 -->
+                    <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden reward-card flex flex-col relative">
+                        <div class="bg-gradient-to-r from-accent-500 to-amber-500 h-24 p-4 flex items-center gap-3 text-white">
+                            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl backdrop-blur-sm"><i class="fa-solid fa-car"></i></div>
+                            <div>
+                                <p class="text-[10px] font-bold text-accent-100 uppercase">Rental Mobil</p>
+                                <h3 class="font-extrabold text-base">Gratis Antar Jemput Bandara</h3>
+                            </div>
+                        </div>
+                        <div class="voucher-divider h-2"></div>
+                        <div class="p-4 flex flex-col flex-grow bg-slate-50/50">
+                            <p class="text-xs text-slate-500 mb-4 line-clamp-2">Voucher gratis layanan supir untuk penjemputan dari Bandara Juanda/Malang ke Hotel.</p>
+                            <div class="mt-auto flex justify-between items-center">
+                                <div class="flex items-center gap-1.5 font-extrabold text-amber-500">
+                                    <i class="fa-solid fa-coins"></i> 7.500
+                                </div>
+                                <button onclick="redeemReward('Antar Jemput Bandara', 7500)" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-lg transition-colors shadow-md shadow-amber-500/30">
+                                    Tukar Poin
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reward Card 3 -->
+                    <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden reward-card flex flex-col relative opacity-60">
+                        <div class="absolute inset-0 bg-white/40 z-10 flex items-center justify-center backdrop-blur-[1px] pointer-events-none">
+                            <span class="bg-slate-800 text-white font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">Poin Kurang</span>
+                        </div>
+                        <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-24 p-4 flex items-center gap-3 text-white">
+                            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl backdrop-blur-sm"><i class="fa-solid fa-bed"></i></div>
+                            <div>
+                                <p class="text-[10px] font-bold text-emerald-100 uppercase">Voucher Hotel</p>
+                                <h3 class="font-extrabold text-base">Voucher Menginap Rp 250k</h3>
+                            </div>
+                        </div>
+                        <div class="voucher-divider h-2"></div>
+                        <div class="p-4 flex flex-col flex-grow bg-slate-50/50">
+                            <p class="text-xs text-slate-500 mb-4 line-clamp-2">Potongan harga untuk pemesanan hotel di seluruh Indonesia melalui NusaTrip.</p>
+                            <div class="mt-auto flex justify-between items-center">
+                                <div class="flex items-center gap-1.5 font-extrabold text-slate-400">
+                                    <i class="fa-solid fa-coins"></i> 25.000
+                                </div>
+                                <button disabled class="px-4 py-1.5 bg-slate-200 text-slate-400 font-bold text-xs rounded-lg cursor-not-allowed">
+                                    Tukar Poin
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- TAB 2: RIWAYAT POIN -->
+            <div id="tab-riwayat" class="hidden">
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                    <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                        <h2 class="font-extrabold text-slate-900 text-sm">Aktivitas Poin Terakhir</h2>
+                        <span class="text-xs text-slate-500 font-medium">Bulan Ini</span>
+                    </div>
+                    
+                    <div class="divide-y divide-slate-100">
+                        <!-- Transaksi 1 -->
+                        <div class="p-4 flex justify-between items-center hover:bg-slate-50 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-arrow-down"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-800 text-sm">Pembelian Paket Tour Bromo</p>
+                                    <p class="text-[10px] text-slate-500">24 Okt 2026 • INV-20261024-001</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-extrabold text-emerald-500 text-sm">+ 2.500 Pts</p>
+                                <p class="text-[10px] text-slate-400">Berhasil ditambahkan</p>
+                            </div>
+                        </div>
+
+                        <!-- Transaksi 2 -->
+                        <div class="p-4 flex justify-between items-center hover:bg-slate-50 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-800 text-sm">Menulis Ulasan (Review)</p>
+                                    <p class="text-[10px] text-slate-500">20 Okt 2026 • Bali Explorer</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-extrabold text-emerald-500 text-sm">+ 50 Pts</p>
+                                <p class="text-[10px] text-slate-400">Berhasil ditambahkan</p>
+                            </div>
+                        </div>
+
+                        <!-- Transaksi 3 -->
+                        <div class="p-4 flex justify-between items-center hover:bg-slate-50 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-ticket"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-800 text-sm">Penukaran Voucher Diskon</p>
+                                    <p class="text-[10px] text-slate-500">15 Sep 2026 • Potongan Rp 50.000</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-extrabold text-red-500 text-sm">- 5.000 Pts</p>
+                                <p class="text-[10px] text-slate-400">Berhasil ditukar</p>
+                            </div>
+                        </div>
+
+                        <!-- Transaksi 4 -->
+                        <div class="p-4 flex justify-between items-center hover:bg-slate-50 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-user-plus"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-800 text-sm">Pendaftaran Akun Baru</p>
+                                    <p class="text-[10px] text-slate-500">01 Jan 2026 • Welcome Bonus</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-extrabold text-emerald-500 text-sm">+ 15.000 Pts</p>
+                                <p class="text-[10px] text-slate-400">Berhasil ditambahkan</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 text-center border-t border-slate-100 bg-slate-50/50">
+                        <button class="text-xs font-bold text-brand-600 hover:text-brand-800">Muat Lebih Banyak</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: CARA MENDAPATKAN POIN -->
+            <div id="tab-cara" class="hidden">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm text-center">
+                        <div class="w-16 h-16 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center text-2xl mx-auto mb-4">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-2">Lakukan Pemesanan</h3>
+                        <p class="text-xs text-slate-500 mb-3">Dapatkan 1 Poin untuk setiap pembelanjaan kelipatan Rp 1.000 di NusaTrip.</p>
+                        <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">1 Poin / Rp 1rb</span>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm text-center">
+                        <div class="w-16 h-16 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center text-2xl mx-auto mb-4">
+                            <i class="fa-regular fa-comment-dots"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-2">Tulis Ulasan Perjalanan</h3>
+                        <p class="text-xs text-slate-500 mb-3">Bantu traveler lain dengan membagikan pengalaman Anda beserta foto.</p>
+                        <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">+ 50 Poin / Review</span>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm text-center">
+                        <div class="w-16 h-16 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center text-2xl mx-auto mb-4">
+                            <i class="fa-solid fa-user-group"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-2">Ajak Teman (Referral)</h3>
+                        <p class="text-xs text-slate-500 mb-3">Bagikan kode referral Anda. Jika teman Anda mendaftar & transaksi, Anda berdua dapat poin.</p>
+                        <span class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">+ 5.000 Poin / Teman</span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- SUCCESS MODAL (REDEEM) -->
+    <div id="redeem-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-[2rem] p-8 max-w-sm w-full text-center shadow-2xl scale-95 transition-transform duration-300 relative overflow-hidden" id="modal-content">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2 class="text-xl font-extrabold text-slate-900 mb-2">Penukaran Berhasil!</h2>
+            <p class="text-xs text-slate-500 leading-relaxed mb-6">Anda berhasil menukar poin dengan voucher <strong id="modal-reward-name" class="text-slate-800">Reward</strong>. Saldo NusaPoin Anda telah dikurangi.</p>
+            <button onclick="closeModal()" class="block w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-xl shadow-md transition-all">Lihat Voucher Saya</button>
+        </div>
+    </div>
+
+    <!-- FOOTER SIMPLE -->
+    <footer class="border-t border-slate-200 bg-white mt-10">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2 font-extrabold text-lg text-brand-900">
+                <div class="w-6 h-6 rounded bg-brand-600 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-n"></i></div>
+                NusaTrip
+            </div>
+            <p class="text-xs text-slate-500 font-medium">© 2026 PT Nusantara Trip System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Animasi Progress Bar saat diload
+        window.onload = () => {
+            setTimeout(() => {
+                // Simulasi progress: Saat ini Silver (12.500), target Gold (20.000). Persentase = 62.5%
+                document.getElementById('tier-progress').style.width = '62.5%';
+            }, 300);
+        };
+
+        // --- Fungsi Filter Tab ---
+        function switchTab(tabId, btnElement) {
+            // Sembunyikan semua tab content
+            document.getElementById('tab-katalog').classList.add('hidden');
+            document.getElementById('tab-katalog').classList.remove('block');
+            document.getElementById('tab-riwayat').classList.add('hidden');
+            document.getElementById('tab-riwayat').classList.remove('block');
+            document.getElementById('tab-cara').classList.add('hidden');
+            document.getElementById('tab-cara').classList.remove('block');
+            
+            // Hapus kelas active dari semua tombol
+            document.querySelectorAll('.poin-tab').forEach(el => el.classList.remove('active'));
+
+            // Tampilkan tab yang dipilih
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById(tabId).classList.add('block');
+            btnElement.classList.add('active');
+        }
+
+        // --- Simulasi Redeem Modal ---
+        function redeemReward(rewardName, pointCost) {
+            // Ubah teks modal
+            document.getElementById('modal-reward-name').innerText = rewardName;
+
+            // Tampilkan Modal
+            const modal = document.getElementById('redeem-modal');
+            const content = document.getElementById('modal-content');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('redeem-modal');
+            const content = document.getElementById('modal-content');
+            
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+    </script>
+</body>
+</html>

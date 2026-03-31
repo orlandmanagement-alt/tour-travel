@@ -4,6 +4,8 @@ import { TourController } from './controllers/TourController';
 import { BookingController } from './controllers/BookingController';
 import { CustomTripController } from './controllers/CustomTripController';
 import { AdminController } from './controllers/AdminController';
+import { ReviewController } from './controllers/ReviewController';
+import { AuthController } from './controllers/AuthController';
 
 export interface Env {
   DB: D1Database;
@@ -25,21 +27,42 @@ export default {
     }
 
     try {
+      // ── Auth ─────────────────────────────
+      if (path === '/api/auth/register' && method === 'POST') {
+        return await AuthController.register(request, env);
+      }
+      if (path === '/api/auth/login' && method === 'POST') {
+        return await AuthController.login(request, env);
+      }
+      if (path === '/api/auth/me' && method === 'GET') {
+        return await AuthController.getMe(request, env);
+      }
+
       // ── Master Data ─────────────────────────────
       if (path.startsWith('/api/master')) {
         return await MasterController.handle(request, env, path);
       }
 
       // ── Tours ────────────────────────────────────
+      const tourIdMatch = path.match(/^\/api\/tours\/([a-zA-Z0-9_-]+)$/);
+      const reviewMatch = path.match(/^\/api\/tours\/([0-9]+)\/reviews$/);
+
       if (path === '/api/tours' && method === 'GET') {
         return await TourController.getAllTours(env, url);
       }
       if (path === '/api/tours/generate-code' && method === 'GET') {
         return await TourController.generateAutoCode(env, url);
       }
-      const tourIdMatch = path.match(/^\/api\/tours\/([a-zA-Z0-9_-]+)$/);
+      
       if (tourIdMatch && method === 'GET') {
         return await TourController.getTourDetail(env, tourIdMatch[1]);
+      }
+
+      if (reviewMatch && method === 'GET') {
+        return await ReviewController.getReviews(env, reviewMatch[1]);
+      }
+      if (reviewMatch && method === 'POST') {
+        return await ReviewController.submitReview(request, env, reviewMatch[1]);
       }
       // Bulk CSV Import — accepts array of validated tour rows
       if (path === '/api/tours/bulk-import' && method === 'POST') {
@@ -55,9 +78,19 @@ export default {
       if (path === '/api/bookings' && method === 'POST') {
         return await BookingController.createBooking(request, env);
       }
+      if (path === '/api/bookings' && method === 'GET') {
+        return await BookingController.getAllBookings(env);
+      }
+      if (path === '/api/bookings/clean' && method === 'DELETE') {
+        return await BookingController.deleteCancelledOrders(env);
+      }
       const bookingRefMatch = path.match(/^\/api\/bookings\/([a-zA-Z0-9_-]+)$/);
       if (bookingRefMatch && method === 'GET') {
         return await BookingController.getBookingStatus(env, bookingRefMatch[1]);
+      }
+      const bookingIdMatch = path.match(/^\/api\/bookings\/([0-9]+)$/);
+      if (bookingIdMatch && method === 'DELETE') {
+        return await BookingController.deleteSingleBooking(env, bookingIdMatch[1]);
       }
       const bookingStatusMatch = path.match(/^\/api\/bookings\/([a-zA-Z0-9_-]+)\/status$/);
       if (bookingStatusMatch && method === 'PUT') {

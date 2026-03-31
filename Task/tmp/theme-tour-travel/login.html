@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk / Daftar | NusantaraTrip</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', // Primary Indigo
+                            700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', // Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        
+        /* Custom Input Styles */
+        .input-saas { transition: all 0.3s ease; }
+        .input-saas:focus-within {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+        
+        /* Custom Checkbox */
+        .check-custom {
+            appearance: none; width: 16px; height: 16px; border: 2px solid #cbd5e1;
+            border-radius: 4px; cursor: pointer; position: relative; transition: all 0.2s;
+        }
+        .check-custom:checked { background-color: #4f46e5; border-color: #4f46e5; }
+        .check-custom:checked::after {
+            content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            color: white; font-size: 10px; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* View Transitions */
+        .auth-view {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .auth-view.hidden-view {
+            opacity: 0;
+            transform: translateX(20px);
+            pointer-events: none;
+            position: absolute;
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-800 antialiased h-screen flex overflow-hidden">
+
+    <!-- ========================================== -->
+    <!-- LEFT PANEL: BRANDING VISUAL (HIDDEN ON MOBILE) -->
+    <!-- ========================================== -->
+    <div class="hidden lg:flex lg:w-1/2 relative items-center justify-center bg-brand-900 overflow-hidden">
+        <!-- Background Image -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200" alt="Bali Destination" class="w-full h-full object-cover opacity-50 mix-blend-overlay">
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-950 via-brand-900/60 to-transparent"></div>
+        </div>
+
+        <!-- Content overlay -->
+        <div class="relative z-10 p-12 max-w-lg text-white">
+            <a href="/" class="font-extrabold text-2xl tracking-tighter flex items-center gap-2 mb-12 hover:opacity-80 transition-opacity w-max">
+                <div class="w-10 h-10 rounded-xl bg-white text-brand-600 flex items-center justify-center shadow-lg"><span class="text-lg"><i class="fa-solid fa-paper-plane"></i></span></div>
+                NusaTrip
+            </a>
+
+            <h1 class="text-4xl font-extrabold mb-6 leading-tight drop-shadow-lg">
+                Gerbang Menuju <br><span class="text-accent-400">Pengalaman Luar Biasa.</span>
+            </h1>
+            <p class="text-brand-100 font-medium mb-10 text-sm leading-relaxed">
+                Bergabunglah dengan lebih dari 500.000+ pelancong dan perusahaan yang mempercayakan perjalanan mereka kepada platform SaaS travel terbaik di Indonesia.
+            </p>
+
+            <!-- Testimonial Bubble -->
+            <div class="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl">
+                <div class="flex text-yellow-400 text-xs mb-2">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-sm font-medium text-white mb-3 italic">"Sistem bookingnya sangat cepat, harga transparan, dan CS selalu responsif 24 jam. Sangat direkomendasikan untuk corporate trip!"</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-accent-500 text-white flex items-center justify-center font-bold text-[10px]">AW</div>
+                    <div>
+                        <p class="text-xs font-bold">Ardi Wijaya</p>
+                        <p class="text-[10px] text-brand-200">HR Manager, Tech Indonusa</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- RIGHT PANEL: AUTH FORMS                    -->
+    <!-- ========================================== -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 overflow-y-auto relative bg-white">
+        
+        <!-- Mobile Logo (Only visible on small screens) -->
+        <a href="/" class="absolute top-6 left-6 lg:hidden font-extrabold text-xl tracking-tighter text-brand-900 flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center shadow"><span class="text-xs"><i class="fa-solid fa-paper-plane"></i></span></div>
+            NusaTrip
+        </a>
+
+        <div class="max-w-md w-full relative">
+            
+            <!-- ---------------------------------------- -->
+            <!-- VIEW 1: LOGIN                            -->
+            <!-- ---------------------------------------- -->
+            <div id="view-login" class="auth-view w-full">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">Selamat Datang Kembali 👋</h2>
+                    <p class="text-sm text-slate-500 font-medium">Silakan masuk ke akun Anda untuk melanjutkan.</p>
+                </div>
+
+                <form onsubmit="simulateAuth(event, 'Masuk...')" class="space-y-5">
+                    
+                    <div class="input-saas bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 relative">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Email / Username</label>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-envelope text-slate-400 text-sm"></i>
+                            <input type="email" placeholder="budi@email.com" class="w-full bg-transparent text-sm text-slate-800 font-semibold focus:outline-none" required>
+                        </div>
+                    </div>
+
+                    <div class="input-saas bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 relative">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Password</label>
+                        <div class="flex items-center gap-2 relative">
+                            <i class="fa-solid fa-lock text-slate-400 text-sm"></i>
+                            <input type="password" id="login-pwd" placeholder="••••••••" class="w-full bg-transparent text-sm text-slate-800 font-semibold focus:outline-none pr-8" required>
+                            <button type="button" onclick="togglePwd('login-pwd', 'login-eye')" class="absolute right-0 text-slate-400 hover:text-brand-600">
+                                <i id="login-eye" class="fa-regular fa-eye-slash text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between mt-2">
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" class="check-custom">
+                            <span class="text-xs font-medium text-slate-600 group-hover:text-slate-900 transition-colors">Ingat Saya</span>
+                        </label>
+                        <button type="button" onclick="switchView('view-forgot')" class="text-xs font-bold text-brand-600 hover:text-brand-800 transition-colors">Lupa Password?</button>
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2 mt-2">
+                        <i class="fa-solid fa-circle-notch fa-spin hidden auth-spinner"></i>
+                        <span class="auth-btn-text">Masuk Sekarang</span>
+                    </button>
+                </form>
+
+                <div class="mt-8 flex items-center gap-3">
+                    <div class="h-px bg-slate-200 flex-1"></div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Atau masuk dengan</span>
+                    <div class="h-px bg-slate-200 flex-1"></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mt-6">
+                    <button type="button" class="w-full py-2.5 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-4 h-4"> Google
+                    </button>
+                    <button type="button" class="w-full py-2.5 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-apple text-base leading-none mb-0.5"></i> Apple
+                    </button>
+                </div>
+
+                <p class="text-center text-sm text-slate-500 font-medium mt-8">
+                    Belum punya akun? <button onclick="switchView('view-register')" class="text-brand-600 font-bold hover:underline">Daftar Gratis</button>
+                </p>
+            </div>
+
+            <!-- ---------------------------------------- -->
+            <!-- VIEW 2: REGISTER (DAFTAR)                -->
+            <!-- ---------------------------------------- -->
+            <div id="view-register" class="auth-view hidden-view w-full absolute top-0">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">Mulai Petualanganmu 🌍</h2>
+                    <p class="text-sm text-slate-500 font-medium">Buat akun untuk mendapatkan harga terbaik.</p>
+                </div>
+
+                <form onsubmit="simulateAuth(event, 'Mendaftarkan...')" class="space-y-4">
+                    
+                    <div class="input-saas bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 relative">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Nama Lengkap</label>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-regular fa-user text-slate-400 text-sm"></i>
+                            <input type="text" placeholder="Sesuai KTP/Paspor" class="w-full bg-transparent text-sm text-slate-800 font-semibold focus:outline-none" required>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="input-saas bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 relative">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Email</label>
+                            <input type="email" placeholder="email@contoh.com" class="w-full bg-transparent text-sm text-slate-800 font-semibold focus:outline-none" required>
+                        </div>
+                        <div class="input-saas bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 relative">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">No. WhatsApp</label>
+                            <input type="tel" placeholder="0812xxxx" class="w-full bg-transparent text-sm text-slate-800 font-semibold focus:outline-none" required>
+                        </div>
+                    </div>
+
+                    <div class="input-saas bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 relative">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Buat Password</label>
+                        <div class="flex items-center gap-2 relative">
+                            <i class="fa-solid fa-lock text-slate-400 text-sm"></i>
+                            <input type="password" id="reg-pwd" placeholder="Minimal 8 karakter" class="w-full bg-transparent text-sm text-slate-800 font-semibold focus:outline-none pr-8" required>
+                            <button type="button" onclick="togglePwd('reg-pwd', 'reg-eye')" class="absolute right-0 text-slate-400 hover:text-brand-600">
+                                <i id="reg-eye" class="fa-regular fa-eye-slash text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <label class="flex items-start gap-2 cursor-pointer mt-3">
+                        <input type="checkbox" class="check-custom mt-0.5" required>
+                        <span class="text-[10px] text-slate-500 font-medium leading-tight">Saya menyetujui <a href="#" class="text-brand-600 font-bold hover:underline">Syarat & Ketentuan</a> dan <a href="#" class="text-brand-600 font-bold hover:underline">Kebijakan Privasi</a> NusantaraTrip.</span>
+                    </label>
+
+                    <button type="submit" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2 mt-4">
+                        <i class="fa-solid fa-circle-notch fa-spin hidden auth-spinner"></i>
+                        <span class="auth-btn-text">Daftar Akun Baru</span>
+                    </button>
+                </form>
+
+                <div class="mt-6 flex items-center gap-3">
+                    <div class="h-px bg-slate-200 flex-1"></div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Atau daftar cepat</span>
+                    <div class="h-px bg-slate-200 flex-1"></div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="button" class="w-full py-2.5 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-4 h-4"> Lanjutkan dengan Google
+                    </button>
+                </div>
+
+                <p class="text-center text-sm text-slate-500 font-medium mt-6">
+                    Sudah punya akun? <button onclick="switchView('view-login')" class="text-brand-600 font-bold hover:underline">Masuk di sini</button>
+                </p>
+            </div>
+
+            <!-- ---------------------------------------- -->
+            <!-- VIEW 3: FORGOT PASSWORD                  -->
+            <!-- ---------------------------------------- -->
+            <div id="view-forgot" class="auth-view hidden-view w-full absolute top-0">
+                <button onclick="switchView('view-login')" class="text-slate-400 hover:text-brand-600 font-bold text-xs flex items-center gap-1 mb-6 transition-colors">
+                    <i class="fa-solid fa-arrow-left"></i> Kembali ke Login
+                </button>
+
+                <div class="text-left mb-8">
+                    <div class="w-12 h-12 bg-accent-100 text-accent-600 rounded-xl flex items-center justify-center text-2xl mb-4">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">Lupa Password? 🔒</h2>
+                    <p class="text-sm text-slate-500 font-medium">Jangan khawatir! Masukkan email yang terdaftar dan kami akan mengirimkan instruksi untuk mereset password Anda.</p>
+                </div>
+
+                <form onsubmit="simulateAuth(event, 'Mengirim Email...')" class="space-y-5">
+                    
+                    <div class="input-saas bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 relative">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Alamat Email Terdaftar</label>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-envelope text-slate-400 text-sm"></i>
+                            <input type="email" placeholder="email@contoh.com" class="w-full bg-transparent text-sm text-slate-800 font-semibold focus:outline-none" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2 mt-4">
+                        <i class="fa-solid fa-circle-notch fa-spin hidden auth-spinner"></i>
+                        <span class="auth-btn-text">Kirim Tautan Reset</span>
+                    </button>
+                </form>
+
+                <!-- Simulasi Pesan Sukses -->
+                <div id="reset-success" class="hidden mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700 text-xs font-bold text-center flex flex-col items-center gap-2">
+                    <i class="fa-solid fa-envelope-circle-check text-2xl text-emerald-500"></i>
+                    Tautan reset telah dikirim! Silakan periksa inbox atau folder spam email Anda.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- Fungsi Toggle Tampilan Form (Login/Register/Forgot) ---
+        function switchView(targetId) {
+            const views = ['view-login', 'view-register', 'view-forgot'];
+            
+            views.forEach(viewId => {
+                const el = document.getElementById(viewId);
+                if (viewId === targetId) {
+                    el.classList.remove('hidden-view');
+                    // Reset posisi relative vs absolute agar container form mengikuti tinggi yg benar
+                    setTimeout(() => { el.style.position = 'relative'; }, 400); 
+                } else {
+                    el.classList.add('hidden-view');
+                    el.style.position = 'absolute';
+                }
+            });
+            
+            // Reset success message di form forgot password saat pindah view
+            document.getElementById('reset-success').classList.add('hidden');
+        }
+
+        // --- Fungsi Toggle Show/Hide Password ---
+        function togglePwd(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                input.type = "password";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        }
+
+        // --- Fungsi Simulasi Form Submit (Loading State) ---
+        function simulateAuth(e, loadingText) {
+            e.preventDefault(); // Mencegah reload halaman
+            const form = e.target;
+            const btnText = form.querySelector('.auth-btn-text');
+            const spinner = form.querySelector('.auth-spinner');
+            const originalText = btnText.innerText;
+
+            // State Loading
+            btnText.innerText = loadingText;
+            spinner.classList.remove('hidden');
+            form.querySelectorAll('button, input').forEach(el => el.style.pointerEvents = 'none');
+
+            // Simulasi proses API (1.5 detik)
+            setTimeout(() => {
+                // Kembalikan ke state awal
+                btnText.innerText = originalText;
+                spinner.classList.add('hidden');
+                form.querySelectorAll('button, input').forEach(el => el.style.pointerEvents = 'auto');
+                
+                // Jika ini form Lupa Password, tampilkan pesan sukses
+                if(form.parentElement.id === 'view-forgot') {
+                    document.getElementById('reset-success').classList.remove('hidden');
+                    form.reset();
+                } else {
+                    // Simulasi redirect untuk login/register
+                    alert("Simulasi Berhasil! Di sistem nyata, Anda akan dialihkan ke Dashboard.");
+                }
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

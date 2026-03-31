@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Mitra - Siska Putri | Admin NusantaraTrip</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', 900: '#312e81',
+                        },
+                        accent: { 400: '#fb923c', 500: '#f97316', 600: '#ea580c' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        .admin-nav-item { transition: all 0.2s ease; border-left: 3px solid transparent; }
+        .admin-nav-item:hover, .admin-nav-item.active { background-color: rgba(255, 255, 255, 0.1); border-left-color: #f97316; color: white; }
+        
+        /* Tabs */
+        .crm-tab { transition: all 0.2s; border-bottom: 2px solid transparent; }
+        .crm-tab.active { border-bottom-color: #4f46e5; color: #4f46e5; font-weight: 700; }
+        .tab-pane { display: none; animation: fadeIn 0.3s; }
+        .tab-pane.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .table-row-hover:hover { background-color: #f8fafc; }
+        .input-saas { transition: all 0.3s ease; border: 1px solid #cbd5e1; }
+        .input-saas:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); outline: none; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased h-screen flex overflow-hidden bg-slate-50">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="w-64 bg-brand-900 text-brand-200 flex-shrink-0 hidden md:flex flex-col h-full shadow-xl z-20">
+        <div class="h-16 flex items-center px-6 border-b border-white/10 bg-brand-950 font-extrabold text-xl text-white">
+             NusaTrip <span class="text-xs font-normal text-brand-300 ml-1">Admin</span>
+        </div>
+        <div class="flex-1 overflow-y-auto py-4">
+            <nav class="flex flex-col gap-1">
+                <a href="admin-dashboard.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-chart-pie w-5"></i> Dashboard
+                </a>
+                <a href="admin-orders.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-cart-shopping w-5 text-center"></i> Semua Pesanan
+                </a>
+                <div class="border-t border-white/5 my-4 mx-6"></div>
+                <a href="admin-tour-crud.html" class="admin-nav-item px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-map-location-dot w-5"></i> Kelola Tour
+                </a>
+                <!-- MENU AKTIF -->
+                <a href="admin-users.html" class="admin-nav-item active px-6 py-3 text-sm font-medium flex items-center gap-3">
+                    <i class="fa-solid fa-users w-5"></i> Pelanggan & Mitra
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- RIGHT MAIN CONTENT -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+        
+        <!-- HEADER -->
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 z-10 shadow-sm flex-shrink-0">
+            <div class="flex items-center gap-4">
+                <a href="admin-users.html" class="text-slate-400 hover:text-brand-600 transition-colors">
+                    <i class="fa-solid fa-arrow-left text-lg"></i>
+                </a>
+                <div class="hidden sm:block">
+                    <h2 class="font-extrabold text-slate-800 flex items-center gap-2">
+                        Affiliate Manager 
+                        <span class="bg-amber-100 text-amber-700 border border-amber-200 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">Mitra Gold</span>
+                    </h2>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button class="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-bold text-[10px] rounded-lg transition-all flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-envelope"></i> Hubungi Mitra
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-50">
+            
+            <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
+                
+                <!-- LEFT COLUMN: AFFILIATE CARD -->
+                <aside class="w-full lg:w-[340px] flex flex-col gap-6 flex-shrink-0">
+                    
+                    <!-- Profile Card -->
+                    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden relative">
+                        <div class="h-24 bg-amber-500 relative overflow-hidden">
+                            <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                        </div>
+                        
+                        <div class="p-6 relative">
+                            <img src="https://ui-avatars.com/api/?name=Siska+Putri&background=fef3c7&color=d97706&size=128" class="w-20 h-20 rounded-full border-4 border-white shadow-md absolute -top-10 left-6 bg-white">
+                            
+                            <div class="mt-8 mb-4">
+                                <h1 class="text-xl font-extrabold text-slate-900 leading-tight">Siska Putri</h1>
+                                <p class="text-[10px] text-slate-500 font-medium">Agen Lepas / Travel Blogger</p>
+                            </div>
+
+                            <div class="space-y-3 pt-4 border-t border-slate-100">
+                                <div class="flex items-center gap-3 text-xs text-slate-600">
+                                    <div class="w-6 text-center text-slate-400"><i class="fa-solid fa-envelope"></i></div>
+                                    <span class="font-medium">siska.travels@email.com</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-xs text-slate-600">
+                                    <div class="w-6 text-center text-slate-400"><i class="fa-solid fa-phone"></i></div>
+                                    <span class="font-medium">+62 899-9123-4567</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-xs text-slate-600">
+                                    <div class="w-6 text-center text-slate-400"><i class="fa-solid fa-globe"></i></div>
+                                    <a href="#" class="font-medium text-brand-600 hover:underline">instagram.com/siskatravels</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bank Account Info (Krusial untuk Payout) -->
+                    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Informasi Bank Pencairan</h3>
+                            <i class="fa-solid fa-building-columns text-slate-300 text-lg"></i>
+                        </div>
+                        
+                        <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+                            <p class="text-xs font-bold text-blue-900 mb-1">Bank Central Asia (BCA)</p>
+                            <p class="text-lg font-mono font-black text-blue-700 tracking-wider mb-2">8720 123 456</p>
+                            <p class="text-[10px] text-blue-600 uppercase font-bold tracking-widest">A.N. Siska Putri</p>
+                        </div>
+                        <p class="text-[9px] text-slate-400 mt-3 text-center"><i class="fa-solid fa-circle-info mr-1"></i> Pastikan nama rekening sesuai dengan profil mitra.</p>
+                    </div>
+
+                    <!-- Affiliate Financial Metrics -->
+                    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
+                        <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Metrik Pendapatan Mitra</h3>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-[10px] text-slate-500 font-medium mb-1">Total Saldo Aktif (Belum Ditarik)</p>
+                                <h4 class="text-xl font-black text-brand-600 leading-none">Rp 8.500.000</h4>
+                                <p class="text-[9px] text-brand-500 font-bold mt-1">Setara 85.000 NusaPoin</p>
+                            </div>
+                            <div class="border-t border-slate-100 pt-3">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-[10px] font-bold text-slate-500">Dalam Proses Penarikan</span>
+                                    <span class="text-xs font-bold text-amber-500">Rp 1.500.000</span>
+                                </div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-[10px] font-bold text-slate-500">Total Pernah Dicairkan</span>
+                                    <span class="text-xs font-bold text-emerald-600">Rp 24.000.000</span>
+                                </div>
+                                <div class="flex justify-between items-center pt-2 border-t border-slate-50">
+                                    <span class="text-[10px] font-bold text-slate-500">Total Konversi Penjualan</span>
+                                    <span class="text-xs font-black text-slate-800">42 Transaksi</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </aside>
+
+                <!-- RIGHT COLUMN: MAIN CONTENT TABS -->
+                <div class="flex-1 w-full min-w-0">
+                    
+                    <!-- Tabs Navigation -->
+                    <div class="flex overflow-x-auto hide-scrollbar border-b border-slate-200 mb-6 gap-2">
+                        <button class="crm-tab active px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap" onclick="switchCrmTab('tab-payouts', this)">
+                            Permintaan Payout <span class="bg-amber-100 text-amber-600 border border-amber-200 text-[10px] px-1.5 py-0.5 rounded ml-1 font-bold">1 Pending</span>
+                        </button>
+                        <button class="crm-tab px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap" onclick="switchCrmTab('tab-history', this)">Riwayat Komisi (Sales)</button>
+                        <button class="crm-tab px-4 py-3 text-sm font-medium text-slate-500 whitespace-nowrap" onclick="switchCrmTab('tab-settings', this)">Pengaturan Afiliasi</button>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden min-h-[500px]">
+                        
+                        <!-- TAB 1: PAYOUT REQUESTS (PENARIKAN DANA) -->
+                        <div id="tab-payouts" class="tab-pane active">
+                            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                                <div>
+                                    <h3 class="font-extrabold text-slate-900 text-sm">Daftar Penarikan Dana (Withdrawal)</h3>
+                                    <p class="text-[10px] text-slate-500">Verifikasi dan transfer dana ke rekening mitra sebelum menyetujui (Approve).</p>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-50 text-[10px] uppercase tracking-widest text-slate-400 border-b border-slate-100">
+                                            <th class="p-4 font-bold">ID Transaksi</th>
+                                            <th class="p-4 font-bold">Tanggal Request</th>
+                                            <th class="p-4 font-bold text-right">Nominal Payout</th>
+                                            <th class="p-4 font-bold text-center">Status</th>
+                                            <th class="p-4 font-bold text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-xs divide-y divide-slate-100">
+                                        <!-- Pending Request -->
+                                        <tr class="table-row-hover bg-amber-50/20" id="payout-row-1">
+                                            <td class="p-4 font-mono font-bold text-slate-800">WD-202610-089</td>
+                                            <td class="p-4 text-slate-600">28 Okt 2026, 09:15</td>
+                                            <td class="p-4 text-right">
+                                                <p class="font-extrabold text-slate-900 text-sm">Rp 1.500.000</p>
+                                                <p class="text-[9px] text-slate-400">-15.000 Pts</p>
+                                            </td>
+                                            <td class="p-4 text-center">
+                                                <span class="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full font-bold text-[9px] uppercase tracking-wide border border-amber-200"><i class="fa-regular fa-clock mr-1"></i> Menunggu Transfer</span>
+                                            </td>
+                                            <td class="p-4 text-center">
+                                                <button onclick="openApprovalModal('WD-202610-089', 'Rp 1.500.000')" class="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[10px] rounded-lg transition-colors shadow-sm">
+                                                    Proses Approval
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <!-- Paid Request -->
+                                        <tr class="table-row-hover">
+                                            <td class="p-4 font-mono font-bold text-slate-800">WD-202609-042</td>
+                                            <td class="p-4 text-slate-600">15 Sep 2026, 14:20</td>
+                                            <td class="p-4 text-right">
+                                                <p class="font-extrabold text-slate-900 text-sm">Rp 3.000.000</p>
+                                                <p class="text-[9px] text-slate-400">-30.000 Pts</p>
+                                            </td>
+                                            <td class="p-4 text-center">
+                                                <span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-bold text-[9px] uppercase tracking-wide"><i class="fa-solid fa-check-double mr-1"></i> Lunas Diri (Paid)</span>
+                                            </td>
+                                            <td class="p-4 text-center">
+                                                <button class="text-[10px] font-bold text-blue-600 hover:underline"><i class="fa-solid fa-receipt mr-1"></i> Bukti Trf</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- TAB 2: COMMISSION HISTORY -->
+                        <div id="tab-history" class="tab-pane">
+                            <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-extrabold text-slate-900 text-sm">Riwayat Komisi (Sales)</h3>
+                                    <p class="text-[10px] text-slate-500">Daftar transaksi pelanggan yang menggunakan kode/link mitra ini.</p>
+                                </div>
+                                <select class="bg-white border border-slate-200 text-[10px] font-bold text-slate-600 rounded px-2 py-1 outline-none">
+                                    <option>Semua Status</option>
+                                    <option>Sukses (Cair)</option>
+                                    <option>Batal / Refund</option>
+                                </select>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-50 text-[10px] uppercase tracking-widest text-slate-400 border-b border-slate-100">
+                                            <th class="p-4 font-bold">Tanggal</th>
+                                            <th class="p-4 font-bold">Order ID & Layanan</th>
+                                            <th class="p-4 font-bold text-right">Nilai Transaksi</th>
+                                            <th class="p-4 font-bold text-right">Komisi Diterima</th>
+                                            <th class="p-4 font-bold text-center">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-xs divide-y divide-slate-100">
+                                        <tr class="table-row-hover">
+                                            <td class="p-4 text-slate-500 font-medium">20 Okt 2026</td>
+                                            <td class="p-4">
+                                                <p class="font-mono font-bold text-brand-600">INV-20261020-055</p>
+                                                <p class="text-[10px] text-slate-600 mt-0.5">Explore Japan Autumn</p>
+                                            </td>
+                                            <td class="p-4 text-right font-bold text-slate-700">Rp 18.500.000</td>
+                                            <td class="p-4 text-right">
+                                                <p class="font-extrabold text-emerald-600">+ Rp 1.387.500</p>
+                                                <p class="text-[9px] text-slate-400">Rate: 7.5% (Gold)</p>
+                                            </td>
+                                            <td class="p-4 text-center"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[9px] font-bold">Masuk Saldo</span></td>
+                                        </tr>
+                                        <tr class="table-row-hover">
+                                            <td class="p-4 text-slate-500 font-medium">18 Okt 2026</td>
+                                            <td class="p-4">
+                                                <p class="font-mono font-bold text-brand-600">INV-20261018-012</p>
+                                                <p class="text-[10px] text-slate-600 mt-0.5">Private Tour Bromo</p>
+                                            </td>
+                                            <td class="p-4 text-right font-bold text-slate-700">Rp 2.500.000</td>
+                                            <td class="p-4 text-right">
+                                                <p class="font-extrabold text-emerald-600">+ Rp 187.500</p>
+                                                <p class="text-[9px] text-slate-400">Rate: 7.5% (Gold)</p>
+                                            </td>
+                                            <td class="p-4 text-center"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[9px] font-bold">Masuk Saldo</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- TAB 3: AFFILIATE SETTINGS -->
+                        <div id="tab-settings" class="tab-pane p-6 sm:p-8">
+                            <h3 class="font-extrabold text-slate-900 text-sm mb-6 border-b border-slate-100 pb-2">Pengaturan Kemitraan Khusus</h3>
+                            
+                            <form class="space-y-6 max-w-xl">
+                                <div class="grid grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Tingkat Mitra (Tier)</label>
+                                        <select class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800 font-bold cursor-pointer">
+                                            <option value="silver">Silver (5%)</option>
+                                            <option value="gold" selected>Gold (7.5%)</option>
+                                            <option value="platinum">Platinum (10%)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Custom Rate (Override Tier)</label>
+                                        <div class="relative">
+                                            <input type="number" class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="Biarkan kosong untuk ikut Tier">
+                                            <span class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-slate-400">%</span>
+                                        </div>
+                                        <p class="text-[9px] text-slate-400 mt-1">Isi jika Anda ingin memberikan komisi spesial.</p>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Kode Voucher Spesial Mitra</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" value="SISKATRAVELS" class="flex-1 bg-slate-50 border border-slate-200 text-sm rounded-lg px-4 py-2.5 font-mono font-bold text-brand-600 uppercase" readonly>
+                                        <button type="button" class="px-4 py-2 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-lg hover:bg-slate-50">Generate Ulang</button>
+                                    </div>
+                                    <p class="text-[9px] text-slate-500 mt-1">Pelanggan yang menggunakan kode ini otomatis tercatat sebagai konversi Siska Putri.</p>
+                                </div>
+
+                                <div class="pt-4 flex justify-end">
+                                    <button type="button" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all">Simpan Pengaturan</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <!-- MODAL APPROVAL PAYOUT -->
+    <div id="payout-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl scale-95 transition-transform duration-300 overflow-hidden" id="modal-content">
+            <div class="p-5 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                <h2 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-money-check-dollar text-emerald-600"></i> Proses Pencairan Dana
+                </h2>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-red-500 focus:outline-none"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+
+            <div class="p-6">
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 text-center">
+                    <p class="text-[10px] font-bold text-amber-700 uppercase tracking-widest mb-1">Nominal Ditransfer</p>
+                    <h3 class="text-3xl font-black text-amber-600" id="modal-amount">Rp 0</h3>
+                    <p class="text-xs text-amber-700 font-medium mt-1">Ke: Bank BCA (8720123456) A.N. Siska Putri</p>
+                </div>
+
+                <form id="payout-form" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Unggah Bukti Transfer (Opsional)</label>
+                        <input type="file" class="w-full bg-white border border-slate-300 text-xs rounded-lg px-3 py-2 file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Catatan Finance</label>
+                        <input type="text" class="w-full bg-white border border-slate-300 text-sm rounded-lg px-4 py-2.5 input-saas text-slate-800" placeholder="Misal: Batch Transfer 28 Okt">
+                    </div>
+                </form>
+            </div>
+
+            <div class="p-5 border-t border-slate-200 bg-slate-50 flex justify-between items-center">
+                <button type="button" class="text-xs font-bold text-red-500 hover:underline" onclick="rejectPayout()">Tolak Request (Reject)</button>
+                <div class="flex gap-2">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 font-bold text-xs rounded-lg transition-colors">Batal</button>
+                    <button type="button" onclick="approvePayout()" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-lg shadow-md transition-colors flex items-center gap-2">
+                        <i id="btn-spinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
+                        <span id="btn-text">Konfirmasi Transfer (Lunas)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFIKASI TOAST (Hidden) -->
+    <div id="toast-notif" class="fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl z-[100] font-bold text-sm flex items-center gap-3 transition-all duration-300 opacity-0 translate-y-10 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i> 
+        <span id="toast-text">Berhasil!</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        function switchCrmTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.crm-tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+        }
+
+        // --- Payout Modal Logic ---
+        const modal = document.getElementById('payout-modal');
+        const modalContent = document.getElementById('modal-content');
+        let currentPayoutId = null;
+
+        function openApprovalModal(id, amount) {
+            currentPayoutId = id;
+            document.getElementById('modal-amount').innerText = amount;
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function approvePayout() {
+            const btnText = document.getElementById('btn-text');
+            const spinner = document.getElementById('btn-spinner');
+            
+            btnText.innerText = "Memproses...";
+            spinner.classList.remove('hidden');
+
+            setTimeout(() => {
+                btnText.innerText = "Konfirmasi Transfer (Lunas)";
+                spinner.classList.add('hidden');
+                closeModal();
+                
+                // Ubah status di UI Tabel secara simulasi
+                const row = document.getElementById('payout-row-1');
+                row.classList.remove('bg-amber-50/20');
+                row.cells[3].innerHTML = '<span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-bold text-[9px] uppercase tracking-wide"><i class="fa-solid fa-check-double mr-1"></i> Lunas (Paid)</span>';
+                row.cells[4].innerHTML = '<button class="text-[10px] font-bold text-blue-600 hover:underline"><i class="fa-solid fa-receipt mr-1"></i> Bukti Trf</button>';
+
+                showToast(`Payout ${currentPayoutId} berhasil diselesaikan.`, "fa-check-circle", "text-emerald-400");
+            }, 1200);
+        }
+
+        function rejectPayout() {
+            if(confirm("Tolak penarikan dana ini? Saldo poin akan dikembalikan ke mitra.")) {
+                closeModal();
+                const row = document.getElementById('payout-row-1');
+                row.classList.remove('bg-amber-50/20');
+                row.cells[3].innerHTML = '<span class="bg-red-100 text-red-700 px-2.5 py-1 rounded-full font-bold text-[9px] uppercase tracking-wide"><i class="fa-solid fa-xmark mr-1"></i> Ditolak</span>';
+                row.cells[4].innerHTML = '-';
+                
+                showToast("Penarikan dana dibatalkan.", "fa-ban", "text-red-400");
+            }
+        }
+
+        function showToast(msg, icon = "fa-circle-check", color = "text-emerald-400") {
+            const toast = document.getElementById('toast-notif');
+            const toastText = document.getElementById('toast-text');
+            const toastIcon = toast.querySelector('i');
+
+            toastText.innerText = msg;
+            toastIcon.className = `fa-solid ${icon} ${color} text-lg`;
+            
+            toast.classList.remove('opacity-0', 'translate-y-10');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-10');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>

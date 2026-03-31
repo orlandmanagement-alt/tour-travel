@@ -13,11 +13,20 @@ export class BookingController {
         tour_id,
         travel_date,
         total_pax,
-        addons, // array of { id: number, quantity: number }
+        addons,
       } = data;
 
-      if (!customer_name || !customer_email || !tour_id || !travel_date || !total_pax) {
-        return sendError('Missing required fields', 400);
+      // Robust Manual Validation (Zod-like)
+      const errors: string[] = [];
+      if (!customer_name || customer_name.length < 3) errors.push('Name is too short');
+      if (!customer_email || !customer_email.includes('@')) errors.push('Invalid email address');
+      if (!customer_phone || customer_phone.length < 8) errors.push('Invalid phone number');
+      if (!tour_id) errors.push('Tour ID is required');
+      if (!travel_date) errors.push('Travel date is required');
+      if (!total_pax || total_pax < 1) errors.push('At least 1 traveler required');
+
+      if (errors.length > 0) {
+        return sendError('Validation failed: ' + errors.join(', '), 400);
       }
 
       // Generate Reference Code
@@ -176,6 +185,45 @@ export class BookingController {
 
       return sendResponse({ message: 'Status updated successfully' });
     } catch(e: any) {
+      return sendError(e.message);
+    }
+  }
+
+  static async getAllBookings(env: Env) {
+    try {
+      const { results } = await env.DB.prepare(`
+        SELECT b.*, t.tour_name 
+        FROM bookings b 
+        LEFT JOIN tours t ON b.tour_id = t.id 
+        ORDER BY b.created_at DESC
+      `).all();
+      return sendResponse(results);
+    } catch (e: any) {
+      return sendError(e.message);
+    }
+  }
+
+  static async deleteCancelledOrders(env: Env) {
+    try {
+      const { meta } = await env.DB.prepare(`
+        DELETE FROM bookings WHERE payment_status = 'cancelled'
+      `).run();
+      return sendResponse({ deleted: meta.changes });
+    } catch (e: any) {
+      return sendError(e.message);
+    }
+  }
+
+  static async deleteSingleBooking(env: Env, id: string) {
+    try {
+      const { meta } = await env.DB.prepare(`
+        DELETE FROM bookings WHERE id = ? AND payment_status = 'cancelled'
+      `).bind(id).run();
+      if (meta.changes === 0) {
+        return sendError('Booking not found or not cancelled', 400);
+      }
+      return sendResponse({ deleted: true });
+    } catch (e: any) {
       return sendError(e.message);
     }
   }

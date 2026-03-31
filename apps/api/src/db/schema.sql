@@ -88,7 +88,18 @@ CREATE TABLE tours (
   duration_nights INTEGER NOT NULL,
   base_price INTEGER NOT NULL DEFAULT 0,
   difficulty_level TEXT,
+  average_rating REAL DEFAULT 0,
+  review_count INTEGER DEFAULT 0,
   is_active BOOLEAN NOT NULL DEFAULT 1,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE tour_reviews (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  tour_id INTEGER REFERENCES tours(id) ON DELETE CASCADE,
+  customer_name TEXT NOT NULL,
+  rating INTEGER NOT NULL CHECK(rating >= 1 AND rating <= 5),
+  comment TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -167,5 +178,17 @@ CREATE TABLE custom_trip_requests (
   requested_destinations TEXT,
   accommodation_preference TEXT,
   status TEXT NOT NULL CHECK(status IN ('new', 'quoted', 'accepted', 'rejected')),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  salt TEXT NOT NULL,
+  affiliate_code TEXT NOT NULL UNIQUE,
+  role TEXT DEFAULT 'user' CHECK(role IN ('user', 'agent', 'admin')),
+  nusa_poin INTEGER DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

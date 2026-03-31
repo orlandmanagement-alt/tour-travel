@@ -3,236 +3,327 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
-// Using simple CSS transitions instead of Framer Motion to prevent strict dependency requirements
-export default function CustomTripWizard() {
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    destination: '',
-    duration: 3,
-    style: '',
-    pax: 2,
-    accommodation: '4-Star',
-    name: '',
-    whatsapp: '',
-    email: ''
-  });
-  
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export default function TripPlannerPage() {
+  const [currentStep, setCurrentStep] = useState(1);
+  const totalSteps = 5;
+  const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleNext = () => setStep(s => Math.min(s + 1, 5));
-  const handlePrev = () => setStep(s => Math.max(s - 1, 1));
-  
-  const handleSelect = (key: string, value: any) => {
-    setFormData(prev => ({ ...prev, [key]: value }));
+  const [userData, setUserData] = useState({
+    dest: '',
+    duration: '',
+    vibe: '',
+    budget: '',
+    guests: 2
+  });
+
+  const [contact, setContact] = useState({ name: '', email: '', phone: '' });
+
+  const selectOption = (key: keyof typeof userData, value: any) => {
+    setUserData(prev => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    // Mock API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-    }, 2000);
+  const isStepValid = () => {
+    switch(currentStep) {
+      case 1: return !!userData.dest;
+      case 2: return !!userData.duration;
+      case 3: return !!userData.vibe;
+      case 4: return !!userData.budget && userData.guests > 0;
+      case 5: return !!contact.name && !!contact.email;
+      default: return true;
+    }
   };
 
-  if (isSuccess) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="bg-white p-12 rounded-3xl shadow-xl max-w-lg w-full text-center flex flex-col items-center animate-in zoom-in duration-500 relative overflow-hidden">
-           {/* Confetti Mock */}
-           <div className="absolute top-0 w-full h-full pointer-events-none opacity-50 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
-           
-           <div className="w-24 h-24 bg-brand-primary rounded-full flex items-center justify-center mb-8 shadow-inner shadow-brand-primary/50 relative z-10">
-             <span className="text-4xl text-white">🎉</span>
-           </div>
-           
-           <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-4 relative z-10">Trip Request Received!</h2>
-           <p className="text-slate-600 mb-8 leading-relaxed relative z-10">
-             Thank you, <b>{formData.name}</b>. A Dedicated Travel Consultant is reviewing your {formData.duration}-Day {formData.style} trip to {formData.destination}. We will contact you via WhatsApp within 24 hours.
-           </p>
-           
-           <div className="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl mb-8 text-left text-sm relative z-10">
-              <span className="text-slate-500 font-bold tracking-widest uppercase text-xs">Request Reference</span>
-              <p className="font-mono text-lg font-bold text-slate-800">CUST-NSTR-802</p>
-           </div>
-           
-           <Link href="/" className="w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:-translate-y-1 transition-transform relative z-10 shadow-lg shadow-slate-900/20">
-             Return to Homepage
-           </Link>
-        </div>
-      </div>
-    );
-  }
+  const changeStep = (n: number) => {
+    if (n === 1 && !isStepValid()) {
+      alert('Mohon lengkapi pilihan di langkah ini!');
+      return;
+    }
+    
+    if (currentStep === 5 && n === 1) {
+      submitWizard();
+      return;
+    }
+
+    setCurrentStep(prev => prev + n);
+  };
+
+  const submitWizard = async () => {
+    setIsLoading(true);
+    
+    const payload = {
+      customer_name: contact.name,
+      customer_email: contact.email,
+      customer_phone: contact.phone,
+      base_location_id: 1, // Default ID or matching base on dest mapping
+      travel_date: new Date().toISOString(),
+      duration_days: userData.duration === '1-3 Hari' ? 3 : userData.duration === '4-7 Hari' ? 7 : 10,
+      total_pax: userData.guests,
+      requested_destinations: userData.dest,
+      accommodation_preference: `${userData.vibe} (${userData.budget})`
+    };
+
+    try {
+      const res = await fetch('/api/custom-trips', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        setIsSuccess(true);
+      } else {
+        alert('Terjadi kesalahan, coba lagi.');
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Terjadi kesalahan koneksi.');
+    }
+    setIsLoading(false);
+  };
+
+  const percent = (currentStep / totalSteps) * 100;
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 pb-20">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        
-        {/* Progress Header */}
-        <div className="mb-12">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Design Your Dream Trip</h1>
-            <span className="text-sm font-bold text-brand-primary bg-brand-primary/10 px-3 py-1 rounded-full">Step {step} of 4</span>
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+      <header className="bg-white border-b border-slate-200 py-4 shadow-sm sticky top-0 z-50">
+          <div className="max-w-4xl mx-auto px-4 flex justify-between items-center">
+              <Link href="/" className="font-extrabold text-xl tracking-tighter text-brand-900 flex items-center gap-2">
+                  <div className="w-8 h-8 rounded bg-brand-600 text-white flex items-center justify-center shadow"><span className="text-sm"><i className="fa-solid fa-wand-magic-sparkles"></i></span></div>
+                  TripPlanner
+              </Link>
+              <Link href="/" className="text-slate-400 hover:text-brand-600 font-bold text-xs flex items-center gap-1 transition-colors">
+                  <i className="fa-solid fa-xmark"></i> Keluar
+              </Link>
           </div>
-          <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-             <div 
-               className="h-full bg-brand-primary transition-all duration-700 ease-in-out" 
-               style={{ width: `${(step / 4) * 100}%` }}
-             ></div>
+      </header>
+
+      <div className="bg-white border-b border-slate-100 py-4">
+          <div className="max-w-xl mx-auto px-6">
+              <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+                  <span>Langkah {currentStep} dari {totalSteps}</span>
+                  <span>{percent}% Selesai</span>
+              </div>
+              <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-brand-600 shadow-[0_0_10px_rgba(79,70,229,0.4)] transition-all duration-500 ease-in-out" style={{ width: `${percent}%` }}></div>
+              </div>
           </div>
-        </div>
-
-        {/* Wizard Container */}
-        <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 md:p-10 min-h-[500px] flex flex-col relative overflow-hidden transition-all duration-500">
-           
-           {/* STEP 1 */}
-           <div className={`transition-all duration-500 absolute w-full left-0 top-0 p-6 md:p-10 ${step === 1 ? 'opacity-100 pointer-events-auto translate-x-0' : 'opacity-0 pointer-events-none -translate-x-full'}`}>
-             <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center">Where do you want to go?</h2>
-             
-             <div className="grid grid-cols-2 gap-4 mb-8">
-               {['East Java Volcanoes', 'Bali Island', 'Lombok & Gili', 'Komodo National Park'].map((dest) => (
-                 <div 
-                   key={dest}
-                   onClick={() => handleSelect('destination', dest)}
-                   className={`h-32 rounded-2xl cursor-pointer flex items-center justify-center p-4 text-center border-2 transition-all ${formData.destination === dest ? 'border-brand-primary bg-brand-primary/5 text-brand-primary font-bold shadow-md transform scale-105 z-10 relative' : 'border-slate-200 hover:border-slate-300 font-semibold text-slate-600'}`}
-                 >
-                   {dest}
-                 </div>
-               ))}
-             </div>
-
-             <div className="mt-8">
-                <label className="block text-center font-bold text-slate-700 mb-6">Duration: <span className="text-brand-primary text-2xl">{formData.duration} Days</span></label>
-                <input 
-                  type="range" 
-                  min="1" max="14" 
-                  value={formData.duration} 
-                  onChange={(e) => handleSelect('duration', parseInt(e.target.value))} 
-                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-primary"
-                />
-             </div>
-           </div>
-
-           {/* STEP 2 */}
-           <div className={`transition-all duration-500 absolute w-full left-0 top-0 p-6 md:p-10 ${step === 2 ? 'opacity-100 pointer-events-auto translate-x-0' : step < 2 ? 'opacity-0 pointer-events-none translate-x-full' : 'opacity-0 pointer-events-none -translate-x-full'}`}>
-             <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center">What is your preferred travel style?</h2>
-             
-             <div className="flex flex-col gap-4">
-               {[
-                 { title: 'Relaxed & Luxury', desc: 'Focus on 5-star comfort, spa, and private leisure.', icon: '🥂' },
-                 { title: 'Adventure & Trekking', desc: 'Active exploration, hiking, and outdoor nature.', icon: '🏔️' },
-                 { title: 'Cultural Immersion', desc: 'Local villages, temples, and historical education.', icon: '🏯' },
-               ].map((style) => (
-                 <div 
-                   key={style.title}
-                   onClick={() => handleSelect('style', style.title)}
-                   className={`p-6 rounded-2xl cursor-pointer flex items-center gap-6 border-2 transition-all ${formData.style === style.title ? 'border-brand-primary bg-brand-primary/5 shadow-md transform scale-[1.02] z-10 relative' : 'border-slate-200 hover:border-slate-300'}`}
-                 >
-                   <span className="text-4xl">{style.icon}</span>
-                   <div>
-                     <h3 className={`font-bold text-lg ${formData.style === style.title ? 'text-brand-primary' : 'text-slate-800'}`}>{style.title}</h3>
-                     <p className="text-slate-500 text-sm mt-1">{style.desc}</p>
-                   </div>
-                   {formData.style === style.title && <div className="ml-auto w-6 h-6 rounded-full bg-brand-primary flex items-center justify-center text-white"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg></div>}
-                 </div>
-               ))}
-             </div>
-           </div>
-
-           {/* STEP 3 */}
-           <div className={`transition-all duration-500 absolute w-full left-0 top-0 p-6 md:p-10 ${step === 3 ? 'opacity-100 pointer-events-auto translate-x-0' : step < 3 ? 'opacity-0 pointer-events-none translate-x-full' : 'opacity-0 pointer-events-none -translate-x-full'}`}>
-             <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center">Group Size & Comfort</h2>
-             
-             <div className="mb-10 text-center">
-                <label className="block text-center font-bold text-slate-700 mb-4">Number of Participants</label>
-                <div className="flex items-center justify-center max-w-xs mx-auto border-2 border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-                   <button onClick={() => handleSelect('pax', Math.max(1, formData.pax - 1))} className="w-16 h-16 flex items-center justify-center bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-2xl transition-colors">-</button>
-                   <span className="flex-1 text-center font-extrabold text-3xl font-mono text-brand-primary">{formData.pax}</span>
-                   <button onClick={() => handleSelect('pax', Math.min(50, formData.pax + 1))} className="w-16 h-16 flex items-center justify-center bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-2xl transition-colors">+</button>
-                </div>
-             </div>
-
-             <div className="text-center">
-                <label className="block text-center font-bold text-slate-700 mb-4">Accommodation Standard</label>
-                <div className="flex justify-center gap-4">
-                  {['Budget / Guesthouse', '4-Star', '5-Star Luxury'].map((acc) => (
-                    <div 
-                      key={acc}
-                      onClick={() => handleSelect('accommodation', acc)}
-                      className={`px-4 py-3 rounded-xl cursor-pointer text-sm font-bold border-2 transition-all ${formData.accommodation === acc ? 'border-brand-primary bg-brand-primary text-white shadow-md' : 'border-slate-200 hover:border-slate-300 text-slate-600'}`}
-                    >
-                      {acc}
-                    </div>
-                  ))}
-                </div>
-             </div>
-           </div>
-
-           {/* STEP 4 */}
-           <div className={`transition-all duration-500 absolute w-full left-0 top-0 p-6 md:p-10 overflow-y-auto h-full ${step === 4 ? 'opacity-100 pointer-events-auto translate-x-0' : step < 4 ? 'opacity-0 pointer-events-none translate-x-full' : 'opacity-0 pointer-events-none -translate-x-full'}`}>
-             <h2 className="text-2xl font-bold text-slate-900 mb-6 text-center">Finalizing Details</h2>
-             
-             <div className="bg-blue-50/50 border border-blue-100 rounded-2xl p-5 mb-8 shadow-sm text-center">
-                <p className="text-sm text-slate-600 leading-relaxed font-medium">
-                  You are planning a <b className="text-brand-primary">{formData.duration}-Day</b> <b className="text-brand-primary">{formData.style}</b> trip to <b className="text-brand-primary">{formData.destination}</b> for <b className="text-brand-primary">{formData.pax} people</b> staying in <b className="text-brand-primary">{formData.accommodation}</b> accommodations.
-                </p>
-             </div>
-
-             <form id="customTripForm" onSubmit={handleSubmit} className="space-y-4">
-               <div>
-                 <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Full Name</label>
-                 <input type="text" value={formData.name} onChange={e => handleSelect('name', e.target.value)} required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary focus:bg-white transition-all font-medium" placeholder="E.g. Sarah Connor" />
-               </div>
-               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                 <div>
-                   <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">WhatsApp Number</label>
-                   <input type="tel" value={formData.whatsapp} onChange={e => handleSelect('whatsapp', e.target.value)} required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary focus:bg-white transition-all font-medium" placeholder="+62 812..." />
-                 </div>
-                 <div>
-                   <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Email Address</label>
-                   <input type="email" value={formData.email} onChange={e => handleSelect('email', e.target.value)} required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary focus:bg-white transition-all font-medium" placeholder="sarah@corp.com" />
-                 </div>
-               </div>
-             </form>
-           </div>
-
-           {/* Controls */}
-           <div className={`mt-auto pt-8 flex items-center bg-white z-20 transition-all ${step > 1 ? 'justify-between' : 'justify-end'}`}>
-             {step > 1 && (
-               <button 
-                 onClick={handlePrev} 
-                 className="px-6 py-3 font-bold text-slate-500 hover:text-slate-800 transition-colors"
-               >
-                 Go Back
-               </button>
-             )}
-             
-             {step < 4 ? (
-               <button 
-                 onClick={handleNext}
-                 disabled={(step===1 && !formData.destination) || (step===2 && !formData.style)}
-                 className="px-8 py-3.5 bg-slate-900 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed ml-auto"
-               >
-                 Next Step
-               </button>
-             ) : (
-               <button 
-                 form="customTripForm"
-                 type="submit"
-                 disabled={isSubmitting}
-                 className="px-10 py-4 bg-brand-primary text-white font-extrabold rounded-xl shadow-xl shadow-brand-primary/30 hover:shadow-2xl transition-all hover:-translate-y-1 ml-auto flex items-center"
-               >
-                 {isSubmitting ? (
-                   <span className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                 ) : 'Request Custom Itinerary'}
-               </button>
-             )}
-           </div>
-
-        </div>
       </div>
+
+      <main className="flex-grow flex items-start justify-center p-4 sm:p-8 animate-in fade-in duration-500">
+          <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden min-h-[500px] flex flex-col relative">
+              
+              <div className="p-6 sm:p-10 flex-grow relative overflow-hidden">
+
+                  {/* STEP 1 */}
+                  <div className={`transition-all duration-500 absolute inset-0 p-6 sm:p-10 ${currentStep === 1 ? 'opacity-100 translate-x-0 z-10' : currentStep > 1 ? 'opacity-0 -translate-x-full z-0' : 'opacity-0 translate-x-full z-0'}`}>
+                      <div className="text-center mb-8">
+                          <h1 className="text-2xl font-extrabold text-slate-900 mb-2">Ke mana tujuan Anda?</h1>
+                          <p className="text-sm text-slate-500 font-medium">Pilih wilayah yang ingin Anda jelajahi kali ini.</p>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div 
+                            onClick={() => selectOption('dest', 'Domestic')}
+                            className={`p-6 rounded-2xl border-2 flex flex-col items-center text-center group cursor-pointer transition-all ${userData.dest === 'Domestic' ? 'border-brand-600 bg-brand-50' : 'border-slate-100 bg-slate-50 hover:border-brand-200'}`}
+                          >
+                              <div className={`w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-sm transition-transform ${userData.dest === 'Domestic' ? 'text-brand-600 scale-110' : 'text-slate-400 group-hover:scale-110'}`}>
+                                  <i className="fa-solid fa-map-location-dot"></i>
+                              </div>
+                              <h3 className="font-bold text-slate-800">Domestik (Indonesia)</h3>
+                              <p className="text-[11px] text-slate-500 mt-2">Jelajahi keindahan Nusantara dari Sabang sampai Merauke.</p>
+                          </div>
+                          <div 
+                            onClick={() => selectOption('dest', 'International')}
+                            className={`p-6 rounded-2xl border-2 flex flex-col items-center text-center group cursor-pointer transition-all ${userData.dest === 'International' ? 'border-brand-600 bg-brand-50' : 'border-slate-100 bg-slate-50 hover:border-brand-200'}`}
+                          >
+                              <div className={`w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-sm transition-transform ${userData.dest === 'International' ? 'text-brand-600 scale-110' : 'text-slate-400 group-hover:scale-110'}`}>
+                                  <i className="fa-solid fa-earth-americas"></i>
+                              </div>
+                              <h3 className="font-bold text-slate-800">Internasional</h3>
+                              <p className="text-[11px] text-slate-500 mt-2">Keliling dunia, dari Asia Timur hingga benua Eropa.</p>
+                          </div>
+                      </div>
+                  </div>
+
+                  {/* STEP 2 */}
+                  <div className={`transition-all duration-500 absolute inset-0 p-6 sm:p-10 ${currentStep === 2 ? 'opacity-100 translate-x-0 z-10' : currentStep > 2 ? 'opacity-0 -translate-x-full z-0 pointer-events-none' : 'opacity-0 translate-x-full z-0 pointer-events-none'}`}>
+                      <div className="text-center mb-8">
+                          <h1 className="text-2xl font-extrabold text-slate-900 mb-2">Berapa lama Anda berlibur?</h1>
+                          <p className="text-sm text-slate-500 font-medium">Tentukan durasi perjalanan impian Anda.</p>
+                      </div>
+                      <div className="space-y-3">
+                          {[
+                            { value: '1-3 Hari', icon: 'fa-clock', title: 'Trip Pendek (1-3 Hari)', desc: 'Cocok untuk weekend getaway atau transit.' },
+                            { value: '4-7 Hari', icon: 'fa-calendar-day', title: 'Liburan Standar (4-7 Hari)', desc: 'Ideal untuk eksplorasi kota secara mendalam.' },
+                            { value: '> 7 Hari', icon: 'fa-calendar-days', title: 'Perjalanan Panjang (> 7 Hari)', desc: 'Eksplorasi lintas wilayah atau benua.' }
+                          ].map((opt) => (
+                            <div 
+                                key={opt.value}
+                                onClick={() => selectOption('duration', opt.value)}
+                                className={`p-4 rounded-xl border-2 flex items-center gap-4 cursor-pointer transition-all ${userData.duration === opt.value ? 'border-brand-600 bg-brand-50' : 'border-slate-100 bg-slate-50 hover:border-brand-200'}`}
+                            >
+                                <div className={`w-12 h-12 bg-white rounded-lg flex items-center justify-center text-xl shadow-sm ${userData.duration === opt.value ? 'text-brand-600 scale-110' : 'text-slate-400'}`}>
+                                  <i className={`fa-solid ${opt.icon}`}></i>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-slate-800 text-sm">{opt.title}</h3>
+                                    <p className="text-[10px] text-slate-500">{opt.desc}</p>
+                                </div>
+                            </div>
+                          ))}
+                      </div>
+                  </div>
+
+                  {/* STEP 3 */}
+                  <div className={`transition-all duration-500 absolute inset-0 p-6 sm:p-10 ${currentStep === 3 ? 'opacity-100 translate-x-0 z-10' : currentStep > 3 ? 'opacity-0 -translate-x-full z-0 pointer-events-none' : 'opacity-0 translate-x-full z-0 pointer-events-none'}`}>
+                      <div className="text-center mb-8">
+                          <h1 className="text-2xl font-extrabold text-slate-900 mb-2">Pilih Vibe Liburanmu</h1>
+                          <p className="text-sm text-slate-500 font-medium">Apa fokus utama dari perjalanan ini?</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                          {[
+                            { val: 'Nature', i: 'fa-mountain-sun', key: 'Alam & Outdoor' },
+                            { val: 'Relax', i: 'fa-umbrella-beach', key: 'Santai & Pantai' },
+                            { val: 'Culture', i: 'fa-temple', key: 'Budaya & Sejarah' },
+                            { val: 'City', i: 'fa-city', key: 'Perkotaan (MICE)' }
+                          ].map(v => (
+                            <div 
+                              key={v.val} 
+                              onClick={() => selectOption('vibe', v.val)}
+                              className={`p-4 rounded-xl border-2 flex flex-col items-center text-center cursor-pointer transition-all ${userData.vibe === v.val ? 'border-brand-600 bg-brand-50' : 'border-slate-100 bg-slate-50 hover:border-brand-200'}`}
+                            >
+                                <i className={`fa-solid ${v.i} text-2xl mb-2 ${userData.vibe === v.val ? 'text-brand-600 scale-110' : 'text-slate-400'}`}></i>
+                                <h3 className="font-bold text-slate-800 text-xs">{v.key}</h3>
+                            </div>
+                          ))}
+                      </div>
+                  </div>
+
+                  {/* STEP 4 */}
+                  <div className={`transition-all duration-500 absolute inset-0 p-6 sm:p-10 ${currentStep === 4 ? 'opacity-100 translate-x-0 z-10' : currentStep > 4 ? 'opacity-0 -translate-x-full z-0 pointer-events-none' : 'opacity-0 translate-x-full z-0 pointer-events-none'}`}>
+                      <div className="text-center mb-8">
+                          <h1 className="text-2xl font-extrabold text-slate-900 mb-2">Budget & Kapasitas</h1>
+                          <p className="text-sm text-slate-500 font-medium">Bantu kami menyesuaikan skala biaya.</p>
+                      </div>
+                      <div className="space-y-6">
+                          <div>
+                              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Estimasi Budget per Orang</label>
+                              <div className="grid grid-cols-3 gap-3">
+                                  {['Ekonomis', 'Menengah', 'Premium'].map(b => (
+                                    <button 
+                                      key={b} 
+                                      onClick={() => selectOption('budget', b)}
+                                      className={`py-3 rounded-lg border-2 font-bold text-xs transition-colors ${userData.budget === b ? 'border-brand-600 bg-brand-50 text-brand-700' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
+                                    >
+                                      {b === 'Ekonomis' ? 'Rp' : b === 'Menengah' ? 'Rp Rp' : 'Rp Rp Rp'} <br/> {b}
+                                    </button>
+                                  ))}
+                              </div>
+                          </div>
+                          <div>
+                              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Jumlah Peserta</label>
+                              <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200 focus-within:border-brand-500 transition-colors">
+                                  <i className="fa-solid fa-users text-brand-600"></i>
+                                  <input 
+                                    type="number" 
+                                    value={userData.guests} 
+                                    onChange={(e) => selectOption('guests', parseInt(e.target.value) || 1)}
+                                    className="w-full bg-transparent font-bold focus:outline-none text-lg text-slate-800" 
+                                    min="1" 
+                                  />
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  {/* STEP 5 */}
+                  <div className={`transition-all duration-500 absolute inset-0 p-6 sm:p-10 ${currentStep === 5 ? 'opacity-100 translate-x-0 z-10 overflow-y-auto custom-scrollbar' : 'opacity-0 translate-x-full z-0 pointer-events-none'}`}>
+                      <div className="text-center mb-6">
+                          <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-3 shadow-[0_0_15px_rgba(52,211,153,0.3)]">
+                              <i className="fa-solid fa-check-double"></i>
+                          </div>
+                          <h1 className="text-2xl font-extrabold text-slate-900 mb-2">Rencana Hampir Siap!</h1>
+                          <p className="text-sm text-slate-500 font-medium">Tinjau pilihan Anda dan tinggalkan kontak untuk penawaran kustom.</p>
+                      </div>
+
+                      <div className="bg-brand-50 border border-brand-100 rounded-2xl p-5 mb-6 grid grid-cols-2 gap-y-3 gap-x-4">
+                          <div className="flex flex-col text-xs">
+                              <span className="text-slate-500"><i className="fa-solid fa-location-dot text-brand-600 mr-1"></i> Destinasi:</span>
+                              <strong className="text-brand-900 text-sm mt-0.5">{userData.dest}</strong>
+                          </div>
+                          <div className="flex flex-col text-xs">
+                              <span className="text-slate-500"><i className="fa-regular fa-clock text-brand-600 mr-1"></i> Durasi:</span>
+                              <strong className="text-brand-900 text-sm mt-0.5">{userData.duration}</strong>
+                          </div>
+                          <div className="flex flex-col text-xs">
+                              <span className="text-slate-500"><i className="fa-solid fa-bolt text-brand-600 mr-1"></i> Vibe/Tipe:</span>
+                              <strong className="text-brand-900 text-sm mt-0.5">{userData.vibe}</strong>
+                          </div>
+                          <div className="flex flex-col text-xs">
+                              <span className="text-slate-500"><i className="fa-solid fa-wallet text-brand-600 mr-1"></i> Budget:</span>
+                              <strong className="text-brand-900 text-sm mt-0.5">{userData.budget} ({userData.guests} Pax)</strong>
+                          </div>
+                      </div>
+
+                      <div className="space-y-4">
+                          <input 
+                            type="text" 
+                            placeholder="Nama Lengkap Anda" 
+                            value={contact.name} onChange={e => setContact(p => ({...p, name: e.target.value}))}
+                            className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 font-medium transition-all" 
+                          />
+                          <input 
+                            type="email" 
+                            placeholder="Alamat Email (Untuk proposal)" 
+                            value={contact.email} onChange={e => setContact(p => ({...p, email: e.target.value}))}
+                            className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 font-medium transition-all" 
+                          />
+                          <input 
+                            type="tel" 
+                            placeholder="No. WhatsApp Aktif" 
+                            value={contact.phone} onChange={e => setContact(p => ({...p, phone: e.target.value}))}
+                            className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 font-medium transition-all" 
+                          />
+                      </div>
+                  </div>
+
+              </div>
+
+              {/* Navigation Footer */}
+              <div className="mt-auto p-4 sm:p-6 bg-slate-50 border-t border-slate-100 flex justify-between items-center relative z-20">
+                  <button 
+                    className={`px-4 sm:px-6 py-2.5 text-slate-500 hover:text-brand-600 font-bold text-sm transition-opacity ${currentStep > 1 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+                    onClick={() => changeStep(-1)}
+                  >
+                      <i className="fa-solid fa-arrow-left mr-1"></i> Sebelumnya
+                  </button>
+
+                  <button 
+                    className="px-6 sm:px-8 py-3 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all flex items-center gap-2" 
+                    onClick={() => changeStep(1)}
+                    disabled={isLoading}
+                  >
+                      {isLoading ? <i className="fa-solid fa-circle-notch fa-spin"></i> : <span>{currentStep === 5 ? 'Dapatkan Penawaran' : 'Lanjut'}</span>}
+                      {!isLoading && <i className={`fa-solid ${currentStep === 5 ? 'fa-paper-plane' : 'fa-arrow-right'}`}></i>}
+                  </button>
+              </div>
+          </div>
+      </main>
+
+      {/* Success Overlay */}
+      {isSuccess && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+            <div className="bg-white rounded-[2rem] p-8 sm:p-12 max-w-md w-full text-center shadow-2xl animate-in zoom-in-95 duration-500 delay-100">
+                <div className="w-20 h-20 bg-emerald-500 text-white rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-lg shadow-emerald-200">
+                    <i className="fa-solid fa-check"></i>
+                </div>
+                <h2 className="text-2xl font-extrabold text-slate-900 mb-3">Permintaan Diterima!</h2>
+                <p className="text-sm text-slate-500 leading-relaxed mb-8">Konsultan perjalanan kami akan merancang penawaran terbaik dan mengirimkannya ke email Anda dalam waktu maksimal 2x24 Jam.</p>
+                <Link href="/" className="block w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl shadow-lg transition-all">
+                    Kembali ke Beranda
+                </Link>
+            </div>
+        </div>
+      )}
     </div>
   );
 }

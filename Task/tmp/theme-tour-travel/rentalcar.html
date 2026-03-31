@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sewa Mobil | NusantaraTrip</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', // Primary Indigo
+                            700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', // Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
+        
+        /* Custom Scrollbar untuk Filter Sidebar */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Custom Checkbox SaaS Style */
+        .check-saas {
+            appearance: none;
+            width: 18px; height: 18px;
+            border: 2px solid #cbd5e1;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .check-saas:checked {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+        }
+        .check-saas:checked::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: white;
+            font-size: 10px;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Hover Card Animations */
+        .car-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .car-card:hover { 
+            transform: translateY(-6px); 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(79, 70, 229, 0.15); 
+            border-color: #c7d2fe;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased overflow-x-hidden pt-6 pb-12">
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-6 lg:gap-8">
+        
+        <!-- ========================================== -->
+        <!-- SIDEBAR FILTER (KIRI)                      -->
+        <!-- ========================================== -->
+        <aside class="w-full lg:w-[280px] xl:w-[320px] flex-shrink-0">
+            <!-- Mobile Filter Toggle -->
+            <button class="lg:hidden w-full bg-white border border-slate-200 text-brand-900 font-bold py-3 rounded-xl shadow-sm mb-4 flex justify-between items-center px-4" onclick="document.getElementById('filter-content').classList.toggle('hidden')">
+                <span><i class="fa-solid fa-sliders text-brand-600 mr-2"></i> Filter Kendaraan</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+
+            <!-- Filter Content (Sticky on Desktop) -->
+            <div id="filter-content" class="hidden lg:block sticky top-6 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden h-max max-h-[90vh] flex flex-col">
+                
+                <!-- Filter Header -->
+                <div class="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-brand-50/50">
+                    <h2 class="font-extrabold text-brand-900 text-base"><i class="fa-solid fa-filter text-brand-600 mr-1.5"></i> Filter Mobil</h2>
+                    <button onclick="resetFilters()" class="text-[11px] font-bold text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-rotate-right mr-1"></i>Reset</button>
+                </div>
+
+                <!-- Filter Body (Scrollable) -->
+                <div class="p-4 sm:p-5 overflow-y-auto custom-scrollbar flex flex-col gap-6">
+                    
+                    <!-- 1. Search Nama Mobil -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Nama Mobil / Merek</label>
+                        <div class="relative group">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-brand-600 transition-colors text-sm"></i>
+                            <input type="text" id="filter-search" placeholder="Cari Avanza, Innova..." class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg pl-9 pr-3 py-2.5 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-medium">
+                        </div>
+                    </div>
+
+                    <!-- 2. Rentang Harga (Per Hari) -->
+                    <div class="border-t border-slate-100 pt-5">
+                        <label class="block text-xs font-bold text-slate-700 mb-3">Harga per Hari (Rp)</label>
+                        <div class="flex items-center gap-2">
+                            <div class="relative w-full">
+                                <span class="absolute left-2 top-1/2 transform -translate-y-1/2 text-[10px] text-slate-400 font-bold">MIN</span>
+                                <input type="number" id="filter-min" placeholder="250.000" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-lg pl-8 pr-2 py-2 focus:outline-none focus:border-brand-500 font-medium text-right">
+                            </div>
+                            <span class="text-slate-300">-</span>
+                            <div class="relative w-full">
+                                <span class="absolute left-2 top-1/2 transform -translate-y-1/2 text-[10px] text-slate-400 font-bold">MAX</span>
+                                <input type="number" id="filter-max" placeholder="2.500.000" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-lg pl-8 pr-2 py-2 focus:outline-none focus:border-brand-500 font-medium text-right">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Layanan Supir (Penting untuk Indonesia) -->
+                    <div class="border-t border-slate-100 pt-5">
+                        <label class="block text-xs font-bold text-slate-700 mb-3">Layanan Pengemudi</label>
+                        <div class="space-y-2.5">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox" checked>
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600 transition-colors">Lepas Kunci (Tanpa Supir)</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox" checked>
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600 transition-colors">Dengan Supir</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600 transition-colors">Supir + BBM (All-in)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 4. Tipe Transmisi -->
+                    <div class="border-t border-slate-100 pt-5">
+                        <label class="block text-xs font-bold text-slate-700 mb-3">Tipe Transmisi</label>
+                        <div class="space-y-2.5">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600">Automatic (AT) <span class="text-[10px] text-slate-400 ml-1">(45)</span></span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600">Manual (MT) <span class="text-[10px] text-slate-400 ml-1">(28)</span></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 5. Kapasitas Penumpang -->
+                    <div class="border-t border-slate-100 pt-5">
+                        <label class="block text-xs font-bold text-slate-700 mb-3">Kapasitas Kursi</label>
+                        <div class="flex flex-wrap gap-2">
+                            <label class="cursor-pointer">
+                                <input type="checkbox" class="peer sr-only filter-checkbox">
+                                <div class="px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-500 hover:bg-slate-50 transition-colors"><i class="fa-solid fa-user text-[10px] mr-1"></i> 4 Kursi</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="checkbox" class="peer sr-only filter-checkbox" checked>
+                                <div class="px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-500 hover:bg-slate-50 transition-colors"><i class="fa-solid fa-user text-[10px] mr-1"></i> 6-7 Kursi</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="checkbox" class="peer sr-only filter-checkbox">
+                                <div class="px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 peer-checked:bg-brand-50 peer-checked:text-brand-600 peer-checked:border-brand-500 hover:bg-slate-50 transition-colors"><i class="fa-solid fa-user-group text-[10px] mr-1"></i> 10+ Kursi</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 6. Kategori Mobil -->
+                    <div class="border-t border-slate-100 pt-5 mb-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-3">Kategori Mobil</label>
+                        <div class="space-y-2.5">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600">MPV (Avanza, Xpander)</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600">SUV (Fortuner, Pajero)</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600">Minibus (Hiace, Elf)</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="check-saas filter-checkbox">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-brand-600">Premium (Alphard, Camry)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <!-- Filter Action Button -->
+                <div class="p-4 border-t border-slate-100 bg-white">
+                    <button onclick="simulateFilter()" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-lg shadow-md shadow-brand-500/30 transition-colors flex items-center justify-center gap-2">
+                        <i id="btn-spinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
+                        <span id="btn-text">Cari Mobil</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ========================================== -->
+        <!-- MAIN CONTENT (KANAN) GRID KENDARAAN        -->
+        <!-- ========================================== -->
+        <div class="flex-1 w-full">
+            
+            <!-- Breadcrumbs & Quick Tags -->
+            <div class="mb-5 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
+                <div>
+                    <nav class="flex text-[10px] sm:text-xs text-slate-400 font-medium mb-2" aria-label="Breadcrumb">
+                        <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                            <li class="inline-flex items-center"><a href="#" class="hover:text-brand-600 transition-colors">Beranda</a></li>
+                            <li><div class="flex items-center"><i class="fa-solid fa-chevron-right text-[8px] mx-1"></i><a href="#" class="hover:text-brand-600 transition-colors">Rental Mobil</a></div></li>
+                            <li><div class="flex items-center"><i class="fa-solid fa-chevron-right text-[8px] mx-1"></i><span class="text-slate-600 font-bold">Malang / Batu</span></div></li>
+                        </ol>
+                    </nav>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-brand-900 tracking-tight">Sewa Mobil Terbaik</h1>
+                    <p class="text-slate-500 text-xs sm:text-sm mt-1 font-medium">Menemukan <span class="text-brand-600 font-bold" id="total-result">84</span> kendaraan tersedia untuk Anda.</p>
+                </div>
+
+                <!-- Sort Dropdown (SaaS Style) -->
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-500">Urutkan:</span>
+                    <div class="relative group">
+                        <select class="appearance-none bg-white border border-slate-200 text-brand-900 text-xs sm:text-sm font-bold rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:border-brand-500 shadow-sm cursor-pointer hover:bg-slate-50 transition-colors">
+                            <option>Rekomendasi Utama</option>
+                            <option>Harga: Terendah</option>
+                            <option>Harga: Tertinggi</option>
+                            <option>Tahun Terbaru</option>
+                            <option>Kapasitas Terbesar</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tags Kategori Cepat (Marketplace Style) -->
+            <div class="flex flex-wrap gap-2 mb-6">
+                <button class="px-3 py-1.5 bg-brand-600 text-white text-[11px] font-bold rounded-full shadow-sm shadow-brand-500/30 transition-all"><i class="fa-solid fa-check mr-1"></i> Semua Mobil</button>
+                <button class="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 hover:border-brand-600 hover:text-brand-600 text-[11px] font-bold rounded-full shadow-sm transition-all"><i class="fa-solid fa-key mr-1"></i> Lepas Kunci</button>
+                <button class="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 hover:border-brand-600 hover:text-brand-600 text-[11px] font-bold rounded-full shadow-sm transition-all">Mobil Keluarga (MPV)</button>
+                <button class="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 hover:border-brand-600 hover:text-brand-600 text-[11px] font-bold rounded-full shadow-sm transition-all">Minibus / Rombongan</button>
+                <button class="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 hover:border-brand-600 hover:text-brand-600 text-[11px] font-bold rounded-full shadow-sm transition-all"><i class="fa-solid fa-percent text-red-500 mr-1"></i> Diskon</button>
+            </div>
+
+            <!-- GRID KENDARAAN (4 Kolom di Desktop Besar, 3 di Desktop Biasa, 2 di Tablet, 1 di Mobile) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5" id="car-grid">
+                <!-- Data ini akan dirender via JavaScript di bagian bawah -->
+            </div>
+
+            <!-- PAGING (PAGINATION) -->
+            <div class="mt-10 pt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <p class="text-xs font-medium text-slate-500">Menampilkan 1-12 dari 84 kendaraan</p>
+                
+                <nav class="inline-flex shadow-sm rounded-lg" aria-label="Pagination">
+                    <!-- Prev Button -->
+                    <button class="relative inline-flex items-center px-3 py-2 rounded-l-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-400 cursor-not-allowed transition-colors">
+                        <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                    </button>
+                    <!-- Numbers -->
+                    <button class="relative inline-flex items-center px-3.5 py-2 border border-slate-200 bg-brand-600 text-sm font-extrabold text-white">
+                        1
+                    </button>
+                    <button class="relative inline-flex items-center px-3.5 py-2 border border-slate-200 bg-white text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                        2
+                    </button>
+                    <button class="hidden sm:inline-flex relative items-center px-3.5 py-2 border border-slate-200 bg-white text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                        3
+                    </button>
+                    <span class="relative inline-flex items-center px-3 py-2 border border-slate-200 bg-white text-sm font-medium text-slate-400">
+                        ...
+                    </span>
+                    <button class="relative inline-flex items-center px-3.5 py-2 border border-slate-200 bg-white text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                        7
+                    </button>
+                    <!-- Next Button -->
+                    <button class="relative inline-flex items-center px-3 py-2 rounded-r-lg border border-slate-200 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-brand-600 transition-colors group">
+                        <span class="mr-1 text-xs group-hover:text-brand-600">Next</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
+                </nav>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- JAVASCRIPT & DATA DUMMY -->
+    <script>
+        // Data Dummy untuk Rental Mobil
+        const carData = [
+            {
+                img: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600", // Placeholder Mobil
+                badge: "TERLARIS",
+                badgeColor: "bg-red-500",
+                brand: "Toyota",
+                name: "All New Avanza",
+                transmission: "Automatic",
+                seats: "7 Kursi",
+                gas: "Bensin",
+                year: "2023",
+                driverType: "Lepas Kunci / Dengan Supir",
+                rating: "4.9",
+                reviews: "1.240",
+                oldPrice: "Rp 350.000",
+                newPrice: "300",
+            },
+            {
+                img: "https://images.unsplash.com/photo-1620067677840-7ac53577d2ec?w=600",
+                badge: "NYAMAN",
+                badgeColor: "bg-brand-500",
+                brand: "Toyota",
+                name: "Innova Zenix Hybrid",
+                transmission: "Automatic",
+                seats: "7 Kursi",
+                gas: "Hybrid",
+                year: "2024",
+                driverType: "Dengan Supir",
+                rating: "5.0",
+                reviews: "342",
+                oldPrice: "",
+                newPrice: "850",
+            },
+            {
+                img: "https://images.unsplash.com/photo-1549317336-206569e8475c?w=600",
+                badge: "PROMO",
+                badgeColor: "bg-accent-500",
+                brand: "Honda",
+                name: "Brio Satya E",
+                transmission: "Manual",
+                seats: "5 Kursi",
+                gas: "Bensin",
+                year: "2022",
+                driverType: "Lepas Kunci",
+                rating: "4.8",
+                reviews: "850",
+                oldPrice: "Rp 300.000",
+                newPrice: "250",
+            },
+            {
+                img: "https://images.unsplash.com/photo-1563720223185-11003d516935?w=600", // Placeholder Van/Bus
+                badge: "ROMBONGAN",
+                badgeColor: "bg-emerald-500",
+                brand: "Toyota",
+                name: "Hiace Commuter",
+                transmission: "Manual",
+                seats: "15 Kursi",
+                gas: "Diesel",
+                year: "2022",
+                driverType: "Termasuk Supir + BBM",
+                rating: "4.9",
+                reviews: "512",
+                oldPrice: "",
+                newPrice: "1.100",
+            },
+            // Mengulang untuk mengisi grid
+            {
+                img: "https://images.unsplash.com/photo-1616423640778-28d1b53229bd?w=600",
+                badge: "PREMIUM",
+                badgeColor: "bg-slate-800",
+                brand: "Toyota",
+                name: "Alphard Transformer",
+                transmission: "Automatic",
+                seats: "6 Kursi",
+                gas: "Bensin",
+                year: "2022",
+                driverType: "Dengan Supir",
+                rating: "5.0",
+                reviews: "215",
+                oldPrice: "Rp 2.500.000",
+                newPrice: "2.200",
+            },
+            {
+                img: "https://images.unsplash.com/photo-1606016159991-dde6541cc3ab?w=600",
+                badge: "LEPAS KUNCI",
+                badgeColor: "bg-blue-500",
+                brand: "Mitsubishi",
+                name: "Xpander Ultimate",
+                transmission: "Automatic",
+                seats: "7 Kursi",
+                gas: "Bensin",
+                year: "2023",
+                driverType: "Lepas Kunci / Dengan Supir",
+                rating: "4.9",
+                reviews: "630",
+                oldPrice: "",
+                newPrice: "400",
+            },
+            {
+                img: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600",
+                badge: "OFFROAD",
+                badgeColor: "bg-yellow-600",
+                brand: "Mitsubishi",
+                name: "Pajero Sport Dakar",
+                transmission: "Automatic",
+                seats: "7 Kursi",
+                gas: "Diesel",
+                year: "2023",
+                driverType: "Dengan Supir",
+                rating: "4.9",
+                reviews: "185",
+                oldPrice: "",
+                newPrice: "1.300",
+            },
+            {
+                img: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=600",
+                badge: "EKONOMIS",
+                badgeColor: "bg-cyan-500",
+                brand: "Daihatsu",
+                name: "Ayla 1.2 R",
+                transmission: "Automatic",
+                seats: "5 Kursi",
+                gas: "Bensin",
+                year: "2021",
+                driverType: "Lepas Kunci",
+                rating: "4.7",
+                reviews: "920",
+                oldPrice: "Rp 250.000",
+                newPrice: "220",
+            },
+            {
+                img: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600",
+                badge: "TERLARIS",
+                badgeColor: "bg-red-500",
+                brand: "Toyota",
+                name: "Innova Reborn Diesel",
+                transmission: "Manual",
+                seats: "7 Kursi",
+                gas: "Diesel",
+                year: "2021",
+                driverType: "Lepas Kunci / Dengan Supir",
+                rating: "4.9",
+                reviews: "1.430",
+                oldPrice: "",
+                newPrice: "600",
+            },
+            {
+                img: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600",
+                badge: "LEPAS KUNCI",
+                badgeColor: "bg-blue-500",
+                brand: "Honda",
+                name: "HR-V SE",
+                transmission: "Automatic",
+                seats: "5 Kursi",
+                gas: "Bensin",
+                year: "2023",
+                driverType: "Lepas Kunci",
+                rating: "4.8",
+                reviews: "320",
+                oldPrice: "Rp 600.000",
+                newPrice: "550",
+            },
+            {
+                img: "https://images.unsplash.com/photo-1563720223185-11003d516935?w=600",
+                badge: "WISATA",
+                badgeColor: "bg-emerald-500",
+                brand: "Isuzu",
+                name: "Elf Long Chassis",
+                transmission: "Manual",
+                seats: "19 Kursi",
+                gas: "Diesel",
+                year: "2022",
+                driverType: "Termasuk Supir + BBM",
+                rating: "4.8",
+                reviews: "450",
+                oldPrice: "Rp 1.400.000",
+                newPrice: "1.250",
+            },
+            {
+                img: "https://images.unsplash.com/photo-1620067677840-7ac53577d2ec?w=600",
+                badge: "PREMIUM",
+                badgeColor: "bg-slate-800",
+                brand: "Toyota",
+                name: "Fortuner VRZ",
+                transmission: "Automatic",
+                seats: "7 Kursi",
+                gas: "Diesel",
+                year: "2023",
+                driverType: "Dengan Supir",
+                rating: "4.9",
+                reviews: "280",
+                oldPrice: "",
+                newPrice: "1.200",
+            }
+        ];
+
+        const gridContainer = document.getElementById('car-grid');
+
+        // Fungsi Render Card Kendaraan
+        function renderCards() {
+            gridContainer.innerHTML = '';
+            carData.forEach(car => {
+                
+                // Cek apakah ada harga coret
+                const priceHTML = car.oldPrice 
+                    ? `<p class="text-[9px] sm:text-[10px] text-slate-400 line-through mb-0.5">${car.oldPrice}</p>
+                       <p class="text-accent-600 font-extrabold text-sm sm:text-lg leading-none">Rp ${car.newPrice}<span class="text-[8px] sm:text-[10px] font-medium text-slate-500">k/hari</span></p>`
+                    : `<p class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase mb-0.5">Mulai Dari</p>
+                       <p class="text-brand-600 font-extrabold text-sm sm:text-lg leading-none">Rp ${car.newPrice}<span class="text-[8px] sm:text-[10px] font-medium text-slate-500">k/hari</span></p>`;
+
+                const cardHTML = `
+                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-xl hover:border-brand-300 group car-card flex flex-col relative cursor-pointer">
+                    
+                    <div class="relative h-36 sm:h-44 overflow-hidden bg-slate-100 flex items-center justify-center">
+                        <img src="${car.img}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-700">
+                        <span class="absolute top-2 left-2 text-white ${car.badgeColor} text-[9px] font-bold px-2 py-1 rounded shadow-sm">${car.badge}</span>
+                        <div class="absolute bottom-2 right-2 bg-white/90 backdrop-blur rounded px-1.5 py-0.5 text-[9px] font-bold text-slate-600 border border-slate-200 shadow-sm">
+                            Thn ${car.year}
+                        </div>
+                    </div>
+                    
+                    <div class="p-3 sm:p-4 flex flex-col flex-grow group-hover:bg-brand-50/20 transition-colors border-t border-slate-100">
+                        <div class="text-[10px] text-slate-500 font-medium mb-0.5 uppercase tracking-wide">
+                            ${car.brand}
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-sm sm:text-base mb-2 line-clamp-1 group-hover:text-brand-600 transition-colors">${car.name}</h3>
+                        
+                        <!-- Spesifikasi Mobil Ikon -->
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="bg-slate-100 text-slate-600 text-[9px] sm:text-[10px] font-medium px-2 py-1 rounded flex items-center gap-1">
+                                <i class="fa-solid fa-gears text-slate-400"></i> ${car.transmission}
+                            </span>
+                            <span class="bg-slate-100 text-slate-600 text-[9px] sm:text-[10px] font-medium px-2 py-1 rounded flex items-center gap-1">
+                                <i class="fa-solid fa-users text-slate-400"></i> ${car.seats}
+                            </span>
+                            <span class="bg-slate-100 text-slate-600 text-[9px] sm:text-[10px] font-medium px-2 py-1 rounded flex items-center gap-1">
+                                <i class="fa-solid fa-gas-pump text-slate-400"></i> ${car.gas}
+                            </span>
+                        </div>
+
+                        <!-- Info Supir & Rating -->
+                        <div class="flex items-center justify-between mt-1 mb-4">
+                            <span class="text-[9px] sm:text-[10px] text-emerald-600 font-bold flex items-center gap-1">
+                                <i class="fa-solid fa-user-check"></i> ${car.driverType}
+                            </span>
+                            <div class="flex items-center gap-1">
+                                <i class="fa-solid fa-star text-[10px] text-yellow-400"></i>
+                                <span class="text-[10px] sm:text-xs font-bold text-slate-700">${car.rating}</span>
+                                <span class="text-[9px] text-slate-400">(${car.reviews})</span>
+                            </div>
+                        </div>
+
+                        <!-- Harga & Action -->
+                        <div class="mt-auto pt-3 border-t border-slate-100 flex justify-between items-end">
+                            <div>
+                                ${priceHTML}
+                            </div>
+                            <button class="px-3 py-1.5 sm:px-4 sm:py-2 bg-brand-50 text-brand-600 font-bold text-[10px] sm:text-xs rounded-lg group-hover:bg-brand-600 group-hover:text-white transition-all shadow-sm">
+                                Pilih
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+                gridContainer.innerHTML += cardHTML;
+            });
+        }
+
+        // Render card saat load
+        renderCards();
+
+        // --- SIMULASI FILTER ---
+        function simulateFilter() {
+            const btn = document.getElementById('btn-text');
+            const spinner = document.getElementById('btn-spinner');
+            
+            // Animasi tombol
+            btn.innerText = "Mencari...";
+            spinner.classList.remove('hidden');
+            gridContainer.style.opacity = '0.5';
+
+            // Simulasi proses delay
+            setTimeout(() => {
+                btn.innerText = "Cari Mobil";
+                spinner.classList.add('hidden');
+                gridContainer.style.opacity = '1';
+                
+                // Ubah angka total secara acak untuk simulasi filter berjalan
+                document.getElementById('total-result').innerText = Math.floor(Math.random() * 40) + 12;
+            }, 800);
+        }
+
+        // --- RESET FILTER ---
+        function resetFilters() {
+            document.getElementById('filter-search').value = '';
+            document.getElementById('filter-min').value = '';
+            document.getElementById('filter-max').value = '';
+            
+            const checkboxes = document.querySelectorAll('.filter-checkbox');
+            checkboxes.forEach(cb => cb.checked = false);
+            
+            simulateFilter();
+        }
+    </script>
+</body>
+</html>

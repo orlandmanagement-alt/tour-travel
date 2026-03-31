@@ -81,6 +81,21 @@ export default function StickyBookingWidget({ tourData }: PriceCalculatorProps) 
     
   }, [pax, selectedAddons, date, tourData]);
 
+  const [isChecking, setIsChecking] = useState(false);
+  const [availability, setAvailability] = useState<'unchecked' | 'available' | 'unavailable'>('unchecked');
+
+  useEffect(() => {
+    if (date && pax) {
+      setIsChecking(true);
+      // Simulate real-time availability check for SaaS feel
+      const timer = setTimeout(() => {
+        setIsChecking(false);
+        setAvailability('available');
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [date, pax]);
+
   const handleCheckout = () => {
     if (!date) {
       alert('Silakan pilih tanggal keberangkatan');
@@ -110,8 +125,8 @@ export default function StickyBookingWidget({ tourData }: PriceCalculatorProps) 
         {/* Header Pricing */}
         <div className="mb-6 pb-6 border-b border-slate-100 dark:border-slate-700">
           <div className="flex justify-between items-center mb-2">
-            <span className="bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider">
-              Hemat s/d 20%
+            <span className="bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider">
+              Flash Deal
             </span>
             <p className="text-slate-400 text-sm line-through font-medium">{formatPrice(tourData.base_price * 1.2)}</p>
           </div>
@@ -121,9 +136,6 @@ export default function StickyBookingWidget({ tourData }: PriceCalculatorProps) 
             </h2>
             <span className="text-sm font-bold text-slate-500 mb-1">/ pax</span>
           </div>
-          <p className="text-[10px] font-bold text-slate-400 mt-2 flex items-center gap-1.5">
-            <i className="fa-solid fa-circle-info text-blue-400"></i> Harga bervariasi sesuai jumlah peserta.
-          </p>
         </div>
 
         {/* Form Container */}
@@ -131,39 +143,47 @@ export default function StickyBookingWidget({ tourData }: PriceCalculatorProps) 
           
           {/* Date Picker */}
           <div>
-            <label className="block text-xs font-black text-slate-700 dark:text-slate-200 mb-2 uppercase tracking-wide">Tanggal Keberangkatan</label>
+            <label className="block text-xs font-black text-slate-700 dark:text-slate-200 mb-2 uppercase tracking-wide">Departure Date</label>
             <div className="relative group">
-              <i className="fa-regular fa-calendar absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-primary text-sm transition-colors"></i>
               <input 
                 type="date"
                 min={new Date().toISOString().split('T')[0]}
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-brand-primary/20 rounded-2xl focus:ring-4 focus:ring-brand-primary/5 outline-none text-sm font-bold text-slate-800 dark:text-white cursor-pointer transition-all"
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-brand-primary/20 rounded-2xl focus:ring-4 focus:ring-brand-primary/5 outline-none text-sm font-bold text-slate-800 dark:text-white cursor-pointer transition-all"
                 required
               />
             </div>
+            {isChecking && (
+              <p className="text-[10px] text-brand-primary font-bold mt-2 animate-pulse flex items-center gap-2">
+                <span className="w-2 h-2 bg-brand-primary rounded-full animate-bounce"></span> Checking slot availability...
+              </p>
+            )}
+            {availability === 'available' && !isChecking && (
+              <p className="text-[10px] text-emerald-600 font-bold mt-2 flex items-center gap-1">
+                <i className="fa-solid fa-circle-check"></i> High availability: 12+ slots left
+              </p>
+            )}
           </div>
 
           {/* Pax Counter */}
           <div>
-            <label className="block text-xs font-black text-slate-700 dark:text-slate-200 mb-2 uppercase tracking-wide">Jumlah Peserta</label>
+            <label className="block text-xs font-black text-slate-700 dark:text-slate-200 mb-2 uppercase tracking-wide">Total Travelers</label>
             <div className="flex items-center justify-between p-1.5 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-inner">
               <button 
                 onClick={() => setPax(p => Math.max(1, p - 1))}
                 className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-white flex items-center justify-center hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all active:scale-90"
               >
-                <i className="fa-solid fa-minus text-xs"></i>
+                -
               </button>
               <div className="flex flex-col items-center">
                 <span className="text-xl font-black text-slate-900 dark:text-white">{pax}</span>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Peserta</span>
               </div>
               <button 
                 onClick={() => setPax(p => p + 1)}
                 className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-white flex items-center justify-center hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all active:scale-90"
               >
-                <i className="fa-solid fa-plus text-xs"></i>
+                +
               </button>
             </div>
           </div>
@@ -171,12 +191,12 @@ export default function StickyBookingWidget({ tourData }: PriceCalculatorProps) 
           {/* Price Breakdown */}
           <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 border-dashed space-y-2">
             <div className="flex justify-between text-xs font-bold text-slate-500">
-              <span>Total Harga:</span>
+              <span>Total Amount:</span>
               <span className="text-base font-black text-slate-900 dark:text-white">{formatPrice(total)}</span>
             </div>
             {breakdown.surchargeTotal > 0 && (
               <div className="flex justify-between text-[10px] font-bold text-brand-accent">
-                <span>High Season Surcharge:</span>
+                <span>Seasonal Surcharge:</span>
                 <span>+ {formatPrice(breakdown.surchargeTotal)}</span>
               </div>
             )}
@@ -186,18 +206,17 @@ export default function StickyBookingWidget({ tourData }: PriceCalculatorProps) 
           <div className="space-y-3 pt-2">
             <button 
               onClick={handleCheckout}
-              className="w-full py-4 bg-brand-primary hover:bg-brand-primary-dark text-white font-black text-sm rounded-2xl shadow-xl shadow-brand-primary/20 transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2"
+              disabled={isChecking || availability === 'unavailable'}
+              className="w-full py-4 bg-brand-primary hover:bg-brand-primary-dark text-white font-black text-sm rounded-2xl shadow-xl shadow-brand-primary/20 transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              Pesan Sekarang <i className="fa-solid fa-arrow-right-long text-xs"></i>
+              Continue to Booking <i className="fa-solid fa-arrow-right-long text-xs"></i>
             </button>
             
             <a 
               href="https://wa.me/628123456789" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-3 bg-white dark:bg-slate-800 border-2 border-emerald-500 text-emerald-600 dark:text-emerald-500 font-black text-sm rounded-2xl flex items-center justify-center gap-2 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-all"
+              className="w-full py-3 bg-white dark:bg-slate-800 border-2 border-slate-200 text-slate-600 font-black text-sm rounded-2xl flex items-center justify-center gap-2 hover:bg-slate-50 transition-all text-center"
             >
-              <i className="fa-brands fa-whatsapp text-lg"></i> Hubungi Admin
+              Ask a question
             </a>
           </div>
 

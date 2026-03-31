@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Tour | Bromo Midnight Private Tour</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1',
+                            600: '#4f46e5', // Primary Indigo
+                            700: '#4338ca', 900: '#312e81',
+                        },
+                        accent: {
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', // Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+        
+        /* Itinerary Accordion Transition */
+        .accordion-content {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .accordion-content.open {
+            max-height: 500px; /* Cukup besar untuk menampung teks */
+            opacity: 1;
+        }
+        .accordion-icon { transition: transform 0.3s ease; }
+        .accordion-icon.rotate { transform: rotate(180deg); }
+
+        /* Sticky Panel Offset */
+        .sticky-panel { top: 2rem; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased overflow-x-hidden pt-6 pb-12">
+
+    <main class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- ========================================== -->
+        <!-- BREADCRUMBS & HEADER ACTIONS               -->
+        <!-- ========================================== -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-4">
+            <nav class="flex text-[10px] sm:text-xs text-slate-500 font-medium" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                    <li class="inline-flex items-center"><a href="#" class="hover:text-brand-600 transition-colors">Beranda</a></li>
+                    <li><div class="flex items-center"><i class="fa-solid fa-chevron-right text-[8px] mx-1"></i><a href="#" class="hover:text-brand-600 transition-colors">Paket Tour</a></div></li>
+                    <li><div class="flex items-center"><i class="fa-solid fa-chevron-right text-[8px] mx-1"></i><a href="#" class="hover:text-brand-600 transition-colors">Jawa Timur</a></div></li>
+                    <li><div class="flex items-center"><i class="fa-solid fa-chevron-right text-[8px] mx-1"></i><span class="text-slate-800 font-bold">Gunung Bromo</span></div></li>
+                </ol>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <button class="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors px-3 py-1.5 rounded-lg hover:bg-brand-50">
+                    <i class="fa-solid fa-arrow-up-from-bracket"></i> Bagikan
+                </button>
+                <button class="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-red-500 transition-colors px-3 py-1.5 rounded-lg hover:bg-red-50" onclick="this.classList.toggle('text-red-500')">
+                    <i class="fa-regular fa-heart"></i> Simpan
+                </button>
+            </div>
+        </div>
+
+        <!-- Judul Tour -->
+        <div class="mb-5">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="bg-accent-100 text-accent-600 border border-accent-200 text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">PRIVATE TOUR</span>
+                <span class="bg-brand-100 text-brand-600 border border-brand-200 text-[10px] font-bold px-2 py-0.5 rounded shadow-sm"><i class="fa-solid fa-bolt mr-1"></i>INSTANT CONFIRMATION</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-2">
+                Private Tour Bromo Midnight & Air Terjun Madakaripura
+            </h1>
+            <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm font-medium text-slate-600">
+                <div class="flex items-center gap-1 text-slate-700">
+                    <i class="fa-solid fa-star text-yellow-400"></i>
+                    <span class="font-bold text-slate-900">4.9</span>
+                    <span class="underline cursor-pointer hover:text-brand-600">(128 Ulasan)</span>
+                </div>
+                <span class="text-slate-300">|</span>
+                <div class="flex items-center gap-1.5">
+                    <i class="fa-solid fa-location-dot text-brand-500"></i> Start Malang / Surabaya
+                </div>
+                <span class="text-slate-300">|</span>
+                <div class="flex items-center gap-1.5">
+                    <i class="fa-regular fa-clock text-brand-500"></i> 1 Hari (12 Jam)
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- IMAGE GALLERY (SaaS Grid Style)            -->
+        <!-- ========================================== -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-2 h-[300px] md:h-[400px] rounded-2xl overflow-hidden mb-8 relative group cursor-pointer">
+            <!-- Gambar Utama Besar (Kiri) -->
+            <div class="md:col-span-3 h-full w-full relative">
+                <img src="https://images.unsplash.com/photo-1542898939-5e5f385c5dfa?w=1200" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" alt="Bromo Sunrise">
+            </div>
+            <!-- 2 Gambar Kecil (Kanan) -->
+            <div class="hidden md:flex flex-col gap-2 h-full w-full">
+                <div class="h-1/2 w-full relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1518090597335-e6f7783ee855?w=600" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" alt="Bromo Jeep">
+                </div>
+                <div class="h-1/2 w-full relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=600" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" alt="Madakaripura">
+                    <!-- Overlay untuk foto lainnya -->
+                    <div class="absolute inset-0 bg-slate-900/40 flex items-center justify-center transition-colors hover:bg-slate-900/60">
+                        <span class="text-white font-bold text-sm">+12 Foto Lainnya</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Tombol Mobile Tampil Semua Foto -->
+            <button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur text-slate-800 text-xs font-bold px-4 py-2 rounded-lg shadow-lg border border-slate-200 hover:bg-white md:hidden">
+                <i class="fa-regular fa-images mr-1"></i> Lihat Semua Foto
+            </button>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- CONTENT & BOOKING PANEL LAYOUT             -->
+        <!-- ========================================== -->
+        <div class="flex flex-col lg:flex-row gap-8 relative">
+            
+            <!-- KIRI: DETAIL KONTEN (70%) -->
+            <div class="flex-1 w-full min-w-0 pb-10">
+                
+                <!-- Highlights List -->
+                <div class="bg-brand-50 border border-brand-100 rounded-xl p-5 mb-8">
+                    <h3 class="font-bold text-brand-900 text-sm mb-3">Highlights Perjalanan:</h3>
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-sm text-slate-700 font-medium">
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 mt-0.5"></i> Menikmati Golden Sunrise di Penanjakan 1</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 mt-0.5"></i> Berpetualang dengan Jeep 4WD Hardtop</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 mt-0.5"></i> Mengunjungi Kawah Bromo & Pura Luhur</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 mt-0.5"></i> Trekking di Air Terjun Madakaripura</li>
+                    </ul>
+                </div>
+
+                <!-- Section: Deskripsi -->
+                <section class="mb-10" id="deskripsi">
+                    <h2 class="text-xl font-extrabold text-slate-900 mb-4 pb-2 border-b border-slate-200">Deskripsi Tour</h2>
+                    <div class="text-sm text-slate-600 leading-relaxed space-y-4">
+                        <p>Nikmati pengalaman tak terlupakan menjelajahi keajaiban alam Jawa Timur dengan <strong>Private Tour Bromo Midnight & Air Terjun Madakaripura</strong>. Tour ini dirancang khusus untuk Anda yang ingin menikmati privasi dan kenyamanan maksimal tanpa harus bergabung dengan peserta lain (Private Trip).</p>
+                        <p>Perjalanan akan dimulai pada tengah malam dari Malang atau Surabaya langsung menuju area transit Bromo. Menggunakan armada Jeep 4WD klasik, kita akan membelah lautan pasir menuju titik tertinggi di Penanjakan untuk menyaksikan keindahan <em>Golden Sunrise</em> dengan latar belakang Gunung Bromo, Batok, dan Semeru yang megah.</p>
+                        <p>Setelah mengeksplorasi area Gunung Bromo, Kawah, Pasir Berbisik, dan Bukit Teletubbies, perjalanan dilanjutkan menuju Air Terjun Madakaripura, air terjun tertinggi di Pulau Jawa yang sarat akan nilai sejarah Mahapatih Gajah Mada.</p>
+                    </div>
+                </section>
+
+                <!-- Section: Fasilitas (Include/Exclude) -->
+                <section class="mb-10" id="fasilitas">
+                    <h2 class="text-xl font-extrabold text-slate-900 mb-4 pb-2 border-b border-slate-200">Fasilitas Termasuk & Tidak Termasuk</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Include -->
+                        <div class="bg-white border border-emerald-100 rounded-xl p-5 shadow-sm">
+                            <h3 class="font-bold text-emerald-700 text-sm mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check"></i> Sudah Termasuk (Include)
+                            </h3>
+                            <ul class="space-y-3 text-sm text-slate-600">
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-check text-emerald-500 mt-0.5 w-4"></i> Transportasi Private AC (Innova/Hiace) PP</li>
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-check text-emerald-500 mt-0.5 w-4"></i> Sewa Jeep 4WD Bromo Khusus Rombongan</li>
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-check text-emerald-500 mt-0.5 w-4"></i> Tiket Masuk Taman Nasional Bromo Tengger</li>
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-check text-emerald-500 mt-0.5 w-4"></i> Tiket Masuk Air Terjun Madakaripura</li>
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-check text-emerald-500 mt-0.5 w-4"></i> Driver merangkap Guide Ramah</li>
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-check text-emerald-500 mt-0.5 w-4"></i> BBM, Toll, dan Biaya Parkir</li>
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-check text-emerald-500 mt-0.5 w-4"></i> Air Mineral 600ml per peserta</li>
+                            </ul>
+                        </div>
+                        <!-- Exclude -->
+                        <div class="bg-white border border-red-100 rounded-xl p-5 shadow-sm">
+                            <h3 class="font-bold text-red-600 text-sm mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-circle-xmark"></i> Tidak Termasuk (Exclude)
+                            </h3>
+                            <ul class="space-y-3 text-sm text-slate-600">
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-xmark text-red-400 mt-0.5 w-4 text-center"></i> Tiket Pesawat / Kereta Api dari kota asal</li>
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-xmark text-red-400 mt-0.5 w-4 text-center"></i> Biaya Makan (Sarapan/Siang)</li>
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-xmark text-red-400 mt-0.5 w-4 text-center"></i> Sewa Kuda di area Kawah Bromo</li>
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-xmark text-red-400 mt-0.5 w-4 text-center"></i> Sewa Ojek Payung di Madakaripura</li>
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-xmark text-red-400 mt-0.5 w-4 text-center"></i> Tipping Guide/Driver (Sukarela)</li>
+                                <li class="flex items-start gap-3"><i class="fa-solid fa-xmark text-red-400 mt-0.5 w-4 text-center"></i> Pengeluaran Pribadi lainnya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Itinerary (Accordion) -->
+                <section class="mb-10" id="itinerary">
+                    <h2 class="text-xl font-extrabold text-slate-900 mb-4 pb-2 border-b border-slate-200 flex items-center justify-between">
+                        Rencana Perjalanan (Itinerary)
+                        <span class="text-xs font-medium text-brand-600 bg-brand-50 px-2 py-1 rounded">1 Hari Berakhir</span>
+                    </h2>
+                    
+                    <div class="space-y-3 relative before:absolute before:inset-y-0 before:left-[15px] before:w-0.5 before:bg-slate-200 pl-8 ml-2">
+                        
+                        <!-- Timeline Item 1 -->
+                        <div class="relative">
+                            <!-- Bullet -->
+                            <div class="absolute w-4 h-4 bg-brand-500 rounded-full border-4 border-white -left-[39px] top-1.5 shadow"></div>
+                            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:border-brand-300 transition-colors">
+                                <button class="w-full text-left p-4 flex justify-between items-center focus:outline-none" onclick="toggleAccordion('it-1', 'icon-1')">
+                                    <div>
+                                        <div class="text-[10px] font-bold text-brand-600 mb-0.5">00:00 - 03:00 WIB</div>
+                                        <h4 class="font-bold text-slate-800 text-sm">Penjemputan & Perjalanan ke Bromo</h4>
+                                    </div>
+                                    <i id="icon-1" class="fa-solid fa-chevron-down text-slate-400 text-sm accordion-icon"></i>
+                                </button>
+                                <div id="it-1" class="accordion-content bg-slate-50 border-t border-slate-100">
+                                    <div class="p-4 text-xs text-slate-600 leading-relaxed">
+                                        Tim kami akan menjemput Anda di lokasi yang telah disepakati di area Malang atau Surabaya (Hotel/Stasiun/Bandara). Perjalanan malam menuju area transit di Sukapura/Wonokitri memakan waktu sekitar 2-3 jam. Setibanya di sana, Anda akan berganti kendaraan dari mobil MPV ke Jeep 4WD.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timeline Item 2 -->
+                        <div class="relative">
+                            <div class="absolute w-4 h-4 bg-brand-500 rounded-full border-4 border-white -left-[39px] top-1.5 shadow"></div>
+                            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:border-brand-300 transition-colors">
+                                <button class="w-full text-left p-4 flex justify-between items-center focus:outline-none" onclick="toggleAccordion('it-2', 'icon-2')">
+                                    <div>
+                                        <div class="text-[10px] font-bold text-brand-600 mb-0.5">03:00 - 06:00 WIB</div>
+                                        <h4 class="font-bold text-slate-800 text-sm">Menyaksikan Golden Sunrise Bromo</h4>
+                                    </div>
+                                    <i id="icon-2" class="fa-solid fa-chevron-down text-slate-400 text-sm accordion-icon"></i>
+                                </button>
+                                <div id="it-2" class="accordion-content bg-slate-50 border-t border-slate-100">
+                                    <div class="p-4 text-xs text-slate-600 leading-relaxed">
+                                        Menggunakan Jeep, kita akan menanjak membelah lautan pasir dalam gelap menuju titik pandang (Penanjakan 1 / Bukit Kingkong / Bukit Cinta). Setibanya di sana, Anda bisa bersantai sejenak sambil ngopi sebelum menikmati momen magis matahari terbit (Golden Sunrise) dengan pemandangan menakjubkan Gunung Bromo dan Semeru.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timeline Item 3 -->
+                        <div class="relative">
+                            <div class="absolute w-4 h-4 bg-brand-500 rounded-full border-4 border-white -left-[39px] top-1.5 shadow"></div>
+                            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:border-brand-300 transition-colors">
+                                <button class="w-full text-left p-4 flex justify-between items-center focus:outline-none" onclick="toggleAccordion('it-3', 'icon-3')">
+                                    <div>
+                                        <div class="text-[10px] font-bold text-brand-600 mb-0.5">06:00 - 09:30 WIB</div>
+                                        <h4 class="font-bold text-slate-800 text-sm">Eksplorasi Kawah Bromo & Area Taman Nasional</h4>
+                                    </div>
+                                    <i id="icon-3" class="fa-solid fa-chevron-down text-slate-400 text-sm accordion-icon"></i>
+                                </button>
+                                <div id="it-3" class="accordion-content bg-slate-50 border-t border-slate-100">
+                                    <div class="p-4 text-xs text-slate-600 leading-relaxed">
+                                        Setelah puas menikmati *sunrise*, Jeep akan membawa Anda turun ke Lautan Pasir. Dari area parkir Jeep, Anda bisa berjalan kaki atau menyewa kuda menuju anak tangga Pura Luhur Poten dan naik 250 anak tangga menuju bibir Kawah Bromo. Selanjutnya perjalanan dilanjutkan ke spot foto ikonik: Pasir Berbisik dan Padang Savana (Bukit Teletubbies).
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timeline Item 4 -->
+                        <div class="relative">
+                            <div class="absolute w-4 h-4 bg-accent-500 rounded-full border-4 border-white -left-[39px] top-1.5 shadow"></div>
+                            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:border-brand-300 transition-colors">
+                                <button class="w-full text-left p-4 flex justify-between items-center focus:outline-none" onclick="toggleAccordion('it-4', 'icon-4')">
+                                    <div>
+                                        <div class="text-[10px] font-bold text-accent-600 mb-0.5">10:30 - 13:00 WIB</div>
+                                        <h4 class="font-bold text-slate-800 text-sm">Trekking Air Terjun Madakaripura</h4>
+                                    </div>
+                                    <i id="icon-4" class="fa-solid fa-chevron-down text-slate-400 text-sm accordion-icon"></i>
+                                </button>
+                                <div id="it-4" class="accordion-content bg-slate-50 border-t border-slate-100">
+                                    <div class="p-4 text-xs text-slate-600 leading-relaxed">
+                                        Kita meninggalkan Bromo menuju Lumbang, Probolinggo untuk mengunjungi Air Terjun Madakaripura. Setiba di parkiran, dilanjutkan naik ojek lokal dan trekking menyusuri sungai berbatu sekitar 20 menit. Anda akan disambut oleh tirai air terjun megah yang melingkar setinggi 200 meter. (Disarankan membawa jas hujan atau baju ganti).
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timeline Item 5 -->
+                        <div class="relative">
+                            <div class="absolute w-4 h-4 bg-slate-400 rounded-full border-4 border-white -left-[39px] top-1.5 shadow"></div>
+                            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:border-brand-300 transition-colors">
+                                <button class="w-full text-left p-4 flex justify-between items-center focus:outline-none" onclick="toggleAccordion('it-5', 'icon-5')">
+                                    <div>
+                                        <div class="text-[10px] font-bold text-slate-500 mb-0.5">13:00 - 15:30 WIB</div>
+                                        <h4 class="font-bold text-slate-800 text-sm">Perjalanan Pulang (End of Tour)</h4>
+                                    </div>
+                                    <i id="icon-5" class="fa-solid fa-chevron-down text-slate-400 text-sm accordion-icon"></i>
+                                </button>
+                                <div id="it-5" class="accordion-content bg-slate-50 border-t border-slate-100">
+                                    <div class="p-4 text-xs text-slate-600 leading-relaxed">
+                                        Meninggalkan Madakaripura, perjalanan kembali menuju Malang atau Surabaya. Kita bisa singgah sejenak untuk makan siang di restoran lokal (biaya pribadi). Tiba di titik drop-off, tour selesai dengan membawa kenangan indah. *Jadwal dapat berubah menyesuaikan kondisi lalu lintas dan cuaca di lapangan.*
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Review Highlight -->
+                <section class="mb-5">
+                    <h2 class="text-xl font-extrabold text-slate-900 mb-4 pb-2 border-b border-slate-200">Ulasan Pelanggan</h2>
+                    <div class="flex flex-col sm:flex-row gap-6 mb-6">
+                        <!-- Summary Rating -->
+                        <div class="w-full sm:w-1/3 flex flex-col items-center justify-center p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                            <span class="text-4xl font-extrabold text-slate-900 mb-1">4.9</span>
+                            <div class="flex text-yellow-400 text-sm mb-2">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <span class="text-xs text-slate-500 font-medium">Berdasarkan 128 ulasan</span>
+                        </div>
+                        <!-- Snapshot Ulasan -->
+                        <div class="flex-1 space-y-4">
+                            <div class="p-4 border border-slate-100 rounded-xl bg-white shadow-sm">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-xs">AD</div>
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-800">Andi Darmawan</p>
+                                            <p class="text-[10px] text-slate-400">Desember 2025 • Family Trip</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-yellow-400 text-[10px]"><i class="fa-solid fa-star"></i> 5.0</div>
+                                </div>
+                                <p class="text-xs text-slate-600">Pelayanannya sangat profesional. Supir tepat waktu jemput di hotel Malang jam 12 malam. Jeepnya juga bagus dan driver jeep ramah bantu foto-foto. Madakaripura sangat indah meski capek trekking.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full py-2.5 border border-slate-300 text-slate-700 font-bold text-sm rounded-lg hover:bg-slate-50 transition-colors">
+                        Lihat Semua 128 Ulasan
+                    </button>
+                </section>
+                
+            </div>
+
+            <!-- KANAN: WIDGET BOOKING PANEL (STICKY) (30%) -->
+            <aside class="w-full lg:w-[360px] flex-shrink-0">
+                <div class="sticky sticky-panel bg-white border border-slate-200 rounded-2xl shadow-xl p-5 sm:p-6 mb-8">
+                    
+                    <!-- Harga -->
+                    <div class="mb-5 pb-5 border-b border-slate-100">
+                        <div class="flex justify-between items-end mb-1">
+                            <p class="text-slate-400 text-sm line-through">Rp 1.500.000</p>
+                            <span class="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-0.5 rounded">HEMAT 16%</span>
+                        </div>
+                        <div class="flex items-end gap-1">
+                            <h2 class="text-2xl sm:text-3xl font-extrabold text-brand-600 leading-none">Rp 1.250.000</h2>
+                            <span class="text-xs font-medium text-slate-500 mb-1">/ pax</span>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-1"><i class="fa-solid fa-circle-info mr-1 text-blue-400"></i> Harga bervariasi tergantung jumlah peserta. Minimum 2 Pax.</p>
+                    </div>
+
+                    <!-- Form Pemesanan -->
+                    <form onsubmit="event.preventDefault();" class="space-y-4">
+                        
+                        <!-- Pilihan Tanggal -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Tanggal Keberangkatan</label>
+                            <div class="relative">
+                                <i class="fa-regular fa-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-sm"></i>
+                                <input type="date" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg pl-9 pr-3 py-2.5 focus:outline-none focus:border-brand-500 font-bold text-slate-800 cursor-pointer" required>
+                            </div>
+                        </div>
+
+                        <!-- Lokasi Penjemputan -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Area Penjemputan (Start)</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-sm"></i>
+                                <select class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg pl-9 pr-8 py-2.5 focus:outline-none focus:border-brand-500 font-medium text-slate-800 appearance-none cursor-pointer">
+                                    <option value="malang">Kota Malang / Batu (Tanpa Biaya Tambahan)</option>
+                                    <option value="surabaya">Surabaya (+ Rp 300.000 / Mobil)</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+                            </div>
+                        </div>
+
+                        <!-- Jumlah Peserta -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Jumlah Peserta</label>
+                            <div class="flex items-center justify-between border border-slate-200 rounded-lg p-1 bg-slate-50">
+                                <button type="button" class="w-10 h-10 rounded-md bg-white border border-slate-200 text-slate-500 hover:text-brand-600 hover:border-brand-300 shadow-sm flex items-center justify-center font-bold" onclick="updatePax(-1)">
+                                    <i class="fa-solid fa-minus text-xs"></i>
+                                </button>
+                                <div class="font-extrabold text-lg text-slate-800 w-16 text-center" id="pax-count">2</div>
+                                <button type="button" class="w-10 h-10 rounded-md bg-white border border-slate-200 text-slate-500 hover:text-brand-600 hover:border-brand-300 shadow-sm flex items-center justify-center font-bold" onclick="updatePax(1)">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Total Perhitungan (Simulasi CSS) -->
+                        <div class="bg-slate-100 p-3 rounded-lg border border-slate-200 flex justify-between items-center mt-2">
+                            <span class="text-xs font-bold text-slate-600">Total Harga:</span>
+                            <span class="text-lg font-extrabold text-slate-900" id="total-price">Rp 2.500.000</span>
+                        </div>
+
+                        <!-- Tombol CTA -->
+                        <button class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-brand-500/30 transition-all transform hover:-translate-y-0.5 mt-2 flex justify-center items-center gap-2">
+                            Pesan Sekarang <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        
+                        <!-- Tombol WA -->
+                        <button type="button" class="w-full py-2.5 bg-white border border-green-500 text-green-600 hover:bg-green-50 font-bold text-sm rounded-xl transition-colors mt-2 flex justify-center items-center gap-2">
+                            <i class="fa-brands fa-whatsapp text-lg"></i> Tanya Admin
+                        </button>
+
+                    </form>
+
+                    <!-- Trust Badges -->
+                    <div class="mt-6 pt-5 border-t border-slate-100 flex justify-center gap-4 text-center">
+                        <div>
+                            <i class="fa-solid fa-shield-halved text-brand-500 text-xl mb-1"></i>
+                            <p class="text-[9px] font-bold text-slate-500">Transaksi Aman</p>
+                        </div>
+                        <div>
+                            <i class="fa-solid fa-headset text-brand-500 text-xl mb-1"></i>
+                            <p class="text-[9px] font-bold text-slate-500">Support 24/7</p>
+                        </div>
+                        <div>
+                            <i class="fa-solid fa-money-bill-transfer text-brand-500 text-xl mb-1"></i>
+                            <p class="text-[9px] font-bold text-slate-500">Bebas Biaya Tersembunyi</p>
+                        </div>
+                    </div>
+
+                </div>
+            </aside>
+
+        </div>
+    </main>
+
+    <!-- FOOTER SIMPLE (Mini Footer untuk Halaman Detail) -->
+    <footer class="border-t border-slate-200 bg-white mt-10">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2 font-extrabold text-lg text-brand-900">
+                <div class="w-6 h-6 rounded bg-brand-600 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-n"></i></div>
+                NusaTrip
+            </div>
+            <p class="text-xs text-slate-500 font-medium">© 2026 PT Nusantara Trip System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- Fungsi Buka/Tutup Itinerary Accordion ---
+        function toggleAccordion(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                icon.classList.remove('rotate');
+            } else {
+                content.classList.add('open');
+                icon.classList.add('rotate');
+            }
+        }
+
+        // --- Fungsi Simulasi Perhitungan Harga berdasarkan Jumlah Pax ---
+        let pax = 2;
+        const basePrice = 1250000; // Harga default per pax jika berdua
+        
+        function updatePax(change) {
+            const newPax = pax + change;
+            if (newPax < 1) return; // Minimal 1 pax
+            if (newPax > 12) return; // Maksimal batas simulasi misal 12
+            
+            pax = newPax;
+            document.getElementById('pax-count').innerText = pax;
+            
+            // Logika harga grosir sederhana untuk simulasi (Makin banyak makin murah)
+            let pricePerPax = basePrice;
+            if (pax >= 4) pricePerPax = 1000000;
+            else if (pax >= 3) pricePerPax = 1100000;
+            else if (pax == 1) pricePerPax = 2200000; // Harga jika sendirian lebih mahal
+
+            const total = pricePerPax * pax;
+            
+            // Format Rupiah
+            const formattedTotal = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(total);
+
+            document.getElementById('total-price').innerText = formattedTotal;
+        }
+    </script>
+</body>
+</html>
